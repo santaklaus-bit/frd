@@ -11,7 +11,7 @@ export default function FieldPage() {
                         Sur le terrain
                     </h1>
                     <p className="text-xl text-muted-foreground leading-relaxed">
-                        Productions réalisées en contexte : immersion dans une communauté, observation d'un projet, mission sur le terrain.
+                        Productions réalisées en contexte : immersion dans une communauté, observation d&apos;un projet, mission sur le terrain.
                     </p>
                 </div>
 
@@ -29,7 +29,7 @@ export default function FieldPage() {
                                     Projet terrain {i}
                                 </h3>
                                 <p className="text-muted-foreground">
-                                    Documentation d'une initiative sur le terrain.
+                                    Documentation d&apos;une initiative sur le terrain.
                                 </p>
                             </div>
                         </div>

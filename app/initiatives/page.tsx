@@ -38,7 +38,7 @@ export default function InitiativesPage() {
                         Initiatives
                     </h1>
                     <p className="text-xl text-muted-foreground leading-relaxed">
-                        Depuis toujours, je crois en l'importance d'agir et de contribuer à créer des opportunités. Cette page présente quelques initiatives que j'ai portées ou accompagnées, à la croisée de l'entrepreneuriat, du développement organisationnel et de l'engagement social.
+                        Depuis toujours, je crois en l&apos;importance d&apos;agir et de contribuer à créer des opportunités. Cette page présente quelques initiatives que j&apos;ai portées ou accompagnées, à la croisée de l&apos;entrepreneuriat, du développement organisationnel et de l&apos;engagement social.
                     </p>
                 </div>
 

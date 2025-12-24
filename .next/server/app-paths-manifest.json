@@ -1,0 +1,17 @@
+{
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/blog/[slug]/opengraph-image/route": "app/blog/[slug]/opengraph-image/route.js",
+  "/about/page": "app/about/page.js",
+  "/production/field/page": "app/production/field/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/initiatives/page": "app/initiatives/page.js",
+  "/production/capsules/page": "app/production/capsules/page.js",
+  "/production/interviews/page": "app/production/interviews/page.js",
+  "/blog/[slug]/page": "app/blog/[slug]/page.js",
+  "/contact/page": "app/contact/page.js",
+  "/page": "app/page.js",
+  "/production/lifestyle/page": "app/production/lifestyle/page.js",
+  "/production/podcasts/page": "app/production/podcasts/page.js",
+  "/production/page": "app/production/page.js",
+  "/opengraph-image/route": "app/opengraph-image/route.js"
+}

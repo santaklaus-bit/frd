@@ -11,7 +11,7 @@ export default function LifestylePage() {
                         Lifestyle & Perspectives
                     </h1>
                     <p className="text-xl text-muted-foreground leading-relaxed">
-                        Contenus plus personnels qui montrent l'envers du décor : mon quotidien, mon parcours, mes inspirations.
+                        Contenus plus personnels qui montrent l&apos;envers du décor : mon quotidien, mon parcours, mes inspirations.
                     </p>
                 </div>
 

@@ -50,10 +50,10 @@ export default function HomePage() {
               </h2>
               <div className="prose prose-lg dark:prose-invert">
                 <p className="text-muted-foreground leading-relaxed">
-                  Je suis un entrepreneur social animé par un désir profond d'être utile à l'humanité. Depuis l'âge de dix ans, je ressens le besoin de créer des opportunités là où elles manquent, de transformer des idées en solutions concrètes et de contribuer à un monde plus juste.
+                  Je suis un entrepreneur social animé par un désir profond d&apos;être utile à l&apos;humanité. Depuis l&apos;âge de dix ans, je ressens le besoin de créer des opportunités là où elles manquent, de transformer des idées en solutions concrètes et de contribuer à un monde plus juste.
                 </p>
                 <p className="text-muted-foreground leading-relaxed mt-4">
-                  Fort d'un parcours en sciences politiques et en droit, j'ai développé mes compétences à travers des formations spécialisées en économie circulaire, développement durable et intervention rurale.
+                  Fort d&apos;un parcours en sciences politiques et en droit, j&apos;ai développé mes compétences à travers des formations spécialisées en économie circulaire, développement durable et intervention rurale.
                 </p>
               </div>
               <Link href="/about" className="inline-block mt-6">

@@ -1,0 +1,17 @@
+{
+  "/favicon.ico/route": "/favicon.ico",
+  "/blog/[slug]/opengraph-image/route": "/blog/[slug]/opengraph-image",
+  "/about/page": "/about",
+  "/production/field/page": "/production/field",
+  "/_not-found/page": "/_not-found",
+  "/initiatives/page": "/initiatives",
+  "/production/capsules/page": "/production/capsules",
+  "/production/interviews/page": "/production/interviews",
+  "/blog/[slug]/page": "/blog/[slug]",
+  "/contact/page": "/contact",
+  "/page": "/",
+  "/production/lifestyle/page": "/production/lifestyle",
+  "/production/podcasts/page": "/production/podcasts",
+  "/production/page": "/production",
+  "/opengraph-image/route": "/opengraph-image"
+}

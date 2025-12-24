@@ -12,7 +12,7 @@ export default function ContactPage() {
                         Contact
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                        N'hésitez pas à me contacter pour toute demande de collaboration, entrevue ou message général.
+                        N&apos;hésitez pas à me contacter pour toute demande de collaboration, entrevue ou message général.
                     </p>
                 </div>
 
@@ -69,7 +69,7 @@ export default function ContactPage() {
                                 Temps de réponse
                             </h3>
                             <p className="text-sm text-muted-foreground">
-                                Je m'efforce de répondre à toutes les demandes dans un délai de 48 heures.
+                                Je m&apos;efforce de répondre à toutes les demandes dans un délai de 48 heures.
                             </p>
                         </div>
                     </div>
