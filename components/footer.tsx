@@ -17,7 +17,7 @@ export default function Footer() {
         {/* Footer Content */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} Farid Danko. Tous droits réservés.
+            &copy; {new Date().getFullYear()} Farid DANKO. Tous droits réservés.
           </p>
 
           {/* Social Links */}

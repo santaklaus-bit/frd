@@ -12,7 +12,7 @@ export const translations = {
         // Homepage
         home: {
             hero: {
-                title: 'Farid Danko',
+                title: 'Farid DANKO',
                 subtitle: 'Entrepreneur social • Conseiller en développement organisationnel',
                 description: 'Je mets mon expertise au service de celles et ceux qui souhaitent entreprendre autrement — avec clarté, cohérence et impact.',
                 cta: 'Découvrir mon parcours',
@@ -123,7 +123,7 @@ export const translations = {
         // Homepage
         home: {
             hero: {
-                title: 'Farid Danko',
+                title: 'Farid DANKO',
                 subtitle: 'Social Entrepreneur • Organizational Development Consultant',
                 description: 'I offer my expertise to those who wish to conduct business differently — with clarity, consistency and impact.',
                 cta: 'Discover my journey',

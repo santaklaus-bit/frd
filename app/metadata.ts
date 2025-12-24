@@ -19,11 +19,11 @@ export const metadata: Metadata = {
     keywords: metadataKeywords,
     authors: [
         {
-            name: "Farid Danko",
+            name: "Farid DANKO",
             url: siteConfig.url,
         },
     ],
-    creator: "Farid Danko",
+    creator: "Farid DANKO",
     openGraph: {
         type: "website",
         locale: "fr_FR",

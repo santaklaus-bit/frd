@@ -51,12 +51,12 @@ export async function generateMetadata({
       ],
       authors: [
         {
-          name: page.data.author || "Farid Danko",
+          name: page.data.author || "Farid DANKO",
           url: siteConfig.url,
         },
       ],
-      creator: page.data.author || "Farid Danko",
-      publisher: "Farid Danko",
+      creator: page.data.author || "Farid DANKO",
+      publisher: "Farid DANKO",
       robots: {
         index: true,
         follow: true,
@@ -74,7 +74,7 @@ export async function generateMetadata({
         type: "article",
         url: ogUrl,
         publishedTime: page.data.date,
-        authors: [page.data.author || "Farid Danko"],
+        authors: [page.data.author || "Farid DANKO"],
         tags: page.data.tags,
         images: [
           {

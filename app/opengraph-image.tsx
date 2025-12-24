@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Blog - Farid Danko";
+export const alt = "Blog - Farid DANKO";
 export const size = {
   width: 1200,
   height: 630,
@@ -98,7 +98,7 @@ export default async function Image() {
           <div style={styles.container}>
             <h1 style={styles.title}>Blog</h1>
             <p style={styles.description}>
-              Farid Danko - Entrepreneur social • Conseiller en développement organisationnel
+              Farid DANKO - Entrepreneur social • Conseiller en développement organisationnel
             </p>
           </div>
         </div>

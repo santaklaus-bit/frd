@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export const metadata: Metadata = {
     title: "Blog",
-    description: "Articles et réflexions de Farid Danko",
+    description: "Articles et réflexions de Farid DANKO",
 };
 
 const blogSource = loader({

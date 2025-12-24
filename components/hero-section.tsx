@@ -21,7 +21,7 @@ export function HeroSection() {
 
             <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
                 <h1 className="font-bold text-5xl md:text-6xl lg:text-7xl tracking-tight mb-6">
-                    Farid Danko
+                    Farid DANKO
                 </h1>
                 <p className="text-xl md:text-2xl text-muted-foreground mb-4">
                     Entrepreneur social • Conseiller en développement organisationnel
