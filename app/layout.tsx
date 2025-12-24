@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { ThemeProvider } from "@/components/theme-provider";
+import { LanguageProvider } from "@/lib/language-context";
 
 import { siteConfig } from "@/lib/site";
 import { metadataKeywords } from "./metadata";
@@ -41,9 +42,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SiteNav />
-          {children}
-          <Footer />
+          <LanguageProvider>
+            <SiteNav />
+            {children}
+            <Footer />
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

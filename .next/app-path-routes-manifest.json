@@ -4,6 +4,7 @@
   "/about/page": "/about",
   "/blog/[slug]/opengraph-image/route": "/blog/[slug]/opengraph-image",
   "/blog/[slug]/page": "/blog/[slug]",
+  "/blog/page": "/blog",
   "/contact/page": "/contact",
   "/favicon.ico/route": "/favicon.ico",
   "/initiatives/page": "/initiatives",

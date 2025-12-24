@@ -1,44 +1,34 @@
-'use client';
-
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Briefcase, Video, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { FlickeringGrid } from '@/components/magicui/flickering-grid';
+import { HeroSection } from '@/components/hero-section';
+import { docs, meta } from "@/.source";
+import { loader } from "fumadocs-core/source";
+import { createMDXSource } from "fumadocs-mdx";
+
+const blogSource = loader({
+  baseUrl: "/blog",
+  source: createMDXSource(docs, meta),
+});
+
+const formatDate = (date: Date): string => {
+  return date.toLocaleDateString("fr-FR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
 
 export default function HomePage() {
+  const posts = blogSource.getPages().sort((a, b) => {
+    return new Date(b.data.date ?? 0).getTime() - new Date(a.data.date ?? 0).getTime();
+  }).slice(0, 3);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="relative min-h-[600px] flex items-center justify-center border-b border-border">
-        <div className="absolute top-0 left-0 z-0 w-full h-full [mask-image:linear-gradient(to_bottom,transparent_5%,black_50%,transparent_95%)]">
-          <FlickeringGrid
-            className="absolute top-0 left-0 size-full"
-            squareSize={4}
-            gridGap={6}
-            color="#6B7280"
-            maxOpacity={0.2}
-            flickerChance={0.05}
-          />
-        </div>
-
-        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
-          <h1 className="font-bold text-5xl md:text-6xl lg:text-7xl tracking-tight mb-6">
-            Farid Danko
-          </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-4">
-            Entrepreneur social • Conseiller en développement organisationnel
-          </p>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-            Je mets mon expertise au service de celles et ceux qui souhaitent entreprendre autrement — avec clarté, cohérence et impact.
-          </p>
-          <Link href="/about">
-            <Button size="lg" className="gap-2">
-              Découvrir mon parcours
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* About Preview Section */}
       <section className="py-20 border-b border-border">
@@ -151,26 +141,65 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Collaborations Section */}
+      {/* Blog Section */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center">
+          <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Collaborations & Clients
+              Blog
             </h2>
-            <p className="text-lg text-muted-foreground mb-12">
-              Accompagnement de projets à impact
+            <p className="text-lg text-muted-foreground">
+              Articles et réflexions récents
             </p>
-            <div className="flex flex-wrap justify-center gap-8 items-center opacity-60">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div
-                  key={i}
-                  className="w-32 h-16 border border-border rounded-lg flex items-center justify-center text-sm text-muted-foreground"
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-12">
+            {posts.map((post) => {
+              const date = post.data.date ? new Date(post.data.date) : null;
+
+              return (
+                <Link
+                  key={post.url}
+                  href={post.url}
+                  className="group flex flex-col overflow-hidden rounded-lg border border-border bg-card hover:shadow-lg transition-all"
                 >
-                  Client {i}
-                </div>
-              ))}
-            </div>
+                  {post.data.thumbnail && (
+                    <div className="relative h-48 w-full overflow-hidden">
+                      <Image
+                        src={post.data.thumbnail}
+                        alt={post.data.title}
+                        fill
+                        className="object-cover transition-transform group-hover:scale-105"
+                      />
+                    </div>
+                  )}
+                  <div className="flex flex-1 flex-col p-6 text-left">
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold tracking-tight mb-2 group-hover:text-primary transition-colors">
+                        {post.data.title}
+                      </h3>
+                      {post.data.description && (
+                        <p className="text-sm text-muted-foreground line-clamp-3">
+                          {post.data.description}
+                        </p>
+                      )}
+                    </div>
+                    <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
+                      {date && <time>{formatDate(date)}</time>}
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="text-center">
+            <Link href="/blog">
+              <Button variant="outline" className="gap-2">
+                Voir tous les articles
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
