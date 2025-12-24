@@ -3,5 +3,14 @@
     "x-nextjs-stale-time": "300",
     "x-nextjs-prerender": "1",
     "x-next-cache-tags": "_N_T_/layout,_N_T_/production/layout,_N_T_/production/interviews/layout,_N_T_/production/interviews/page,_N_T_/production/interviews"
-  }
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/production/interviews/__PAGE__",
+    "/production/interviews",
+    "/production",
+    "/_index",
+    "/_head"
+  ]
 }

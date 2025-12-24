@@ -1,17 +1,18 @@
 {
-  "/favicon.ico/route": "/favicon.ico",
-  "/blog/[slug]/opengraph-image/route": "/blog/[slug]/opengraph-image",
-  "/about/page": "/about",
-  "/production/field/page": "/production/field",
+  "/_global-error/page": "/_global-error",
   "/_not-found/page": "/_not-found",
-  "/initiatives/page": "/initiatives",
-  "/production/capsules/page": "/production/capsules",
-  "/production/interviews/page": "/production/interviews",
+  "/about/page": "/about",
+  "/blog/[slug]/opengraph-image/route": "/blog/[slug]/opengraph-image",
   "/blog/[slug]/page": "/blog/[slug]",
   "/contact/page": "/contact",
+  "/favicon.ico/route": "/favicon.ico",
+  "/initiatives/page": "/initiatives",
+  "/opengraph-image/route": "/opengraph-image",
   "/page": "/",
+  "/production/capsules/page": "/production/capsules",
+  "/production/field/page": "/production/field",
+  "/production/interviews/page": "/production/interviews",
   "/production/lifestyle/page": "/production/lifestyle",
-  "/production/podcasts/page": "/production/podcasts",
   "/production/page": "/production",
-  "/opengraph-image/route": "/opengraph-image"
+  "/production/podcasts/page": "/production/podcasts"
 }
