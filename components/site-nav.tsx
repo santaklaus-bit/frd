@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { LanguageSwitcher } from "@/components/language-switcher";
+
 import { Menu, X, Linkedin, Youtube, Instagram, Facebook, Twitter } from "lucide-react";
 import { useState } from "react";
 
@@ -115,8 +115,6 @@ export function SiteNav() {
               Contact
             </Link>
 
-            {/* Language Switcher */}
-            <LanguageSwitcher />
 
             {/* Theme Toggle */}
             <ThemeToggle />
@@ -133,8 +131,8 @@ export function SiteNav() {
           </Link>
 
           <div className="flex items-center gap-2">
-            <LanguageSwitcher />
             <ThemeToggle />
+
             <button
               className="p-2"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
