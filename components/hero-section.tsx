@@ -5,8 +5,27 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
+  const [isClient, setIsClient] = useState(false);
+  const [decorations, setDecorations] = useState<any[]>([]);
+
+  useEffect(() => {
+    setIsClient(true);
+    // Generate static random values only on client to avoid hydration mismatch
+    const newDecorations = [...Array(8)].map((_, i) => ({
+      width: Math.random() * 300 + 150,
+      height: Math.random() * 300 + 150,
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      moveX: Math.random() * 120 - 60,
+      moveY: Math.random() * 120 - 60,
+      duration: Math.random() * 15 + 10,
+    }));
+    setDecorations(newDecorations);
+  }, []);
+
   return (
     <section
       className="relative h-[90vh] flex items-center justify-center overflow-hidden border-b border-border/40"
@@ -18,9 +37,52 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           squareSize={4}
           gridGap={6}
           color="#60A5FA"
-          maxOpacity={0.5}
-          flickerChance={0.05}
+          maxOpacity={0.2}
+          flickerChance={0.03}
         />
+        {/* Radial Gradient Glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(96,165,250,0.1),transparent_50%)]" />
+
+        {/* Large Decorative Text */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none overflow-hidden w-full text-center">
+          <motion.h2
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.03 }}
+            transition={{ duration: 2 }}
+            className="text-[30vw] font-bold uppercase tracking-tighter whitespace-nowrap leading-none"
+          >
+            FARID DANKO
+          </motion.h2>
+        </div>
+
+        {/* Floating Decorative Elements */}
+        {isClient && (
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {decorations.map((dec, i) => (
+              <motion.div
+                key={i}
+                className="absolute rounded-full bg-blue-500/15 blur-2xl"
+                style={{
+                  width: dec.width,
+                  height: dec.height,
+                  left: dec.left,
+                  top: dec.top,
+                }}
+                animate={{
+                  x: [0, dec.moveX],
+                  y: [0, dec.moveY],
+                  scale: [1, 1.15, 1],
+                  opacity: [0.4, 0.7, 0.4],
+                }}
+                transition={{
+                  duration: dec.duration,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="max-w-7xl mx-auto px-6 text-center space-y-12 relative z-10">
@@ -29,7 +91,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h1 className="text-[12vw] md:text-[10vw] lg:text-[12rem] font-bold tracking-tighter uppercase leading-[0.8] mb-8">
+          <h1 className="text-[12vw] md:text-[10vw] lg:text-[10rem] font-bold tracking-tighter uppercase leading-[0.8] mb-8 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
             {dict.home.title}
           </h1>
           <p className="text-sm md:text-base font-bold uppercase tracking-[0.6em] text-muted-foreground opacity-60">
@@ -41,7 +103,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-          className="text-2xl md:text-4xl font-medium leading-tight text-muted-foreground/80 max-w-4xl mx-auto tracking-tight"
+          className="text-2xl md:text-3xl font-medium leading-tight text-muted-foreground/80 max-w-4xl mx-auto tracking-tight"
         >
           {dict.home.description}
         </motion.p>
@@ -55,17 +117,42 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           <Link href={`/${lang}/about`}>
             <Button
               size="lg"
-              className="px-16 py-10 rounded-full text-xl font-bold uppercase tracking-widest hover:scale-105 transition-all shadow-2xl bg-black text-white dark:bg-white dark:text-black border-none"
+              className="px-16 py-10 rounded-full text-xl font-bold uppercase tracking-widest hover:scale-105 transition-all shadow-2xl bg-black text-white dark:bg-white dark:text-black border-none group"
             >
               {dict.home.cta}
-              <ArrowRight className="ml-4 h-8 w-8" />
+              <ArrowRight className="ml-4 h-8 w-8 group-hover:translate-x-2 transition-transform" />
             </Button>
           </Link>
         </motion.div>
       </div>
 
+      {/* Animated Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, duration: 1 }}
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+      >
+        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-muted-foreground/50">
+          Scroll
+        </span>
+        <div className="w-[22px] h-[36px] rounded-full border-2 border-muted-foreground/20 p-1 flex justify-center">
+          <motion.div
+            animate={{
+              y: [0, 12, 0],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="w-1 h-2 bg-muted-foreground/40 rounded-full"
+          />
+        </div>
+      </motion.div>
+
       {/* Subtle overlay for depth */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/20 to-background pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/80 pointer-events-none" />
     </section>
   );
 }
