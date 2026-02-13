@@ -19,6 +19,7 @@ export function LanguageToggle({ lang }: { lang: "en" | "fr" }) {
       size="sm"
       onClick={toggleLanguage}
       className="font-bold text-xs"
+      aria-label="Changer de langue"
     >
       {lang === "en" ? "FR" : "EN"}
     </Button>

@@ -54,6 +54,7 @@ export function SocialShare({ lang }: { lang: string }) {
           variant="outline"
           size="icon"
           className="fixed bottom-8 right-8 h-14 w-14 rounded-full shadow-2xl bg-black text-white dark:bg-white dark:text-black hover:scale-110 transition-transform z-50 border-none"
+          aria-label="Partager cette page"
         >
           <Share2 className="h-6 w-6" />
         </Button>

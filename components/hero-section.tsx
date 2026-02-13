@@ -8,7 +8,10 @@ import { motion } from "framer-motion";
 
 export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
   return (
-    <section className="relative h-[90vh] flex items-center justify-center overflow-hidden border-b border-border/40">
+    <section
+      className="relative h-[90vh] flex items-center justify-center overflow-hidden border-b border-border/40"
+      aria-label="Introduction"
+    >
       <div className="absolute inset-0 -z-10">
         <FlickeringGrid
           className="w-full h-full"
@@ -16,15 +19,15 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           gridGap={6}
           color="#60A5FA"
           maxOpacity={0.5}
-          flickerChance={0.1}
+          flickerChance={0.05}
         />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 text-center space-y-12 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <h1 className="text-[12vw] md:text-[10vw] lg:text-[12rem] font-bold tracking-tighter uppercase leading-[0.8] mb-8">
             {dict.home.title}
