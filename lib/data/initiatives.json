@@ -1,0 +1,34 @@
+[
+  {
+    "slug": "programme-apprentissage",
+    "icon": "Target",
+    "title": {
+      "fr": "Programme d'apprentissage en milieu de travail",
+      "en": "Workplace Learning Programme"
+    },
+    "description": {
+      "fr": "Programme d'envergure pour les métiers du secteur de l'environnement, visant à faciliter l'insertion professionnelle.",
+      "en": "Large-scale programme for environmental sector trades, aimed at facilitating professional integration."
+    },
+    "category": {
+      "fr": "Employabilité",
+      "en": "Employability"
+    }
+  },
+  {
+    "slug": "insertion-socioprofessionnelle",
+    "icon": "Users",
+    "title": {
+      "fr": "Insertion socioprofessionnelle",
+      "en": "Socio-professional Integration"
+    },
+    "description": {
+      "fr": "Coordination de programmes dédiés à l'employabilité et à l'insertion socioprofessionnelle.",
+      "en": "Coordination of programmes dedicated to employability and socio-professional integration."
+    },
+    "category": {
+      "fr": "Développement social",
+      "en": "Social Development"
+    }
+  }
+]

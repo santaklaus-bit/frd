@@ -21,6 +21,15 @@ export async function generateMetadata({
   };
 }
 
+import initiativesData from "@/lib/data/initiatives.json";
+
+const ICON_MAP: Record<string, any> = {
+  Target,
+  Users,
+  Lightbulb,
+  TrendingUp,
+};
+
 export default async function InitiativesPage({
   params,
 }: {
@@ -29,32 +38,13 @@ export default async function InitiativesPage({
   const { lang } = await params;
   const dict = await getDictionary(lang as "en" | "fr");
 
-  const initiatives = [
-    {
-      icon: Target,
-      title:
-        lang === "fr"
-          ? "Programme d'apprentissage en milieu de travail"
-          : "Workplace Learning Programme",
-      description:
-        lang === "fr"
-          ? "Programme d'envergure pour les métiers du secteur de l'environnement, visant à faciliter l'insertion professionnelle."
-          : "Large-scale programme for environmental sector trades, aimed at facilitating professional integration.",
-      category: lang === "fr" ? "Employabilité" : "Employability",
-    },
-    {
-      icon: Users,
-      title:
-        lang === "fr"
-          ? "Insertion socioprofessionnelle"
-          : "Socio-professional Integration",
-      description:
-        lang === "fr"
-          ? "Coordination de programmes dédiés à l'employabilité et à l'insertion socioprofessionnelle."
-          : "Coordination of programmes dedicated to employability and socio-professional integration.",
-      category: lang === "fr" ? "Développement social" : "Social Development",
-    },
-  ];
+  const initiatives = initiativesData.map((item) => ({
+    ...item,
+    icon: ICON_MAP[item.icon] || Lightbulb,
+    title: item.title[lang as keyof typeof item.title],
+    description: item.description[lang as keyof typeof item.description],
+    category: item.category[lang as keyof typeof item.category],
+  }));
 
   return (
     <div className="min-h-screen bg-background text-foreground">

@@ -1,6 +1,15 @@
 import Link from "next/link";
 import { Video, Mic, Film, MapPin, Camera, ArrowRight } from "lucide-react";
 import { getDictionary } from "@/lib/get-dictionary";
+import productionData from "@/lib/data/production.json";
+
+const ICON_MAP: Record<string, any> = {
+  Video,
+  Mic,
+  Film,
+  MapPin,
+  Camera,
+};
 
 export default async function ProductionPage({
   params,
@@ -10,43 +19,13 @@ export default async function ProductionPage({
   const { lang } = await params;
   const dict = await getDictionary(lang as "en" | "fr");
 
-  const sections = [
-    {
-      title: dict.production.subpages.interviews.title,
-      description: dict.production.subpages.interviews.desc,
-      details: dict.production.subpages.interviews.details,
-      href: `/${lang}/production/interviews`,
-      icon: Video,
-    },
-    {
-      title: dict.production.subpages.podcasts.title,
-      description: dict.production.subpages.podcasts.desc,
-      details: dict.production.subpages.podcasts.details,
-      href: `/${lang}/production/podcasts`,
-      icon: Mic,
-    },
-    {
-      title: dict.production.subpages.capsules.title,
-      description: dict.production.subpages.capsules.desc,
-      details: dict.production.subpages.capsules.details,
-      href: `/${lang}/production/capsules`,
-      icon: Film,
-    },
-    {
-      title: dict.production.subpages.field.title,
-      description: dict.production.subpages.field.desc,
-      details: dict.production.subpages.field.details,
-      href: `/${lang}/production/field`,
-      icon: MapPin,
-    },
-    {
-      title: dict.production.subpages.lifestyle.title,
-      description: dict.production.subpages.lifestyle.desc,
-      details: dict.production.subpages.lifestyle.details,
-      href: `/${lang}/production/lifestyle`,
-      icon: Camera,
-    },
-  ];
+  const sections = productionData.map((item: any) => ({
+    title: item.title[lang as keyof typeof item.title],
+    description: item.description[lang as keyof typeof item.description],
+    details: item.details[lang as keyof typeof item.details],
+    href: `/${lang}${item.href}`,
+    icon: ICON_MAP[item.icon] || Video,
+  }));
 
   return (
     <div className="min-h-screen bg-background text-foreground">

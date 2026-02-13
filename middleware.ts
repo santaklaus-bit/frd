@@ -16,13 +16,25 @@ function getLocale(request: NextRequest) {
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Skip if it's an internal next.js path or public file
+  // Skip if it's an internal next.js path or public file or api
   if (
     pathname.startsWith("/_next") ||
     pathname.includes("/api/") ||
     pathname.includes(".") ||
     pathname === "/favicon.ico"
   ) {
+    return;
+  }
+
+  // Handle Admin routes
+  if (pathname.startsWith("/admin")) {
+    if (pathname === "/admin/login") {
+      return;
+    }
+    const token = request.cookies.get("auth_token");
+    if (!token) {
+      return NextResponse.redirect(new URL("/admin/login", request.url));
+    }
     return;
   }
 
