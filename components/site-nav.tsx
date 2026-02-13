@@ -117,9 +117,13 @@ export function SiteNav({ lang }: { lang: "en" | "fr" }) {
           {/* Center - Farid Danko */}
           <Link
             href={`/${lang}`}
-            className="font-bold text-xl tracking-tighter hover:opacity-80 transition-opacity absolute left-1/2 transform -translate-x-1/2 whitespace-nowrap"
+            className="hover:opacity-80 transition-opacity absolute left-1/2 transform -translate-x-1/2 whitespace-nowrap"
           >
-            FARID DANKO
+            <img
+              src="/logo.png"
+              alt="Farid Danko"
+              className="h-8 w-auto invert dark:invert-0"
+            />
           </Link>
 
           {/* Right Section: Blog, Initiatives, Contact, Language Toggle */}
@@ -157,9 +161,13 @@ export function SiteNav({ lang }: { lang: "en" | "fr" }) {
         <div className="lg:hidden flex h-14 items-center justify-between">
           <Link
             href={`/${lang}`}
-            className="font-bold text-lg tracking-tighter hover:opacity-80 transition-opacity"
+            className="hover:opacity-80 transition-opacity"
           >
-            FARID DANKO
+            <img
+              src="/logo.png"
+              alt="Farid Danko"
+              className="h-6 w-auto invert dark:invert-0"
+            />
           </Link>
 
           <div className="flex items-center gap-2">

@@ -60,9 +60,13 @@ export default function Footer({ lang, dict }: { lang: string; dict: any }) {
           <div className="space-y-6 max-w-sm">
             <Link
               href={`/${lang}`}
-              className="font-bold text-2xl tracking-tighter uppercase"
+              className="hover:opacity-80 transition-opacity"
             >
-              Farid DANKO
+              <img
+                src="/logo.png"
+                alt="Farid Danko"
+                className="h-10 w-auto invert dark:invert-0"
+              />
             </Link>
             <p className="text-muted-foreground leading-relaxed font-medium">
               {lang === "fr"
