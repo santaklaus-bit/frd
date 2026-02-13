@@ -84,5 +84,31 @@
     "button": "Subscribe",
     "success": "Thank you for subscribing!",
     "error": "An error occurred. Please try again."
+  },
+  "seo": {
+    "home": {
+      "title": "Farid DANKO - Social Entrepreneur & Development Advisor",
+      "description": "Discover Farid Danko's journey as a social entrepreneur and organizational development advisor. Guidance for high-impact social and sustainable projects."
+    },
+    "about": {
+      "title": "About - Farid DANKO",
+      "description": "Learn more about Farid Danko, his social entrepreneurial path, and his commitment to a fairer and more sustainable world."
+    },
+    "production": {
+      "title": "Productions - Farid DANKO",
+      "description": "Explore Farid Danko's productions: interviews, podcasts, clips, and field reflections to share ideas and visions."
+    },
+    "initiatives": {
+      "title": "Initiatives - Farid DANKO",
+      "description": "Discover the initiatives led or supported by Farid Danko in the environmental, employability, and social innovation sectors."
+    },
+    "blog": {
+      "title": "Blog & Reflections - Farid DANKO",
+      "description": "Articles, analyses, and reflections by Farid Danko on social entrepreneurship, leadership, and positive change."
+    },
+    "contact": {
+      "title": "Contact - Farid DANKO",
+      "description": "Get in touch with Farid Danko for collaboration projects, media inquiries, or general questions."
+    }
   }
 }

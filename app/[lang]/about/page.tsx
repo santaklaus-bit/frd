@@ -1,5 +1,23 @@
 import { getDictionary } from "@/lib/get-dictionary";
 import Image from "next/image";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const dict = await getDictionary(lang as "en" | "fr");
+
+  return {
+    title: dict.seo.about.title,
+    description: dict.seo.about.description,
+    alternates: {
+      canonical: `/${lang}/about`,
+    },
+  };
+}
 
 export default async function AboutPage({
   params,

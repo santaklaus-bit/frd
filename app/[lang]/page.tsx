@@ -22,6 +22,21 @@ const formatDate = (date: Date, lang: string): string => {
 };
 
 import { Newsletter } from "@/components/newsletter";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const dict = await getDictionary(lang as "en" | "fr");
+
+  return {
+    title: dict.seo.home.title,
+    description: dict.seo.home.description,
+  };
+}
 
 export default async function HomePage({
   params,

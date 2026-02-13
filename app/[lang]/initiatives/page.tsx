@@ -2,6 +2,24 @@ import { Target, Users, Lightbulb, TrendingUp, ArrowRight } from "lucide-react";
 import { getDictionary } from "@/lib/get-dictionary";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const dict = await getDictionary(lang as "en" | "fr");
+
+  return {
+    title: dict.seo.initiatives.title,
+    description: dict.seo.initiatives.description,
+    alternates: {
+      canonical: `/${lang}/initiatives`,
+    },
+  };
+}
 
 export default async function InitiativesPage({
   params,
