@@ -3,11 +3,12 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { ThemeProvider } from "@/components/theme-provider";
 
-
 import { siteConfig } from "@/lib/site";
 import { metadataKeywords } from "./metadata";
 import { SiteNav } from "@/components/site-nav";
 import Footer from "@/components/footer";
+import { SocialShare } from "@/components/social-share";
+import { getDictionary } from "@/lib/get-dictionary";
 import "@/app/globals.css";
 
 export const viewport: Viewport = {
@@ -24,14 +25,19 @@ export const metadata: Metadata = {
   keywords: metadataKeywords,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+  params,
+}: {
   children: React.ReactNode;
-}>) {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const dict = await getDictionary(lang as "en" | "fr");
+
   return (
     <html
-      lang="fr"
+      lang={lang}
       className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
       suppressHydrationWarning
     >
@@ -42,10 +48,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SiteNav />
+          <SiteNav lang={lang as "en" | "fr"} />
           {children}
-          <Footer />
-
+          <SocialShare lang={lang} />
+          <Footer lang={lang} dict={dict} />
         </ThemeProvider>
       </body>
     </html>

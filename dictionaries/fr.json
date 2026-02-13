@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos",
+    "production": "PRODUCTION",
+    "blog": "BLOG",
+    "initiatives": "INITIATIVES",
+    "contact": "CONTACT"
+  },
+  "home": {
+    "title": "Farid DANKO",
+    "subtitle": "Entrepreneur social • Conseiller en développement organisationnel",
+    "description": "Farid Danko est un entrepreneur social. Il accompagne les personnes, les entreprises et les organisations à clarifier leur vision, construire des solutions durables et renforcer leur impact dans la société.",
+    "cta": "Découvrir mon parcours"
+  },
+  "about": {
+    "title": "À propos de moi",
+    "content1": "Je suis un entrepreneur social animé par un rêve, un désir profond : être utile à l’humanité. Dès l’âge de 10 ans, j’ai ressenti un besoin — celui de contribuer à créer des opportunités là où elles manquent, de transformer les idées en solutions concrètes, de contribuer à un monde plus juste.",
+    "content2": "Issu d’un environnement entrepreneurial (avec des parents entrepreneurs), j’ai grandi avec un sens des responsabilités développé, nourri par la curiosité, la débrouillardise et des valeurs humaines fortes : la générosité, l’écoute, le partage. Ces principes ont façonné mon rapport au leadership, toujours orienté vers l’impact collectif.",
+    "content3": "Créateur compulsif d’idées et bâtisseur de projets, j’ai accompagné au fil des ans plus d’une cinquantaine de personnes et organisations à clarifier leur vision, structurer leurs initiatives et poser les bases de projets porteurs de sens. J’interviens notamment en création d’entreprise, développement organisationnel, gestion de projet, positionnement stratégique et accompagnement au changement.",
+    "content4": "J’ai également soutenu plusieurs organisations — tant à but non lucratif que dans le secteur privé — dans la recherche de financement, que ce soit auprès d’institutions bancaires, de bailleurs de fonds ou dans le cadre d’appels à projets. Mon rôle est d’accompagner, de structurer les idées et de renforcer la posture stratégique pour maximiser les chances de succès.",
+    "content5": "En plus de mon parcours universitaire à la Faculté de science politique et de droit de l’Université du Québec à Montréal (UQAM), j’ai approfondi mes compétences grâce à des formations spécialisées portant sur l’économie circulaire, le développement durable, l’intervention en milieu rural et l’accompagnement en contexte international, notamment auprès de l’Organisation internationale du Travail. Ces expériences m’ont permis d’affiner une approche humaine, systémique et solidement ancrée dans les réalités de terrain.",
+    "content6": "J’ai dirigé des projets d’envergure, notamment le Programme d’apprentissage en milieu de travail pour des métiers du secteur de l’environnement, coordonné des programmes liés à l’employabilité et à l’insertion socioprofessionnelle, et participé à des révisions de normes professionnelles. Mon expertise inclut également la gestion du changement en milieu organisationnel et la structuration de projets à impact social.",
+    "content7": "Aujourd’hui, je mets cette expertise au service de celles et ceux qui souhaitent entreprendre autrement — avec clarté, cohérence et impact."
+  },
+  "production": {
+    "title": "Production",
+    "description": "Je produis ici du contenu pour transmettre: Des idées, des voix, des réalités, des visions.",
+    "intro": "Cette section regroupe les formats que j’ai créés ou coordonnés : entrevues, capsules, réflexions filmées, podcasts ou moments captés sur le terrain.",
+    "outro": "Ce sont des productions personnelles, pensées comme des espaces de conversation, de documentation ou de transmission.",
+    "subpages": {
+      "title": "Sous-pages",
+      "interviews": {
+        "title": "Entrevues",
+        "desc": "Conversations filmées ou audio avec des personnes inspirantes, expertes ou actrices du changement.",
+        "details": "Il peut s’agir de : discussions de fond, invités spéciaux, formats longs."
+      },
+      "podcasts": {
+        "title": "Podcasts / Audio",
+        "desc": "Contenus audio ou discussions plus libres, intimes ou analytiques.",
+        "details": "Il peut s’agir de : balados, échanges de fond sans forcément de support visuel."
+      },
+      "capsules": {
+        "title": "Capsules & Réflexions",
+        "desc": "Vidéos ou extraits courts où je partage une idée, une réflexion ou une observation.",
+        "details": "Il peut s’agir de : prises de parole directes, interventions rapides, contenus percutants."
+      },
+      "field": {
+        "title": "Sur le terrain",
+        "desc": "Productions réalisées en contexte : immersion dans une communauté, observation d’un projet, mission sur le terrain.",
+        "details": "Il peut s’agir de : documentaires courts, reportages, contenus tournés lors d’initiatives concrètes."
+      },
+      "lifestyle": {
+        "title": "Lifestyle & Perspectives",
+        "desc": "Contenus plus personnels qui montrent l’envers du décor : mon quotidien, mon parcours, mes inspirations.",
+        "details": "Il peut s’agir de : vlogs, moments spontanés."
+      }
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "name": "Nom complet",
+    "email": "Adresse e-mail",
+    "email_hint": "seul canal de réponse",
+    "type": "Type de demande",
+    "options": {
+      "general": "Message général",
+      "collaboration": "Collaboration / événement",
+      "media": "Média / entrevue"
+    },
+    "message": "Message",
+    "submit": "Envoyer"
+  },
+  "initiatives": {
+    "title": "Initiatives",
+    "intro": "Depuis toujours, je crois en l’importance d’agir et de contribuer à créer des opportunités.",
+    "description": "Cette page présente quelques initiatives que j’ai portées ou accompagnées, à la croisée de l’entrepreneuriat, du développement organisationnel et de l’engagement.",
+    "outro": "Des actions concrètes qui traduisent mon désir constant : être utile et contribuer à un impact durable."
+  },
+  "newsletter": {
+    "title": "Restez informé",
+    "description": "Inscrivez-vous pour recevoir mes dernières réflexions, projets et exclusivités directement dans votre boîte mail.",
+    "placeholder": "Votre adresse e-mail",
+    "button": "S'abonner",
+    "success": "Merci pour votre abonnement !",
+    "error": "Une erreur est survenue. Veuillez réessayer."
+  }
+}

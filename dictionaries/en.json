@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "production": "PRODUCTION",
+    "blog": "BLOG",
+    "initiatives": "INITIATIVES",
+    "contact": "CONTACT"
+  },
+  "home": {
+    "title": "Farid DANKO",
+    "subtitle": "Social Entrepreneur • Organisational Development Consultant",
+    "description": "Farid Danko is a dedicated social entrepreneur. He helps individuals, businesses, and organisations to clarify their vision, develop sustainable solutions, and increase their positive impact on society.",
+    "cta": "Discover my journey"
+  },
+  "about": {
+    "title": "About Me",
+    "content1": "I am a social entrepreneur driven by a deep desire to be useful to humanity. Since the age of ten, I have felt the need to create opportunities where they are lacking, transform ideas into concrete solutions and contribute to a fairer world.",
+    "content2": "Coming from an entrepreneurial background, with parents who were entrepreneurs, I grew up with a strong sense of responsibility fuelled by curiosity, resourcefulness, and a commitment to strong human values such as generosity, active listening, and sharing. These principles have shaped my leadership approach, which is always focused on collective impact.",
+    "content3": "As a prolific generator of ideas and builder of projects, I have helped over fifty individuals and organisations clarify their vision, structure their initiatives, and lay the foundations for meaningful projects. I specialise in business creation, organisational development, project management, strategic positioning and change management.",
+    "content4": "I have also supported several organisations — both non-profit and in the private sector — in seeking funding from banking institutions, funders and through calls for projects. My role is to provide support, structure ideas and strengthen strategic positioning to maximise the chances of success.",
+    "content5": "In addition to my academic background in Political Science and Law at the University of Quebec in Montreal (UQAM), I have developed my skills through specialised training in the circular economy, sustainable development, rural intervention, and international support, notably with the International Labour Organisation. These experiences have enabled me to develop a human, systemic approach that is firmly grounded in practical realities.",
+    "content6": "I have led large-scale projects, including the Workplace Learning Programme for Environmental Trades, coordinated programmes related to employability and socio-professional integration, and contributed to the revision of professional standards. I am also an expert in change management in organisational settings and in structuring projects with a social impact.",
+    "content7": "Today, I offer my expertise to those who wish to conduct business differently — with clarity, consistency and impact."
+  },
+  "production": {
+    "title": "Production",
+    "description": "Here, I produce content to convey ideas, voices, realities and visions.",
+    "intro": "This section brings together the formats I have created or coordinated: interviews, short videos, filmed reflections, podcasts and moments captured in the field.",
+    "outro": "These are personal productions, designed as spaces for conversation, documentation or transmission.",
+    "subpages": {
+      "title": "Sub-pages",
+      "interviews": {
+        "title": "Interviews",
+        "desc": "Filmed or audio conversations with inspiring individuals, experts or change agents.",
+        "details": "These may include: in-depth discussions, special guests, long formats."
+      },
+      "podcasts": {
+        "title": "Podcasts / Audio",
+        "desc": "Audio content or more informal, intimate or analytical discussions.",
+        "details": "These may include: podcasts, in-depth exchanges without necessarily visual support."
+      },
+      "capsules": {
+        "title": "Capsules & Reflections",
+        "desc": "Short videos or clips where I share an idea, a reflection or an observation.",
+        "details": "These may include: direct statements, quick interventions, powerful content."
+      },
+      "field": {
+        "title": "In the field",
+        "desc": "Productions made in context: immersion in a community, observation of a project, field mission.",
+        "details": "These may include: short documentaries, reports, content filmed during specific initiatives."
+      },
+      "lifestyle": {
+        "title": "Lifestyle & Perspectives",
+        "desc": "More personal content that shows what goes on behind the scenes: my daily life, my journey, my inspirations.",
+        "details": "These may include: vlogs, spontaneous moments."
+      }
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "name": "Full name",
+    "email": "Email address",
+    "email_hint": "sole means of response",
+    "type": "Type of request",
+    "options": {
+      "general": "General message",
+      "collaboration": "Collaboration/event",
+      "media": "Media/interview"
+    },
+    "message": "Message",
+    "submit": "Send"
+  },
+  "initiatives": {
+    "title": "Initiatives",
+    "intro": "I have always believed in the importance of taking action and helping to create opportunities.",
+    "description": "This page presents some of the initiatives I have led or supported, at the crossroads of entrepreneurship, organisational development and social engagement.",
+    "outro": "These are concrete actions that reflect my constant desire to be useful and contribute to a lasting impact."
+  },
+  "newsletter": {
+    "title": "Stay Informed",
+    "description": "Sign up to receive my latest thoughts, projects, and exclusives directly in your inbox.",
+    "placeholder": "Your email address",
+    "button": "Subscribe",
+    "success": "Thank you for subscribing!",
+    "error": "An error occurred. Please try again."
+  }
+}

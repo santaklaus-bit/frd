@@ -1,9 +1,16 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
-
-import { Menu, X, Linkedin, Youtube, Instagram, Facebook, Twitter } from "lucide-react";
+import { LanguageToggle } from "@/components/language-toggle";
+import {
+  Menu,
+  X as XIcon,
+  Linkedin,
+  Youtube,
+  Instagram,
+  Facebook,
+} from "lucide-react";
 import { useState } from "react";
 
 // Custom TikTok Icon Component
@@ -20,28 +27,51 @@ const MediumIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export function SiteNav() {
+// Custom X Icon Component
+const XIconLogo = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
+  </svg>
+);
+
+export function SiteNav({ lang }: { lang: "en" | "fr" }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const socialLinks = [
-    { href: "https://linkedin.com", icon: Linkedin, label: "LinkedIn" },
-    { href: "https://youtube.com", icon: Youtube, label: "YouTube" },
+    {
+      href: "https://www.linkedin.com/in/fariddanko/",
+      icon: Linkedin,
+      label: "LinkedIn",
+    },
+    {
+      href: "https://youtube.com/@fariddanko?si=cedaP3ZmzGQuri_Y",
+      icon: Youtube,
+      label: "YouTube",
+    },
     { href: "https://tiktok.com", icon: TikTokIcon, label: "TikTok" },
-    { href: "https://instagram.com", icon: Instagram, label: "Instagram" },
-    { href: "https://facebook.com", icon: Facebook, label: "Facebook" },
-    { href: "https://twitter.com", icon: Twitter, label: "X" },
+    {
+      href: "https://www.instagram.com/fariddanko",
+      icon: Instagram,
+      label: "Instagram",
+    },
+    {
+      href: "https://www.facebook.com/farid.danko",
+      icon: Facebook,
+      label: "Facebook",
+    },
+    { href: "https://x.com/monsieurdanko", icon: XIconLogo, label: "X" },
     { href: "https://medium.com", icon: MediumIcon, label: "Medium" },
   ];
 
   const leftNavItems = [
-    { href: "/", label: "Accueil" },
-    { href: "/about", label: "À propos" },
-    { href: "/production", label: "Production" },
+    { href: `/${lang}`, label: lang === "en" ? "Home" : "Accueil" },
+    { href: `/${lang}/about`, label: lang === "en" ? "About" : "À propos" },
+    { href: `/${lang}/production`, label: "PRODUCTION" },
   ];
 
   const rightNavItems = [
-    { href: "/blog", label: "Blog" },
-    { href: "/initiatives", label: "Initiatives" },
+    { href: `/${lang}/blog`, label: "BLOG" },
+    { href: `/${lang}/initiatives`, label: "INITIATIVES" },
   ];
 
   return (
@@ -52,7 +82,7 @@ export function SiteNav() {
           {/* Left Section: Social Icons + Navigation */}
           <div className="flex items-center gap-6">
             {/* Social Media Icons */}
-            <div className="flex items-center gap-3 pr-4 border-r border-border/40">
+            <div className="flex items-center gap-2 pr-4 border-r border-border/40">
               {socialLinks.map((social) => {
                 const Icon = social.icon;
                 return (
@@ -76,7 +106,7 @@ export function SiteNav() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-xs font-bold text-muted-foreground hover:text-foreground transition-colors uppercase"
                 >
                   {item.label}
                 </Link>
@@ -86,8 +116,8 @@ export function SiteNav() {
 
           {/* Center - Farid Danko */}
           <Link
-            href="/"
-            className="font-semibold text-xl tracking-tight hover:opacity-80 transition-opacity absolute left-1/2 transform -translate-x-1/2"
+            href={`/${lang}`}
+            className="font-bold text-xl tracking-tighter hover:opacity-80 transition-opacity absolute left-1/2 transform -translate-x-1/2 whitespace-nowrap"
           >
             FARID DANKO
           </Link>
@@ -100,7 +130,7 @@ export function SiteNav() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-xs font-bold text-muted-foreground hover:text-foreground transition-colors uppercase"
                 >
                   {item.label}
                 </Link>
@@ -109,12 +139,14 @@ export function SiteNav() {
 
             {/* Contact Button */}
             <Link
-              href="/contact"
-              className="px-6 py-2 bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full hover:opacity-90 transition-opacity"
+              href={`/${lang}/contact`}
+              className="px-6 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold rounded-full hover:opacity-90 transition-opacity uppercase"
             >
               Contact
             </Link>
 
+            {/* Language Toggle */}
+            <LanguageToggle lang={lang} />
 
             {/* Theme Toggle */}
             <ThemeToggle />
@@ -124,13 +156,14 @@ export function SiteNav() {
         {/* Mobile Navigation */}
         <div className="lg:hidden flex h-14 items-center justify-between">
           <Link
-            href="/"
-            className="font-semibold text-lg tracking-tight hover:opacity-80 transition-opacity"
+            href={`/${lang}`}
+            className="font-bold text-lg tracking-tighter hover:opacity-80 transition-opacity"
           >
             FARID DANKO
           </Link>
 
           <div className="flex items-center gap-2">
+            <LanguageToggle lang={lang} />
             <ThemeToggle />
 
             <button
@@ -139,7 +172,7 @@ export function SiteNav() {
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? (
-                <X className="h-5 w-5" />
+                <XIcon className="h-5 w-5" />
               ) : (
                 <Menu className="h-5 w-5" />
               )}
@@ -176,7 +209,7 @@ export function SiteNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2"
+                className="text-xs font-bold text-muted-foreground hover:text-foreground transition-colors py-2 uppercase"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.label}
@@ -185,8 +218,8 @@ export function SiteNav() {
 
             {/* Contact Button */}
             <Link
-              href="/contact"
-              className="mt-2 px-6 py-2 bg-black dark:bg-white text-white dark:text-black text-sm font-semibold rounded-full hover:opacity-90 transition-opacity text-center"
+              href={`/${lang}/contact`}
+              className="mt-2 px-6 py-2 bg-black dark:bg-white text-white dark:text-black text-xs font-bold rounded-full hover:opacity-90 transition-opacity text-center uppercase"
               onClick={() => setMobileMenuOpen(false)}
             >
               Contact
