@@ -30,5 +30,37 @@
       "fr": "Développement social",
       "en": "Social Development"
     }
+  },
+  {
+    "slug": "",
+    "icon": "Lightbulb",
+    "title": {
+      "fr": "",
+      "en": ""
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "category": {
+      "fr": "",
+      "en": ""
+    }
+  },
+  {
+    "slug": "",
+    "icon": "Lightbulb",
+    "title": {
+      "fr": "",
+      "en": ""
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "category": {
+      "fr": "",
+      "en": ""
+    }
   }
 ]
