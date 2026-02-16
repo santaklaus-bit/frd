@@ -112,7 +112,7 @@ export default async function BlogPost({ params }: PageProps) {
             </time>
           </div>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium tracking-tighter text-balance">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-semibold tracking-tighter text-balance">
             {page.data.title}
           </h1>
 

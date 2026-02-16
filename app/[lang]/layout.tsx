@@ -1,6 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { Inter, Cormorant_Garamond } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  variable: "--font-cormorant",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
 import { ThemeProvider } from "@/components/theme-provider";
 
 import { siteConfig } from "@/lib/site";
@@ -91,7 +103,7 @@ export default async function RootLayout({
   return (
     <html
       lang={lang}
-      className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
+      className={`${inter.variable} ${cormorant.variable} antialiased font-sans`}
       suppressHydrationWarning
     >
       <body>

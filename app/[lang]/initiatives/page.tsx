@@ -50,13 +50,13 @@ export default async function InitiativesPage({
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-7xl mx-auto px-6 py-24">
         <div className="max-w-4xl mb-20 text-center mx-auto">
-          <h1 className="text-5xl md:text-6xl font-bold mb-8 uppercase tracking-tighter">
+          <h1 className="text-4xl md:text-5xl font-serif font-semibold mb-6 uppercase tracking-tighter">
             {dict.initiatives.title}
           </h1>
-          <p className="text-2xl font-medium leading-tight mb-6">
+          <p className="text-xl font-normal leading-tight mb-6">
             {dict.initiatives.intro}
           </p>
-          <p className="text-xl text-muted-foreground leading-relaxed">
+          <p className="text-lg text-muted-foreground leading-relaxed">
             {dict.initiatives.description}
           </p>
         </div>
@@ -75,7 +75,7 @@ export default async function InitiativesPage({
                   {initiative.category}
                 </span>
               </div>
-              <h2 className="text-3xl font-bold mb-4 uppercase tracking-tighter">
+              <h2 className="text-2xl font-serif font-semibold mb-4 uppercase tracking-tighter">
                 {initiative.title}
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed mb-8">

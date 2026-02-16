@@ -34,10 +34,10 @@ export default async function AboutPage({
           {/* Left Side: Consolidated Block Content */}
           <div className="space-y-16">
             <div>
-              <h1 className="text-6xl md:text-8xl font-bold mb-16 uppercase tracking-tighter leading-[0.9]">
+              <h1 className="text-5xl md:text-7xl font-serif font-semibold mb-12 uppercase tracking-tighter leading-[0.9]">
                 {dict.about.title}
               </h1>
-              <div className="space-y-10 text-2xl md:text-3xl leading-relaxed font-medium text-muted-foreground">
+              <div className="space-y-8 text-lg md:text-xl leading-relaxed font-normal text-muted-foreground">
                 <p className="text-foreground">{dict.about.content1}</p>
                 <p>{dict.about.content2}</p>
                 <p>{dict.about.content3}</p>

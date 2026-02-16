@@ -49,7 +49,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.03 }}
             transition={{ duration: 2 }}
-            className="text-[30vw] font-bold uppercase tracking-tighter whitespace-nowrap leading-none"
+            className="text-[25vw] font-serif font-bold uppercase tracking-tighter whitespace-nowrap leading-none"
           >
             FARID DANKO
           </motion.h2>
@@ -91,7 +91,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
-          <h1 className="text-[12vw] md:text-[10vw] lg:text-[10rem] font-bold tracking-tighter uppercase leading-[0.8] mb-8 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
+          <h1 className="text-[10vw] md:text-[8vw] lg:text-[8rem] font-serif font-semibold tracking-tighter uppercase leading-[0.8] mb-8 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
             {dict.home.title}
           </h1>
           <p className="text-sm md:text-base font-bold uppercase tracking-[0.6em] text-muted-foreground opacity-60">
@@ -103,7 +103,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-          className="text-2xl md:text-3xl font-medium leading-tight text-muted-foreground/80 max-w-4xl mx-auto tracking-tight"
+          className="text-xl md:text-2xl font-normal leading-tight text-muted-foreground/80 max-w-4xl mx-auto tracking-tight"
         >
           {dict.home.description}
         </motion.p>

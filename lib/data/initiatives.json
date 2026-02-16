@@ -32,19 +32,19 @@
     }
   },
   {
-    "slug": "",
-    "icon": "Lightbulb",
+    "slug": "wash-schools-benin",
+    "icon": "Target",
     "title": {
-      "fr": "",
-      "en": ""
+      "fr": "Projet WASH Schools Bénin",
+      "en": "WASH Schools Benin Project"
     },
     "description": {
-      "fr": "",
-      "en": ""
+      "fr": "Diagnostic et construction d'infrastructures d'eau, d'hygiène et d'assainissement pour 94 écoles primaires publiques de N'Dali.",
+      "en": "Diagnostic and construction of water, hygiene and sanitation infrastructure for 94 public primary schools in N'Dali."
     },
     "category": {
-      "fr": "",
-      "en": ""
+      "fr": "Santé & Hygiène",
+      "en": "Health & Hygiene"
     }
   },
   {
