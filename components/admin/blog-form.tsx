@@ -41,15 +41,15 @@ export function BlogForm({ initialData }: BlogFormProps) {
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
-        <h1 className="text-4xl font-bold uppercase tracking-tighter">
-          {initialData ? "Modifier" : "Nouvel"} Article
+        <h1 className="text-2xl font-semibold tracking-tight">
+          {initialData ? "Modifier l'article" : "Nouvel article"}
         </h1>
       </div>
 
       <form onSubmit={handleSubmit}>
         <Card className="border-border/40 shadow-sm rounded-3xl overflow-hidden">
-          <CardHeader className="border-b border-border/40 bg-muted/20">
-            <CardTitle className="text-xl font-bold uppercase tracking-widest opacity-60">
+          <CardHeader className="border-b border-border/50">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Détails de l'article
             </CardTitle>
           </CardHeader>
@@ -140,10 +140,10 @@ export function BlogForm({ initialData }: BlogFormProps) {
             <div className="pt-4">
               <Button
                 type="submit"
-                className="w-full h-14 rounded-2xl font-bold uppercase tracking-widest bg-black text-white dark:bg-white dark:text-black hover:opacity-90 transition-opacity"
+                className="w-full h-12 rounded-xl font-medium tracking-tight bg-foreground text-background hover:opacity-90 transition-opacity"
                 disabled={loading}
               >
-                <Save className="mr-2 h-5 w-5" />
+                <Save className="mr-2 h-4 w-4" />
                 {loading ? "Enregistrement..." : "Enregistrer l'article"}
               </Button>
             </div>

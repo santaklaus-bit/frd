@@ -71,16 +71,16 @@ export default function ProductionManager({
     <div className="space-y-8 pb-32">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold uppercase tracking-tighter">
+          <h1 className="text-2xl font-semibold tracking-tight">
             Productions
           </h1>
-          <p className="text-muted-foreground font-medium">
+          <p className="text-sm text-muted-foreground">
             Gérez vos sections de production (Interviews, Podcasts, etc.).
           </p>
         </div>
         <Button
           onClick={addItem}
-          className="rounded-full bg-black text-white dark:bg-white dark:text-black font-bold uppercase tracking-widest px-8"
+          className="rounded-lg bg-foreground text-background font-medium tracking-tight px-4 h-9"
         >
           <Plus className="mr-2 h-4 w-4" /> Ajouter
         </Button>
@@ -247,14 +247,14 @@ export default function ProductionManager({
         ))}
       </div>
 
-      <div className="sticky bottom-8 left-0 right-0 flex justify-center">
+      <div className="sticky bottom-6 left-0 right-0 flex justify-center">
         <Button
           onClick={onSave}
           disabled={loading}
-          className="h-16 px-12 rounded-full font-bold uppercase tracking-widest bg-black text-white dark:bg-white dark:text-black shadow-2xl hover:scale-105 transition-all"
+          className="h-11 px-8 rounded-xl font-medium tracking-tight bg-foreground text-background shadow-lg hover:opacity-90 transition-all"
         >
-          <Save className="mr-2 h-6 w-6" />
-          {loading ? "Enregistrement..." : "Enregistrer les modifications"}
+          <Save className="mr-2 h-4 w-4" />
+          {loading ? "Enregistrement..." : "Enregistrer"}
         </Button>
       </div>
     </div>
