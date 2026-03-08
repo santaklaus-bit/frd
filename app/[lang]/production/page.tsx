@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Video, Mic, Film, MapPin, Camera, ArrowRight } from "lucide-react";
 import { getDictionary } from "@/lib/get-dictionary";
-import productionData from "@/lib/data/production.json";
+import { getData } from "@/lib/content-manager";
+import { Metadata } from "next";
 
 const ICON_MAP: Record<string, any> = {
   Video,
@@ -11,6 +12,20 @@ const ICON_MAP: Record<string, any> = {
   Camera,
 };
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}): Promise<Metadata> {
+  const { lang } = await params;
+  const dict = await getDictionary(lang as "en" | "fr");
+  return {
+    title: dict.seo.production.title,
+    description: dict.seo.production.description,
+    alternates: { canonical: `/${lang}/production` },
+  };
+}
+
 export default async function ProductionPage({
   params,
 }: {
@@ -19,13 +34,17 @@ export default async function ProductionPage({
   const { lang } = await params;
   const dict = await getDictionary(lang as "en" | "fr");
 
-  const sections = productionData.map((item: any) => ({
-    title: item.title[lang as keyof typeof item.title],
-    description: item.description[lang as keyof typeof item.description],
-    details: item.details[lang as keyof typeof item.details],
-    href: `/${lang}${item.href}`,
-    icon: ICON_MAP[item.icon] || Video,
-  }));
+  // Dynamic read — reflects admin changes instantly without a rebuild
+  const rawProduction = await getData("production");
+  const sections = rawProduction
+    .filter((item: any) => item.slug)
+    .map((item: any) => ({
+      title: item.title?.[lang] ?? item.title?.fr ?? "",
+      description: item.description?.[lang] ?? item.description?.fr ?? "",
+      details: item.details?.[lang] ?? item.details?.fr ?? "",
+      href: `/${lang}${item.href}`,
+      icon: ICON_MAP[item.icon] || Video,
+    }));
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -43,7 +62,7 @@ export default async function ProductionPage({
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {sections.map((section) => (
+          {(sections as any[]).map((section: any) => (
             <Link
               key={section.href}
               href={section.href}

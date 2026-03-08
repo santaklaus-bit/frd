@@ -2,7 +2,8 @@ import Link from "next/link";
 import { getBlogPosts } from "@/lib/content-manager";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Plus, Edit, Trash2, Calendar } from "lucide-react";
+import { Plus, Edit, Calendar } from "lucide-react";
+import { BlogDeleteButton } from "@/components/admin/blog-delete-button";
 
 export default async function AdminBlogPage() {
   const posts = await getBlogPosts();
@@ -50,13 +51,7 @@ export default async function AdminBlogPage() {
                     <Edit className="h-4 w-4" />
                   </Button>
                 </Link>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="rounded-xl text-red-500 hover:bg-red-50 hover:text-red-600 border-red-100 hover:border-red-200"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                <BlogDeleteButton slug={post.slug} />
               </div>
             </CardContent>
           </Card>

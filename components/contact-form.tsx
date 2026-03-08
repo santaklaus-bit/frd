@@ -19,18 +19,34 @@ export function ContactForm({ lang, dict }: { lang: string; dict: any }) {
     e.preventDefault();
     setStatus("loading");
 
-    // TODO: Integrate with email service or backend API
-    setTimeout(() => {
-      console.log("Contact form submission:", formData);
-      setStatus("success");
-      setFormData({
-        fullName: "",
-        email: "",
-        requestType: "general",
-        message: "",
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          email: formData.email,
+          requestType: formData.requestType,
+          message: formData.message,
+        }),
       });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        console.error("[Contact Form] API error:", data);
+        setStatus("error");
+        setTimeout(() => setStatus("idle"), 5000);
+        return;
+      }
+
+      setStatus("success");
+      setFormData({ fullName: "", email: "", requestType: "general", message: "" });
       setTimeout(() => setStatus("idle"), 5000);
-    }, 1000);
+    } catch (err) {
+      console.error("[Contact Form] Network error:", err);
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 5000);
+    }
   };
 
   const handleChange = (

@@ -15,13 +15,36 @@ export function Newsletter({ lang, dict }: { lang: string; dict: any }) {
     e.preventDefault();
     setStatus("loading");
 
-    // TODO: Integrate with actual newsletter service (e.g., Mailchimp, Loops, etc.)
-    setTimeout(() => {
-      console.log("Newsletter subscription:", email);
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (res.status === 409) {
+        // Already subscribed — treat as success silently
+        setStatus("success");
+        setEmail("");
+        setTimeout(() => setStatus("idle"), 5000);
+        return;
+      }
+
+      if (!res.ok) {
+        console.error("[Newsletter] API error:", await res.json().catch(() => ({})));
+        setStatus("error");
+        setTimeout(() => setStatus("idle"), 5000);
+        return;
+      }
+
       setStatus("success");
       setEmail("");
       setTimeout(() => setStatus("idle"), 5000);
-    }, 1000);
+    } catch (err) {
+      console.error("[Newsletter] Network error:", err);
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 5000);
+    }
   };
 
   return (

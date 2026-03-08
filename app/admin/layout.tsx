@@ -10,6 +10,8 @@ import {
   Video,
   LogOut,
   BarChart3,
+  Mail,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +19,8 @@ const sidebarItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/admin/blog", label: "Blog Posts", icon: FileText },
+  { href: "/admin/contacts", label: "Messages", icon: Mail },
+  { href: "/admin/newsletter", label: "Newsletter", icon: Users },
   { href: "/admin/content", label: "Contenu i18n", icon: Globe },
   { href: "/admin/initiatives", label: "Initiatives", icon: Target },
   { href: "/admin/production", label: "Production", icon: Video },

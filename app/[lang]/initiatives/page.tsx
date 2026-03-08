@@ -1,5 +1,6 @@
 import { Target, Users, Lightbulb, TrendingUp, ArrowRight } from "lucide-react";
 import { getDictionary } from "@/lib/get-dictionary";
+import { getData } from "@/lib/content-manager";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
@@ -21,8 +22,6 @@ export async function generateMetadata({
   };
 }
 
-import initiativesData from "@/lib/data/initiatives.json";
-
 const ICON_MAP: Record<string, any> = {
   Target,
   Users,
@@ -38,13 +37,17 @@ export default async function InitiativesPage({
   const { lang } = await params;
   const dict = await getDictionary(lang as "en" | "fr");
 
-  const initiatives = initiativesData.map((item) => ({
-    ...item,
-    icon: ICON_MAP[item.icon] || Lightbulb,
-    title: item.title[lang as keyof typeof item.title],
-    description: item.description[lang as keyof typeof item.description],
-    category: item.category[lang as keyof typeof item.category],
-  }));
+  // Dynamic read — reflects admin changes instantly without a rebuild
+  const rawInitiatives = await getData("initiatives");
+  const initiatives = rawInitiatives
+    .filter((item: any) => item.slug) // skip empty drafts
+    .map((item: any) => ({
+      ...item,
+      icon: ICON_MAP[item.icon] || Lightbulb,
+      title: item.title?.[lang] ?? item.title?.fr ?? "",
+      description: item.description?.[lang] ?? item.description?.fr ?? "",
+      category: item.category?.[lang] ?? item.category?.fr ?? "",
+    }));
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -62,7 +65,7 @@ export default async function InitiativesPage({
         </div>
 
         <div className="grid md:grid-cols-2 gap-10">
-          {initiatives.map((initiative, index) => (
+          {(initiatives as any[]).map((initiative: any, index: number) => (
             <div
               key={index}
               className="p-12 border border-border rounded-[2.5rem] bg-background hover:bg-muted/10 hover:shadow-2xl transition-all duration-300 group"

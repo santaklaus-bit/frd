@@ -13,8 +13,23 @@ import {
   Globe,
   ChevronRight,
   ArrowUpRight,
+  Mail,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
+import path from "path";
+import fs from "fs/promises";
+
+async function getJsonCount(filename: string): Promise<number> {
+  try {
+    const filePath = path.join(process.cwd(), "lib/data", `${filename}.json`);
+    const content = await fs.readFile(filePath, "utf-8");
+    const data = JSON.parse(content);
+    return Array.isArray(data) ? data.length : 0;
+  } catch {
+    return 0;
+  }
+}
 
 const quickActions = [
   {
@@ -41,12 +56,26 @@ const quickActions = [
     description: "Éditer les textes FR / EN",
     icon: Globe,
   },
+  {
+    href: "/admin/contacts",
+    label: "Messages",
+    description: "Lire les messages de contact",
+    icon: Mail,
+  },
+  {
+    href: "/admin/newsletter",
+    label: "Newsletter",
+    description: "Voir les abonnés",
+    icon: Users,
+  },
 ];
 
 export default async function AdminDashboard() {
   const posts = await getBlogPosts();
   const initiatives = await getData("initiatives");
   const production = await getData("production");
+  const contactCount = await getJsonCount("contact-messages");
+  const subscriberCount = await getJsonCount("newsletter-subscribers");
 
   const stats = [
     {
@@ -72,6 +101,18 @@ export default async function AdminDashboard() {
       value: 2,
       icon: Globe,
       href: "/admin/content",
+    },
+    {
+      label: "Messages",
+      value: contactCount,
+      icon: Mail,
+      href: "/admin/contacts",
+    },
+    {
+      label: "Abonnés",
+      value: subscriberCount,
+      icon: Users,
+      href: "/admin/newsletter",
     },
   ];
 
