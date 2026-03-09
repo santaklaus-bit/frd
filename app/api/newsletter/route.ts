@@ -1,41 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
 import { z } from "zod";
-
-const DATA_PATH = path.join(process.cwd(), "lib/data");
+import { Subscriber } from "@/lib/db/models";
 
 const NewsletterSchema = z.object({
   email: z.string().email("Invalid email address"),
 });
 
-type Subscriber = {
-  id: string;
-  email: string;
-  subscribedAt: string;
-};
-
-async function ensureDataDir() {
-  await fs.mkdir(DATA_PATH, { recursive: true });
-}
-
-async function getSubscribers(): Promise<Subscriber[]> {
-  try {
-    const filePath = path.join(DATA_PATH, "newsletter-subscribers.json");
-    const content = await fs.readFile(filePath, "utf-8");
-    return JSON.parse(content);
-  } catch {
-    return [];
-  }
-}
-
-async function saveSubscribers(subscribers: Subscriber[]): Promise<void> {
-  await ensureDataDir();
-  const filePath = path.join(DATA_PATH, "newsletter-subscribers.json");
-  await fs.writeFile(filePath, JSON.stringify(subscribers, null, 2), "utf-8");
-}
-
-// POST: Subscribe to newsletter
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -48,28 +18,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const subscribers = await getSubscribers();
-
     // Check for duplicates
-    const alreadySubscribed = subscribers.some(
-      (s) => s.email.toLowerCase() === parsed.data.email.toLowerCase()
-    );
+    const existing = await Subscriber.findOne({
+      where: { email: parsed.data.email.toLowerCase() },
+    });
 
-    if (alreadySubscribed) {
+    if (existing) {
       return NextResponse.json(
         { error: "This email is already subscribed." },
         { status: 409 }
       );
     }
 
-    const newSubscriber: Subscriber = {
-      id: Date.now().toString(),
-      email: parsed.data.email,
-      subscribedAt: new Date().toISOString(),
-    };
-
-    subscribers.push(newSubscriber);
-    await saveSubscribers(subscribers);
+    await Subscriber.create({
+      email: parsed.data.email.toLowerCase(),
+      subscribedAt: new Date(),
+    });
 
     return NextResponse.json(
       { success: true, message: "Successfully subscribed!" },
@@ -84,10 +48,12 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET: Retrieve all subscribers (admin only — protected by middleware)
 export async function GET() {
   try {
-    const subscribers = await getSubscribers();
+    const subscribers = await Subscriber.findAll({
+      order: [["subscribedAt", "DESC"]],
+    });
+    
     return NextResponse.json({
       subscribers,
       count: subscribers.length,

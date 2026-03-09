@@ -1,61 +1,187 @@
-import fs from "fs/promises";
-import path from "path";
-import matter from "gray-matter";
+import { BlogPost, Dictionary, Initiative, Production } from "./db/models";
 
-const BLOG_PATH = path.join(process.cwd(), "blog/content");
-const DICT_PATH = path.join(process.cwd(), "dictionaries");
-const DATA_PATH = path.join(process.cwd(), "lib/data");
+// ============================================================================
+// BLOG POSTS
+// ============================================================================
 
 export async function getBlogPosts() {
-  const files = await fs.readdir(BLOG_PATH);
-  const posts = await Promise.all(
-    files
-      .filter((file) => file.endsWith(".mdx"))
-      .map(async (file) => {
-        const filePath = path.join(BLOG_PATH, file);
-        const content = await fs.readFile(filePath, "utf-8");
-        const { data } = matter(content);
-        return {
-          slug: file.replace(".mdx", ""),
-          title: data.title,
-          date: data.date,
-          description: data.description,
-          thumbnail: data.thumbnail,
-        };
-      })
-  );
-  return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const posts = await BlogPost.findAll({
+    order: [["date", "DESC"]],
+  });
+  return posts.map((p) => p.toJSON());
 }
 
-export async function saveBlogPost(slug: string, frontmatter: any, content: string) {
-  const filePath = path.join(BLOG_PATH, `${slug}.mdx`);
-  const fileContent = matter.stringify(content, frontmatter);
-  await fs.writeFile(filePath, fileContent, "utf-8");
+export async function getBlogPost(slug: string) {
+  const post = await BlogPost.findOne({ where: { slug } });
+  return post ? post.toJSON() : null;
+}
+
+export async function saveBlogPost(
+  slug: string,
+  frontmatter: any,
+  content: string
+) {
+  const existing = await BlogPost.findOne({ where: { slug } });
+
+  if (existing) {
+    await existing.update({
+      title: frontmatter.title,
+      description: frontmatter.description,
+      date: frontmatter.date,
+      thumbnail: frontmatter.thumbnail,
+      content,
+    });
+  } else {
+    await BlogPost.create({
+      slug,
+      title: frontmatter.title,
+      description: frontmatter.description,
+      date: frontmatter.date,
+      thumbnail: frontmatter.thumbnail,
+      content,
+    });
+  }
 }
 
 export async function deleteBlogPost(slug: string) {
-  const filePath = path.join(BLOG_PATH, `${slug}.mdx`);
-  await fs.unlink(filePath);
+  await BlogPost.destroy({ where: { slug } });
 }
 
+// ============================================================================
+// DICTIONARIES (i18n)
+// ============================================================================
+
 export async function getDictionary(lang: "en" | "fr") {
-  const filePath = path.join(DICT_PATH, `${lang}.json`);
-  const content = await fs.readFile(filePath, "utf-8");
-  return JSON.parse(content);
+  const dict = await Dictionary.findOne({ where: { lang } });
+  if (dict) {
+    // If the database returns the JSON natively as a string (or if it was double-stringified), parse it.
+    if (typeof dict.content === "string") {
+      try {
+        return JSON.parse(dict.content);
+      } catch (e) {
+        console.error("Failed to parse dictionary JSON:", e);
+        return {};
+      }
+    }
+    return dict.content;
+  }
+
+  // Fallback to empty structure if not found
+  return {};
 }
 
 export async function saveDictionary(lang: "en" | "fr", data: any) {
-  const filePath = path.join(DICT_PATH, `${lang}.json`);
-  await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
+  const dict = await Dictionary.findOne({ where: { lang } });
+  if (dict) {
+    await dict.update({ content: data });
+  } else {
+    await Dictionary.create({ lang, content: data });
+  }
 }
 
+// ============================================================================
+// DATA (Initiatives, Production)
+// ============================================================================
+
 export async function getData(filename: string) {
-  const filePath = path.join(DATA_PATH, `${filename}.json`);
-  const content = await fs.readFile(filePath, "utf-8");
-  return JSON.parse(content);
+  if (filename === "initiatives") {
+    const initiatives = await Initiative.findAll({ order: [["order", "ASC"]] });
+    // Transform back to JSON structure expected by the frontend
+    return initiatives.map((i) => {
+      const data = i.toJSON();
+      return {
+        slug: data.slug,
+        icon: data.icon,
+        title: { fr: data.titleFr, en: data.titleEn },
+        description: { fr: data.descriptionFr, en: data.descriptionEn },
+        category: { fr: data.categoryFr, en: data.categoryEn },
+        link: data.link,
+      };
+    });
+  }
+
+  if (filename === "production") {
+    const productions = await Production.findAll({ order: [["order", "ASC"]] });
+    // Transform back to JSON
+    return productions.map((p) => {
+      const data = p.toJSON();
+      return {
+        slug: data.slug,
+        icon: data.icon,
+        title: { fr: data.titleFr, en: data.titleEn },
+        description: { fr: data.descriptionFr, en: data.descriptionEn },
+        details: { fr: data.detailsFr, en: data.detailsEn },
+        href: data.href,
+      };
+    });
+  }
+
+  return [];
 }
 
 export async function saveData(filename: string, data: any) {
-  const filePath = path.join(DATA_PATH, `${filename}.json`);
-  await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
+  // Since the legacy format sends the entire array to `saveData`,
+  // we need to sync it to the DB (destroy all, then create all)
+  
+  if (filename === "initiatives") {
+    await Initiative.destroy({ truncate: true }); // Wipe table
+    const records = data.map((i: any, index: number) => ({
+      slug: i.slug,
+      icon: i.icon || "Target",
+      titleFr: i.title?.fr || "",
+      titleEn: i.title?.en || "",
+      descriptionFr: i.description?.fr || "",
+      descriptionEn: i.description?.en || "",
+      categoryFr: i.category?.fr || "",
+      categoryEn: i.category?.en || "",
+      link: i.link || null,
+      order: index,
+    }));
+    await Initiative.bulkCreate(records);
+  }
+
+  if (filename === "production") {
+    await Production.destroy({ truncate: true }); // Wipe table
+    const records = data.map((p: any, index: number) => ({
+      slug: p.slug,
+      icon: p.icon || "Video",
+      titleFr: p.title?.fr || "",
+      titleEn: p.title?.en || "",
+      descriptionFr: p.description?.fr || "",
+      descriptionEn: p.description?.en || "",
+      detailsFr: p.details?.fr || "",
+      detailsEn: p.details?.en || "",
+      href: p.href || "",
+      order: index,
+    }));
+    await Production.bulkCreate(records);
+  }
+}
+
+// ============================================================================
+// ADMIN (Contacts, Subscribers)
+// ============================================================================
+
+import { ContactMessage, Subscriber } from "./db/models";
+
+export async function getContactMessages() {
+  const messages = await ContactMessage.findAll({
+    order: [["createdAt", "DESC"]],
+  });
+  return messages.map((m) => m.toJSON());
+}
+
+export async function getSubscribers() {
+  const subscribers = await Subscriber.findAll({
+    order: [["subscribedAt", "DESC"]],
+  });
+  return subscribers.map((s) => s.toJSON());
+}
+
+export async function getContactMessagesCount() {
+  return await ContactMessage.count();
+}
+
+export async function getSubscribersCount() {
+  return await Subscriber.count();
 }

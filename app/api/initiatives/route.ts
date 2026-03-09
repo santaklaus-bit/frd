@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getData, saveData } from "@/lib/content-manager";
+import { Initiative } from "@/lib/db/models";
 import { z } from "zod";
 
 const LocalizedFieldSchema = z.object({
@@ -47,24 +48,35 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const initiatives = await getData("initiatives");
+    const { data } = parsed;
 
-    // Check for slug uniqueness
-    const slugExists = initiatives.some(
-      (i: any) => i.slug === parsed.data.slug
-    );
-    if (slugExists) {
+    const existing = await Initiative.findOne({ where: { slug: data.slug } });
+    if (existing) {
       return NextResponse.json(
         { error: "An initiative with this slug already exists." },
         { status: 409 }
       );
     }
 
-    initiatives.push(parsed.data);
-    await saveData("initiatives", initiatives);
+    // Determine highest order current
+    const highest = await Initiative.findOne({ order: [["order", "DESC"]] });
+    const nextOrder = highest ? highest.order + 1 : 0;
+
+    await Initiative.create({
+      slug: data.slug,
+      icon: data.icon,
+      titleFr: data.title.fr,
+      titleEn: data.title.en,
+      descriptionFr: data.description.fr,
+      descriptionEn: data.description.en,
+      categoryFr: data.category.fr,
+      categoryEn: data.category.en,
+      link: data.link || null,
+      order: nextOrder,
+    });
 
     return NextResponse.json(
-      { success: true, initiative: parsed.data },
+      { success: true, initiative: data },
       { status: 201 }
     );
   } catch (error) {

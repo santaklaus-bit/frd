@@ -65,15 +65,18 @@ export default async function AnalyticsPage() {
 
     return (
         <div className="space-y-10">
-            {/* Header */}
-            <div className="space-y-1 border-b border-border/50 pb-8 flex items-start justify-between">
-                <div>
-                    <h1 className="text-3xl font-semibold tracking-tight">Analytics</h1>
-                    <p className="text-sm text-muted-foreground">
-                        Trafic des 30 derniers jours.
-                    </p>
-                </div>
-            </div>
+      {/* Header */}
+      <div className="flex items-end justify-between pb-6 border-b border-border/50">
+        <div className="space-y-1">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            Statistiques
+          </p>
+          <h1 className="text-4xl font-semibold tracking-tight">Analytics</h1>
+        </div>
+        <p className="text-xs text-muted-foreground/60 tabular-nums">
+          30 derniers jours{data.isDemo && <span className="ml-2 px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 text-[10px] font-semibold">Démo</span>}
+        </p>
+      </div>
 
             {/* KPI cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

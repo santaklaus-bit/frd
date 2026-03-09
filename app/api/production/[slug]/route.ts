@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getData, saveData } from "@/lib/content-manager";
+import { Production } from "@/lib/db/models";
 
 // DELETE: Remove a production item by slug
 export async function DELETE(
@@ -8,17 +8,15 @@ export async function DELETE(
 ) {
   try {
     const { slug } = await params;
-    const production = await getData("production");
-    const filtered = production.filter((p: any) => p.slug !== slug);
+    const count = await Production.destroy({ where: { slug } });
 
-    if (filtered.length === production.length) {
+    if (count === 0) {
       return NextResponse.json(
         { error: "Production item not found." },
         { status: 404 }
       );
     }
 
-    await saveData("production", filtered);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("[DELETE /api/production/[slug]]", error);
@@ -37,20 +35,37 @@ export async function PUT(
   try {
     const { slug } = await params;
     const body = await request.json();
-    const production = await getData("production");
-    const index = production.findIndex((p: any) => p.slug === slug);
+    
+    const production = await Production.findOne({ where: { slug } });
 
-    if (index === -1) {
+    if (!production) {
       return NextResponse.json(
         { error: "Production item not found." },
         { status: 404 }
       );
     }
 
-    production[index] = { ...production[index], ...body };
-    await saveData("production", production);
+    // Map frontend JSON structure to DB fields
+    const updateData: any = {};
+    if (body.title) {
+      if (body.title.fr) updateData.titleFr = body.title.fr;
+      if (body.title.en) updateData.titleEn = body.title.en;
+    }
+    if (body.description) {
+      if (body.description.fr) updateData.descriptionFr = body.description.fr;
+      if (body.description.en) updateData.descriptionEn = body.description.en;
+    }
+    if (body.details) {
+      if (body.details.fr) updateData.detailsFr = body.details.fr;
+      if (body.details.en) updateData.detailsEn = body.details.en;
+    }
+    if (body.icon) updateData.icon = body.icon;
+    if (body.href) updateData.href = body.href;
+    if (body.order !== undefined) updateData.order = body.order;
 
-    return NextResponse.json({ success: true, item: production[index] });
+    await production.update(updateData);
+
+    return NextResponse.json({ success: true, item: body });
   } catch (error) {
     console.error("[PUT /api/production/[slug]]", error);
     return NextResponse.json(
@@ -59,3 +74,4 @@ export async function PUT(
     );
   }
 }
+

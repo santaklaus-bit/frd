@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getData, saveData } from "@/lib/content-manager";
+import { Production } from "@/lib/db/models";
 import { z } from "zod";
 
 const LocalizedFieldSchema = z.object({
@@ -81,22 +82,35 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+    
+    const { data } = parsed;
 
-    const production = await getData("production");
-    const slugExists = production.some((p: any) => p.slug === parsed.data.slug);
-
-    if (slugExists) {
+    const existing = await Production.findOne({ where: { slug: data.slug } });
+    if (existing) {
       return NextResponse.json(
         { error: "A production item with this slug already exists." },
         { status: 409 }
       );
     }
 
-    production.push(parsed.data);
-    await saveData("production", production);
+    const highest = await Production.findOne({ order: [["order", "DESC"]] });
+    const nextOrder = highest ? highest.order + 1 : 0;
+
+    await Production.create({
+      slug: data.slug,
+      icon: data.icon,
+      titleFr: data.title.fr,
+      titleEn: data.title.en,
+      descriptionFr: data.description.fr,
+      descriptionEn: data.description.en,
+      detailsFr: data.details.fr,
+      detailsEn: data.details.en,
+      href: data.href,
+      order: nextOrder,
+    });
 
     return NextResponse.json(
-      { success: true, item: parsed.data },
+      { success: true, item: data },
       { status: 201 }
     );
   } catch (error) {

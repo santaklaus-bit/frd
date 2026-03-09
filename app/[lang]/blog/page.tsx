@@ -1,10 +1,8 @@
 import { Metadata } from "next";
 import { getDictionary } from "@/lib/get-dictionary";
-import { docs, meta } from "@/.source";
-import { loader } from "fumadocs-core/source";
-import { createMDXSource } from "fumadocs-mdx";
 import Link from "next/link";
 import Image from "next/image";
+import { getBlogPosts } from "@/lib/content-manager";
 
 export async function generateMetadata({
   params,
@@ -23,11 +21,6 @@ export async function generateMetadata({
   };
 }
 
-const blogSource = loader({
-  baseUrl: "/blog",
-  source: createMDXSource(docs, meta),
-});
-
 const formatDate = (date: Date): string => {
   return date.toLocaleDateString("fr-FR", {
     year: "numeric",
@@ -36,8 +29,13 @@ const formatDate = (date: Date): string => {
   });
 };
 
-export default function BlogPage() {
-  const posts = blogSource.getPages();
+export default async function BlogPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const posts = await getBlogPosts();
+  const { lang } = await params;
 
   return (
     <div className="container max-w-6xl py-12 lg:py-16">
@@ -51,19 +49,20 @@ export default function BlogPage() {
 
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         {posts.map((post) => {
-          const date = post.data.date ? new Date(post.data.date) : null;
+          const date = post.date ? new Date(post.date) : null;
+          const url = `/${lang}/blog/${post.slug}`;
 
           return (
             <Link
-              key={post.url}
-              href={post.url}
+              key={post.slug}
+              href={url}
               className="group flex flex-col overflow-hidden rounded-lg border border-border bg-card hover:shadow-lg transition-all"
             >
-              {post.data.thumbnail && (
+              {post.thumbnail && (
                 <div className="relative h-48 w-full overflow-hidden">
                   <Image
-                    src={post.data.thumbnail}
-                    alt={post.data.title}
+                    src={post.thumbnail}
+                    alt={post.title}
                     fill
                     className="object-cover transition-transform group-hover:scale-105"
                   />
@@ -72,28 +71,16 @@ export default function BlogPage() {
               <div className="flex flex-1 flex-col p-6">
                 <div className="flex-1">
                   <h2 className="text-xl font-semibold tracking-tight mb-2 group-hover:text-primary transition-colors">
-                    {post.data.title}
+                    {post.title}
                   </h2>
-                  {post.data.description && (
+                  {post.description && (
                     <p className="text-sm text-muted-foreground line-clamp-3">
-                      {post.data.description}
+                      {post.description}
                     </p>
                   )}
                 </div>
                 <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
                   {date && <time>{formatDate(date)}</time>}
-                  {post.data.tags && post.data.tags.length > 0 && (
-                    <div className="flex gap-2">
-                      {post.data.tags.slice(0, 2).map((tag: string) => (
-                        <span
-                          key={tag}
-                          className="rounded-md bg-muted px-2 py-1 text-xs"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </div>
             </Link>

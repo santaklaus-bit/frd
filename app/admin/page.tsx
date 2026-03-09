@@ -1,201 +1,124 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { getBlogPosts, getData } from "@/lib/content-manager";
+import { 
+  getBlogPosts, 
+  getData,
+  getContactMessagesCount,
+  getSubscribersCount
+} from "@/lib/content-manager";
 import {
   FileText,
   Target,
   Video,
   Globe,
-  ChevronRight,
-  ArrowUpRight,
   Mail,
   Users,
+  ArrowRight,
+  PlusCircle,
 } from "lucide-react";
 import Link from "next/link";
-import path from "path";
-import fs from "fs/promises";
-
-async function getJsonCount(filename: string): Promise<number> {
-  try {
-    const filePath = path.join(process.cwd(), "lib/data", `${filename}.json`);
-    const content = await fs.readFile(filePath, "utf-8");
-    const data = JSON.parse(content);
-    return Array.isArray(data) ? data.length : 0;
-  } catch {
-    return 0;
-  }
-}
-
-const quickActions = [
-  {
-    href: "/admin/blog",
-    label: "Blog Posts",
-    description: "Créer ou modifier un article",
-    icon: FileText,
-  },
-  {
-    href: "/admin/initiatives",
-    label: "Initiatives",
-    description: "Gérer vos projets et initiatives",
-    icon: Target,
-  },
-  {
-    href: "/admin/production",
-    label: "Production",
-    description: "Mettre à jour les sections production",
-    icon: Video,
-  },
-  {
-    href: "/admin/content",
-    label: "Contenu i18n",
-    description: "Éditer les textes FR / EN",
-    icon: Globe,
-  },
-  {
-    href: "/admin/contacts",
-    label: "Messages",
-    description: "Lire les messages de contact",
-    icon: Mail,
-  },
-  {
-    href: "/admin/newsletter",
-    label: "Newsletter",
-    description: "Voir les abonnés",
-    icon: Users,
-  },
-];
 
 export default async function AdminDashboard() {
   const posts = await getBlogPosts();
   const initiatives = await getData("initiatives");
   const production = await getData("production");
-  const contactCount = await getJsonCount("contact-messages");
-  const subscriberCount = await getJsonCount("newsletter-subscribers");
+  const contactCount = await getContactMessagesCount();
+  const subscriberCount = await getSubscribersCount();
 
   const stats = [
-    {
-      label: "Articles",
-      value: posts.length,
-      icon: FileText,
-      href: "/admin/blog",
-    },
-    {
-      label: "Initiatives",
-      value: initiatives.length,
-      icon: Target,
-      href: "/admin/initiatives",
-    },
-    {
-      label: "Production",
-      value: production.length,
-      icon: Video,
-      href: "/admin/production",
-    },
-    {
-      label: "Langues",
-      value: 2,
-      icon: Globe,
-      href: "/admin/content",
-    },
-    {
-      label: "Messages",
-      value: contactCount,
-      icon: Mail,
-      href: "/admin/contacts",
-    },
-    {
-      label: "Abonnés",
-      value: subscriberCount,
-      icon: Users,
-      href: "/admin/newsletter",
-    },
+    { label: "Articles", value: posts.length, icon: FileText, href: "/admin/blog", color: "from-zinc-900 to-zinc-700 dark:from-zinc-100 dark:to-zinc-300" },
+    { label: "Initiatives", value: initiatives.length, icon: Target, href: "/admin/initiatives", color: "from-zinc-800 to-zinc-600 dark:from-zinc-200 dark:to-zinc-400" },
+    { label: "Productions", value: production.length, icon: Video, href: "/admin/production", color: "from-zinc-800 to-zinc-600 dark:from-zinc-200 dark:to-zinc-400" },
+    { label: "Messages", value: contactCount, icon: Mail, href: "/admin/contacts", color: "from-zinc-900 to-zinc-700 dark:from-zinc-100 dark:to-zinc-300" },
+    { label: "Abonnés", value: subscriberCount, icon: Users, href: "/admin/newsletter", color: "from-zinc-800 to-zinc-600 dark:from-zinc-200 dark:to-zinc-400" },
+    { label: "Langues", value: 2, icon: Globe, href: "/admin/content", color: "from-zinc-800 to-zinc-600 dark:from-zinc-200 dark:to-zinc-400" },
+  ];
+
+  const quickActions = [
+    { href: "/admin/blog/new", label: "Nouvel article", description: "Rédiger et publier un article MDX", icon: FileText },
+    { href: "/admin/content", label: "Éditer le contenu", description: "Modifier les textes FR / EN", icon: Globe },
+    { href: "/admin/initiatives", label: "Initiatives", description: "Gérer vos projets et missions", icon: Target },
+    { href: "/admin/production", label: "Production", description: "Interviews, podcasts, etc.", icon: Video },
+    { href: "/admin/contacts", label: "Messages reçus", description: "Voir les demandes de contact", icon: Mail },
+    { href: "/admin/newsletter", label: "Abonnés", description: "Liste des inscrits à la newsletter", icon: Users },
   ];
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-12">
       {/* Header */}
-      <div className="space-y-1 border-b border-border/50 pb-8">
-        <h1 className="text-3xl font-semibold tracking-tight">
-          Tableau de bord
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Bienvenue dans votre espace d'administration.
-        </p>
+      <div className="flex items-end justify-between pb-6 border-b border-border/50">
+        <div className="space-y-1">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            Espace Administration
+          </p>
+          <h1 className="text-4xl font-semibold tracking-tight">
+            Tableau de bord
+          </h1>
+        </div>
+        <Link
+          href="/admin/blog/new"
+          className="inline-flex items-center gap-2 h-9 px-4 rounded-full bg-foreground text-background text-xs font-semibold uppercase tracking-widest hover:opacity-80 transition-opacity"
+        >
+          <PlusCircle className="h-3.5 w-3.5" />
+          Nouvel article
+        </Link>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat) => (
-          <Link key={stat.label} href={stat.href} className="group block">
-            <div className="border border-border/50 rounded-xl p-5 bg-card hover:bg-muted/30 hover:border-border transition-all duration-200 hover:shadow-sm space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="inline-flex items-center justify-center w-8 h-8 border border-border/60 rounded-lg text-muted-foreground group-hover:text-foreground transition-colors">
+      {/* Stats Grid */}
+      <div>
+        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-4">
+          Vue d&apos;ensemble
+        </p>
+        <div className="grid grid-cols-3 lg:grid-cols-6 gap-3">
+          {stats.map((stat) => (
+            <Link
+              key={stat.label}
+              href={stat.href}
+              className="group relative overflow-hidden rounded-2xl border border-border/40 bg-card p-5 hover:border-border hover:shadow-md transition-all duration-200"
+            >
+              <div className="flex flex-col gap-4">
+                <div className="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-border/50 bg-muted/40 text-muted-foreground group-hover:bg-foreground group-hover:text-background group-hover:border-foreground transition-all duration-200">
                   <stat.icon className="h-4 w-4" />
                 </div>
-                <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground/40 group-hover:text-muted-foreground transition-colors" />
+                <div>
+                  <p className="text-3xl font-bold tracking-tight tabular-nums">
+                    {stat.value}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-widest mt-0.5">
+                    {stat.label}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-semibold tracking-tight">
-                  {stat.value}
-                </p>
-                <p className="text-xs text-muted-foreground mt-0.5 font-medium">
-                  {stat.label}
-                </p>
-              </div>
-            </div>
-          </Link>
-        ))}
+              <ArrowRight className="absolute bottom-4 right-4 h-3.5 w-3.5 text-muted-foreground/30 group-hover:text-muted-foreground/70 group-hover:translate-x-0.5 transition-all" />
+            </Link>
+          ))}
+        </div>
       </div>
 
-      {/* Quick Actions — Timeline style */}
+      {/* Quick Actions */}
       <div>
-        <div className="mb-4">
-          <h2 className="text-lg font-semibold tracking-tight">
-            Actions rapides
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Accédez directement aux sections les plus courantes.
-          </p>
-        </div>
-
-        <div className="relative">
-          {/* Vertical timeline line */}
-          <div className="absolute left-4 top-0 bottom-0 w-px bg-border/60" />
-
-          <div className="space-y-0">
-            {quickActions.map((action, index) => (
-              <Link
-                key={action.href}
-                href={action.href}
-                className="group flex items-center gap-6 py-4 pl-12 pr-4 relative hover:bg-muted/30 rounded-xl transition-all duration-150"
-              >
-                {/* Timeline dot */}
-                <div className="absolute left-[13px] w-[10px] h-[10px] rounded-full bg-background border-2 border-border group-hover:border-foreground transition-colors" />
-
-                <div className="flex items-center justify-between w-full">
-                  <div className="flex items-center gap-3">
-                    <div className="inline-flex items-center justify-center w-8 h-8 border border-border/60 rounded-lg bg-card text-muted-foreground group-hover:text-foreground group-hover:border-border transition-all">
-                      <action.icon className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium tracking-tight group-hover:text-foreground transition-colors">
-                        {action.label}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {action.description}
-                      </p>
-                    </div>
-                  </div>
-                  <ChevronRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-muted-foreground group-hover:translate-x-0.5 transition-all" />
-                </div>
-              </Link>
-            ))}
-          </div>
+        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-4">
+          Actions rapides
+        </p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {quickActions.map((action) => (
+            <Link
+              key={action.href}
+              href={action.href}
+              className="group flex items-center gap-4 p-4 rounded-2xl border border-border/40 bg-card hover:border-border hover:shadow-md hover:bg-muted/20 transition-all duration-200"
+            >
+              <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-border/50 bg-muted/40 text-muted-foreground group-hover:bg-foreground group-hover:text-background group-hover:border-foreground transition-all duration-200 shrink-0">
+                <action.icon className="h-4 w-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold tracking-tight group-hover:text-foreground transition-colors truncate">
+                  {action.label}
+                </p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {action.description}
+                </p>
+              </div>
+              <ArrowRight className="h-4 w-4 text-muted-foreground/30 group-hover:text-muted-foreground/70 group-hover:translate-x-0.5 shrink-0 transition-all" />
+            </Link>
+          ))}
         </div>
       </div>
     </div>

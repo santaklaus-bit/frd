@@ -16,14 +16,29 @@ import {
 import { cn } from "@/lib/utils";
 
 const sidebarItems = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/admin/blog", label: "Blog Posts", icon: FileText },
+  { href: "/admin/blog", label: "Articles", icon: FileText },
   { href: "/admin/contacts", label: "Messages", icon: Mail },
   { href: "/admin/newsletter", label: "Newsletter", icon: Users },
   { href: "/admin/content", label: "Contenu i18n", icon: Globe },
   { href: "/admin/initiatives", label: "Initiatives", icon: Target },
   { href: "/admin/production", label: "Production", icon: Video },
+];
+
+const sidebarGroups = [
+  {
+    label: "Général",
+    items: sidebarItems.slice(0, 2),
+  },
+  {
+    label: "Contenu",
+    items: sidebarItems.slice(2, 5),
+  },
+  {
+    label: "Site",
+    items: sidebarItems.slice(5),
+  },
 ];
 
 export default function AdminLayout({
@@ -44,72 +59,77 @@ export default function AdminLayout({
   return (
     <div className="flex min-h-screen bg-background">
       {/* Sidebar */}
-      <aside className="w-60 border-r border-border/50 bg-card flex flex-col sticky top-0 h-screen shrink-0">
+      <aside className="w-56 border-r border-border/50 bg-card flex flex-col sticky top-0 h-screen shrink-0">
         {/* Logo */}
-        <div className="px-6 py-5 border-b border-border/50 flex items-center gap-3">
+        <div className="px-5 py-5 border-b border-border/40">
           <Link href="/admin" className="flex items-center gap-3">
-            <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-foreground text-background text-xs font-bold tracking-tight">
+            <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-foreground text-background text-xs font-black tracking-tighter">
               FD
             </span>
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold tracking-tight leading-none">
-                Farid Danko
-              </span>
-              <span className="text-[10px] text-muted-foreground mt-0.5 tracking-widest uppercase">
+            <div className="flex flex-col leading-none">
+              <span className="text-sm font-bold tracking-tight">Farid Danko</span>
+              <span className="text-[9px] text-muted-foreground mt-0.5 font-bold tracking-[0.2em] uppercase">
                 Admin
               </span>
             </div>
           </Link>
         </div>
 
-        {/* Nav */}
-        <nav className="flex-1 py-6 px-3 space-y-0.5">
-          {sidebarItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all relative",
-                  isActive
-                    ? "text-foreground bg-muted"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                )}
-              >
-                {/* Active indicator */}
-                {isActive && (
-                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-foreground rounded-r-full" />
-                )}
-                <item.icon
-                  className={cn(
-                    "h-4 w-4 shrink-0 transition-colors",
-                    isActive
-                      ? "text-foreground"
-                      : "text-muted-foreground group-hover:text-foreground"
-                  )}
-                />
-                <span className="tracking-tight">{item.label}</span>
-              </Link>
-            );
-          })}
+        {/* Nav groups */}
+        <nav className="flex-1 py-4 px-3 space-y-5 overflow-y-auto">
+          {sidebarGroups.map((group) => (
+            <div key={group.label}>
+              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground/50 px-3 mb-1.5">
+                {group.label}
+              </p>
+              <div className="space-y-0.5">
+                {group.items.map((item) => {
+                  const isActive = item.exact
+                    ? pathname === item.href
+                    : pathname.startsWith(item.href);
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={cn(
+                        "group relative flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all duration-150",
+                        isActive
+                          ? "bg-foreground text-background font-semibold"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/60 font-medium"
+                      )}
+                    >
+                      <item.icon
+                        className={cn(
+                          "h-3.5 w-3.5 shrink-0",
+                          isActive
+                            ? "text-background"
+                            : "text-muted-foreground/70 group-hover:text-foreground"
+                        )}
+                      />
+                      <span className="text-[13px] tracking-tight">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
 
         {/* Logout */}
-        <div className="px-3 pb-6 pt-2 border-t border-border/50">
+        <div className="px-3 pb-5 pt-3 border-t border-border/40">
           <button
             onClick={handleLogout}
-            className="group flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-red-500 hover:bg-red-50/50 dark:hover:bg-red-950/20 transition-all"
+            className="group flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-[13px] font-medium text-muted-foreground hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-all"
           >
-            <LogOut className="h-4 w-4 shrink-0 transition-colors group-hover:text-red-500" />
-            <span className="tracking-tight">Déconnexion</span>
+            <LogOut className="h-3.5 w-3.5 shrink-0 transition-colors group-hover:text-red-500" />
+            Déconnexion
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">
-        <div className="max-w-5xl mx-auto px-8 py-10 space-y-8">{children}</div>
+        <div className="max-w-5xl mx-auto px-10 py-10 space-y-8">{children}</div>
       </main>
     </div>
   );

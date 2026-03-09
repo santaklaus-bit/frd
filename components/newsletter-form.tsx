@@ -3,22 +3,49 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mail } from 'lucide-react';
+import { toast } from 'sonner';
 
 export function NewsletterForm() {
     const [email, setEmail] = useState('');
-    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setStatus('loading');
+        setIsSubmitting(true);
 
-        // TODO: Integrate with email service provider
-        setTimeout(() => {
-            console.log('Newsletter subscription:', email);
-            setStatus('success');
-            setEmail('');
-            setTimeout(() => setStatus('idle'), 3000);
-        }, 1000);
+        try {
+            const res = await fetch("/api/newsletter", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            });
+
+            if (res.status === 409) {
+                toast.success("Vous êtes déjà inscrit !");
+                setEmail("");
+                return;
+            }
+
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                console.error("[NewsletterForm] API error:", data);
+                if (res.status === 400 && data.errors && Array.isArray(data.errors)) {
+                    data.errors.forEach((err: any) => toast.error(err.message));
+                } else {
+                    toast.error("Une erreur est survenue.");
+                }
+                return;
+            }
+
+            toast.success("Merci pour votre inscription !");
+            setEmail("");
+        } catch (err) {
+            console.error("[NewsletterForm] ctx:", err);
+            toast.error("Erreur de connexion.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -34,19 +61,9 @@ export function NewsletterForm() {
                     className="w-full pl-10 pr-4 py-2 rounded-md border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 />
             </div>
-            <Button type="submit" disabled={status === 'loading'}>
-                {status === 'loading' ? 'Inscription...' : 'S\'inscrire'}
+            <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Inscription...' : 'S\'inscrire'}
             </Button>
-            {status === 'success' && (
-                <p className="text-sm text-green-600 dark:text-green-400 mt-2">
-                    Merci pour votre inscription !
-                </p>
-            )}
-            {status === 'error' && (
-                <p className="text-sm text-red-600 dark:text-red-400 mt-2">
-                    Une erreur est survenue. Veuillez réessayer.
-                </p>
-            )}
         </form>
     );
 }

@@ -4,16 +4,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight, Mail } from "lucide-react";
+import { toast } from "sonner";
 
 export function Newsletter({ lang, dict }: { lang: string; dict: any }) {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("loading");
+    setIsSubmitting(true);
 
     try {
       const res = await fetch("/api/newsletter", {
@@ -23,27 +22,31 @@ export function Newsletter({ lang, dict }: { lang: string; dict: any }) {
       });
 
       if (res.status === 409) {
-        // Already subscribed — treat as success silently
-        setStatus("success");
+        // Already subscribed
+        toast.success(dict.newsletter.success || "Vous êtes déjà inscrit !");
         setEmail("");
-        setTimeout(() => setStatus("idle"), 5000);
         return;
       }
+
+      const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        console.error("[Newsletter] API error:", await res.json().catch(() => ({})));
-        setStatus("error");
-        setTimeout(() => setStatus("idle"), 5000);
+        console.error("[Newsletter] API error:", data);
+        if (res.status === 400 && data.errors && Array.isArray(data.errors)) {
+          data.errors.forEach((err: any) => toast.error(err.message));
+        } else {
+          toast.error(dict.newsletter.error || "Une erreur est survenue.");
+        }
         return;
       }
 
-      setStatus("success");
+      toast.success(dict.newsletter.success || "Inscription réussie !");
       setEmail("");
-      setTimeout(() => setStatus("idle"), 5000);
     } catch (err) {
       console.error("[Newsletter] Network error:", err);
-      setStatus("error");
-      setTimeout(() => setStatus("idle"), 5000);
+      toast.error(dict.newsletter.error || "Erreur de connexion.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -75,29 +78,13 @@ export function Newsletter({ lang, dict }: { lang: string; dict: any }) {
             />
             <Button
               type="submit"
-              disabled={status === "loading"}
+              disabled={isSubmitting}
               className="px-10 py-5 h-auto rounded-full bg-white text-black dark:bg-black dark:text-white font-bold uppercase tracking-widest hover:scale-105 transition-transform"
             >
-              {status === "loading" ? "..." : dict.newsletter.button}
+              {isSubmitting ? "..." : dict.newsletter.button}
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
-
-          {/* Status Messages */}
-          {status === "success" && (
-            <div className="absolute top-full left-0 right-0 mt-6 animate-in fade-in slide-in-from-top-4">
-              <p className="text-sm font-bold uppercase tracking-widest">
-                {dict.newsletter.success}
-              </p>
-            </div>
-          )}
-          {status === "error" && (
-            <div className="absolute top-full left-0 right-0 mt-6 animate-in fade-in slide-in-from-top-4">
-              <p className="text-sm font-bold uppercase tracking-widest text-red-500">
-                {dict.newsletter.error}
-              </p>
-            </div>
-          )}
         </form>
       </div>
 

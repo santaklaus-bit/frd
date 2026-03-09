@@ -1,51 +1,38 @@
-import { docs, meta } from "@/.source";
-import { DocsBody } from "fumadocs-ui/page";
-import { loader } from "fumadocs-core/source";
-import { createMDXSource } from "fumadocs-mdx";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import { getBlogPost } from "@/lib/content-manager";
+import { MDXRemote } from "next-mdx-remote/rsc";
 
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const page = blogSource.getPage([slug]);
+  const page = await getBlogPost(slug);
 
   if (!page) notFound();
 
   return {
-    title: page.data.title,
-    description: page.data.description,
+    title: page.title,
+    description: page.description,
     openGraph: {
       type: "article",
-      title: page.data.title,
-      description: page.data.description,
-      images: page.data.thumbnail ? [page.data.thumbnail] : [],
+      title: page.title,
+      description: page.description || "",
+      images: page.thumbnail ? [page.thumbnail] : [],
     },
   };
 }
 
-import { TableOfContents } from "@/components/table-of-contents";
-import { MobileTableOfContents } from "@/components/mobile-toc";
-import { AuthorCard } from "@/components/author-card";
-import { ReadMoreSection } from "@/components/read-more-section";
-
-import { getAuthor, isValidAuthor } from "@/lib/authors";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import { HashScrollHandler } from "@/components/hash-scroll-handler";
 
 interface PageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; lang: string }>;
 }
-
-const blogSource = loader({
-  baseUrl: "/blog",
-  source: createMDXSource(docs, meta),
-});
 
 const formatDate = (date: Date): string => {
   return date.toLocaleDateString("en-US", {
@@ -56,20 +43,19 @@ const formatDate = (date: Date): string => {
 };
 
 export default async function BlogPost({ params }: PageProps) {
-  const { slug } = await params;
+  const { slug, lang } = await params;
 
   if (!slug || slug.length === 0) {
     notFound();
   }
 
-  const page = blogSource.getPage([slug]);
+  const page = await getBlogPost(slug);
 
   if (!page) {
     notFound();
   }
 
-  const MDX = page.data.body;
-  const date = new Date(page.data.date);
+  const date = new Date(page.date);
   const formattedDate = formatDate(date);
 
   return (
@@ -90,81 +76,48 @@ export default async function BlogPost({ params }: PageProps) {
         <div className="max-w-7xl mx-auto flex flex-col gap-6 p-6">
           <div className="flex flex-wrap items-center gap-3 gap-y-5 text-sm text-muted-foreground">
             <Button variant="outline" asChild className="h-6 w-6">
-              <Link href="/">
+              <Link href={`/${lang}/blog`}>
                 <ArrowLeft className="w-4 h-4" />
                 <span className="sr-only">Back to all articles</span>
               </Link>
             </Button>
-            {page.data.tags && page.data.tags.length > 0 && (
-              <div className="flex flex-wrap gap-3 text-muted-foreground">
-                {page.data.tags.map((tag: string) => (
-                  <span
-                    key={tag}
-                    className="h-6 w-fit px-3 text-sm font-medium bg-muted text-muted-foreground rounded-md border flex items-center justify-center"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
             <time className="font-medium text-muted-foreground">
               {formattedDate}
             </time>
           </div>
 
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-semibold tracking-tighter text-balance">
-            {page.data.title}
+            {page.title}
           </h1>
 
-          {page.data.description && (
+          {page.description && (
             <p className="text-muted-foreground max-w-4xl md:text-lg md:text-balance">
-              {page.data.description}
+              {page.description}
             </p>
           )}
         </div>
       </div>
       <div className="flex divide-x divide-border relative max-w-7xl mx-auto px-4 md:px-0 z-10">
         <div className="absolute max-w-7xl mx-auto left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] lg:w-full h-full border-x border-border p-0 pointer-events-none" />
-        <main className="w-full p-0 overflow-hidden">
-          {page.data.thumbnail && (
-            <div className="relative w-full h-[500px] overflow-hidden object-cover border border-transparent">
+        <main className="w-full p-0 overflow-hidden border-r-0">
+          {page.thumbnail && (
+            <div className="relative w-full h-[500px] overflow-hidden object-cover border border-transparent border-r-0">
               <Image
-                src={page.data.thumbnail}
-                alt={page.data.title}
+                src={page.thumbnail}
+                alt={page.title}
                 fill
                 className="object-cover"
                 priority
               />
             </div>
           )}
-          <div className="p-6 lg:p-10">
+          <div className="p-6 lg:p-10 border-r-0">
             <div className="prose dark:prose-invert max-w-none prose-headings:scroll-mt-8 prose-headings:font-semibold prose-a:no-underline prose-headings:tracking-tight prose-headings:text-balance prose-p:tracking-tight prose-p:text-balance prose-lg">
-              <DocsBody>
-                <MDX />
-              </DocsBody>
+              <MDXRemote source={page.content} />
             </div>
-          </div>
-          <div className="mt-10">
-            <ReadMoreSection
-              currentSlug={[slug]}
-              currentTags={page.data.tags}
-            />
           </div>
         </main>
-
-        <aside className="hidden lg:block w-[350px] flex-shrink-0 p-6 lg:p-10 bg-muted/60 dark:bg-muted/20">
-          <div className="sticky top-20 space-y-8">
-            {page.data.author && isValidAuthor(page.data.author) && (
-              <AuthorCard author={getAuthor(page.data.author)} />
-            )}
-            <div className="border border-border rounded-lg p-6 bg-card">
-              <TableOfContents />
-            </div>
-          </div>
-        </aside>
       </div>
-
-      <MobileTableOfContents />
     </div>
   );
 }

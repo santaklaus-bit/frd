@@ -1,10 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { deleteBlogPost, saveBlogPost } from "@/lib/content-manager";
-import fs from "fs/promises";
-import path from "path";
-import matter from "gray-matter";
-
-const BLOG_PATH = path.join(process.cwd(), "blog/content");
+import { BlogPost } from "@/lib/db/models";
 
 // GET: Retrieve a single blog post by slug
 export async function GET(
@@ -13,25 +8,25 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const filePath = path.join(BLOG_PATH, `${slug}.mdx`);
+    
+    const post = await BlogPost.findOne({ where: { slug } });
 
-    let content: string;
-    try {
-      content = await fs.readFile(filePath, "utf-8");
-    } catch {
+    if (!post) {
       return NextResponse.json(
         { error: "Blog post not found." },
         { status: 404 }
       );
     }
 
-    const { data: frontmatter, content: body } = matter(content);
-
+    // Convert to format expected by frontend
     return NextResponse.json({
       post: {
-        slug,
-        ...frontmatter,
-        content: body,
+        slug: post.slug,
+        title: post.title,
+        date: post.date,
+        description: post.description || "",
+        thumbnail: post.thumbnail || "",
+        content: post.content,
       },
     });
   } catch (error) {
@@ -59,14 +54,22 @@ export async function PUT(
       );
     }
 
-    const frontmatter = {
+    const post = await BlogPost.findOne({ where: { slug } });
+
+    if (!post) {
+      return NextResponse.json(
+        { error: "Blog post not found." },
+        { status: 404 }
+      );
+    }
+
+    await post.update({
       title: body.title,
       date: body.date,
       description: body.description ?? "",
       thumbnail: body.thumbnail ?? "",
-    };
-
-    await saveBlogPost(slug, frontmatter, body.content);
+      content: body.content,
+    });
 
     return NextResponse.json({ success: true, slug });
   } catch (error) {
@@ -86,9 +89,9 @@ export async function DELETE(
   try {
     const { slug } = await params;
 
-    try {
-      await deleteBlogPost(slug);
-    } catch {
+    const count = await BlogPost.destroy({ where: { slug } });
+
+    if (count === 0) {
       return NextResponse.json(
         { error: "Blog post not found." },
         { status: 404 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export function ContactForm({ lang, dict }: { lang: string; dict: any }) {
   const [formData, setFormData] = useState({
@@ -11,13 +12,11 @@ export function ContactForm({ lang, dict }: { lang: string; dict: any }) {
     message: "",
   });
 
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus("loading");
+    setIsSubmitting(true);
 
     try {
       const res = await fetch("/api/contact", {
@@ -31,21 +30,39 @@ export function ContactForm({ lang, dict }: { lang: string; dict: any }) {
         }),
       });
 
+      const data = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
         console.error("[Contact Form] API error:", data);
-        setStatus("error");
-        setTimeout(() => setStatus("idle"), 5000);
+        
+        if (res.status === 400 && data.errors && Array.isArray(data.errors)) {
+          // Zod validation errors
+          data.errors.forEach((err: any) => toast.error(err.message));
+        } else {
+          toast.error(
+            lang === "fr"
+              ? "Une erreur est survenue. Veuillez réessayer."
+              : "An error occurred. Please try again."
+          );
+        }
         return;
       }
 
-      setStatus("success");
+      toast.success(
+        lang === "fr"
+          ? "Message envoyé avec succès !"
+          : "Message sent successfully!"
+      );
       setFormData({ fullName: "", email: "", requestType: "general", message: "" });
-      setTimeout(() => setStatus("idle"), 5000);
     } catch (err) {
       console.error("[Contact Form] Network error:", err);
-      setStatus("error");
-      setTimeout(() => setStatus("idle"), 5000);
+      toast.error(
+        lang === "fr"
+          ? "Erreur réseau. Vérifiez votre connexion."
+          : "Network error. Please check your connection."
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -159,10 +176,10 @@ export function ContactForm({ lang, dict }: { lang: string; dict: any }) {
       <Button
         type="submit"
         size="lg"
-        disabled={status === "loading"}
+        disabled={isSubmitting}
         className="w-full py-8 rounded-2xl text-lg font-bold uppercase tracking-widest transition-transform hover:scale-[1.02]"
       >
-        {status === "loading"
+        {isSubmitting
           ? lang === "fr"
             ? "Envoi en cours..."
             : "Sending..."
@@ -170,27 +187,6 @@ export function ContactForm({ lang, dict }: { lang: string; dict: any }) {
             ? "Envoyer"
             : "Send"}
       </Button>
-
-      {/* Status Messages */}
-      {status === "success" && (
-        <div className="p-6 rounded-2xl bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 animate-in fade-in slide-in-from-top-4">
-          <p className="text-sm font-bold text-green-800 dark:text-green-200 text-center">
-            {lang === "fr"
-              ? "Message envoyé avec succès !"
-              : "Message sent successfully!"}
-          </p>
-        </div>
-      )}
-
-      {status === "error" && (
-        <div className="p-6 rounded-2xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 animate-in fade-in slide-in-from-top-4">
-          <p className="text-sm font-bold text-red-800 dark:text-red-200 text-center">
-            {lang === "fr"
-              ? "Une erreur est survenue. Veuillez réessayer."
-              : "An error occurred. Please try again."}
-          </p>
-        </div>
-      )}
     </form>
   );
 }
