@@ -36,6 +36,7 @@ jobs:
           tags: |
             type=raw,value=latest
 
+      - name: Copy env file
         run: |
           cp ./var/www/monsieurdanko-site/prod/envs/.env.prod ./.env || true
 
