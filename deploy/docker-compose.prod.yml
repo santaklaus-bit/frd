@@ -1,0 +1,33 @@
+# Docker Compose for Dev
+
+services:
+  monsieurdanko:
+    image: ghcr.io/aureldsk02/monsieurdanko:latest
+    container_name: monsieurdanko
+    restart: always
+    env_file:
+      - ../.env
+    environment:
+      - NODE_ENV=production
+    expose:
+      - 3000
+    labels:
+      # Traefik integration
+      - traefik.enable=true
+      - traefik.instance=main
+
+      # Router: domain + entrypoints + TLS
+      - traefik.http.routers.monsieurdanko.rule=Host(`monsieurdanko.com`)
+      - traefik.http.routers.monsieurdanko.entrypoints=web,websecure
+      - traefik.http.routers.monsieurdanko.tls=true
+      - traefik.http.routers.monsieurdanko.tls.certresolver=main_resolver
+
+      # Service internal port
+      - traefik.http.services.monsieurdanko.loadbalancer.server.port=3000
+
+    networks:
+      - base-traefik
+
+networks:
+  base-traefik:
+    external: true

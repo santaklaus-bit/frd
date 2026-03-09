@@ -1,0 +1,128 @@
+name: Build & Deploy Next.js (prod) – monsieurdanko
+
+on:
+  push:
+    tags:
+      - "prod/v*.*.*"
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      # 1️⃣ Checkout repo
+      - uses: actions/checkout@v4
+
+      # 2️⃣ Login GHCR
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 2.5️⃣ Lowercase repository owner
+      - name: Lowercase repository owner
+        id: owner
+        run: echo "owner=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
+      # 3️⃣ Metadata (labels)
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ steps.owner.outputs.owner }}/monsieurdanko
+          tags: |
+            type=raw,value=latest
+
+      # 4️⃣ Fetch .env file from server for build
+      - name: Fetch .env from server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: 22
+          source: "/var/www/monsieurdanko-site/prod/envs/.env.prod"
+          target: "./"
+          # Since appleboy/scp-action copies the exact file hierarchy when fetching from remote,
+          # we run a command right after this to position the .env correctly.
+
+      # 4.5️⃣ Position .env correctly after SCP
+      - name: Position .env
+        run: |
+          mv ./var/www/monsieurdanko-site/prod/envs/.env.prod ./.env || true
+
+      # 5️⃣ Build & push Docker image
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ghcr.io/${{ steps.owner.outputs.owner }}/monsieurdanko:latest
+          labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # 6️⃣ Copy docker-compose + configs
+      - name: Copy deploy files to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          # password: ${{ secrets.SERVER_PASSWORD }}
+          port: 22
+          debug: true
+          source: "deploy/*"
+          target: "/var/www/monsieurdanko-site/prod/front"
+
+      # 7️⃣ Deploy via SSH
+      - name: Deploy on server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          # password: ${{ secrets.SERVER_PASSWORD }}
+          port: 22
+          debug: true
+          script: |
+            cd /var/www/monsieurdanko-site/prod/front
+
+            # Login GHCR
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            # Pull / restart container
+            docker compose -f ./deploy/docker-compose.prod.yml pull
+            docker compose -f ./deploy/docker-compose.prod.yml down
+            docker compose -f ./deploy/docker-compose.prod.yml up -d
+            docker compose -f ./deploy/docker-compose.prod.yml logs --tail=100
+
+            # Clean dangling images
+            dangling_images=$(docker images -f "dangling=true" -q)
+            if [ -n "$dangling_images" ]; then
+              echo "Removing dangling images..."
+              docker rmi -f $dangling_images
+            else
+              echo "No dangling images to remove."
+            fi
+
+      # 8️⃣ Verify Deployment
+      - name: Verify Running Containers
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          # password: ${{ secrets.SERVER_PASSWORD }}
+          port: 22
+          script: |
+            echo "Checking running containers:"
+            docker ps --filter "name=monsieurdanko" --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"

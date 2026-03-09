@@ -8,7 +8,8 @@
     "build": "fumadocs-mdx && npm run build:config && next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "fumadocs-mdx && npm run build:config"
+    "postinstall": "fumadocs-mdx && npm run build:config",
+    "db:setup": "npx sequelize-cli db:create || true && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all || true"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.0",
