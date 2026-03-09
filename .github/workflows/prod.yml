@@ -36,23 +36,8 @@ jobs:
           tags: |
             type=raw,value=latest
 
-      # 4️⃣ Fetch .env file from server for build
-      - name: Fetch .env from server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_KEY }}
-          port: 22
-          source: "/var/www/monsieurdanko-site/prod/envs/.env.prod"
-          target: "./"
-          # Since appleboy/scp-action copies the exact file hierarchy when fetching from remote,
-          # we run a command right after this to position the .env correctly.
-
-      # 4.5️⃣ Position .env correctly after SCP
-      - name: Position .env
         run: |
-          mv ./var/www/monsieurdanko-site/prod/envs/.env.prod ./.env || true
+          cp ./var/www/monsieurdanko-site/prod/envs/.env.prod ./.env || true
 
       # 5️⃣ Build & push Docker image
       - uses: docker/build-push-action@v6
