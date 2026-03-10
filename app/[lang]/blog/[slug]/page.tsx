@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getBlogPost } from "@/lib/content-manager";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { getMDXComponents } from "@/mdx-components";
 
 export async function generateMetadata({
   params,
@@ -113,7 +114,7 @@ export default async function BlogPost({ params }: PageProps) {
           )}
           <div className="p-6 lg:p-10 border-r-0">
             <div className="prose dark:prose-invert max-w-none prose-headings:scroll-mt-8 prose-headings:font-semibold prose-a:no-underline prose-headings:tracking-tight prose-headings:text-balance prose-p:tracking-tight prose-p:text-balance prose-lg">
-              <MDXRemote source={page.content} />
+              <MDXRemote source={page.content} components={getMDXComponents()} />
             </div>
           </div>
         </main>

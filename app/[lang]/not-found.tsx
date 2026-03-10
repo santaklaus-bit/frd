@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getDictionary } from "@/lib/get-dictionary";
-import { MoveLeft, Home } from "lucide-react";
+import { Home } from "lucide-react";
+import { GoBackButton } from "@/components/go-back-button";
 
 export default async function NotFound({
   params,
@@ -41,15 +42,7 @@ export default async function NotFound({
               {lang === "fr" ? "Retour à l'accueil" : "Back to home"}
             </Button>
           </Link>
-          <Button
-            variant="ghost"
-            size="lg"
-            className="h-16 px-10 rounded-full font-bold uppercase tracking-widest hover:bg-muted/50 transition-all font-mono"
-            onClick={() => window.history.back()}
-          >
-            <MoveLeft className="mr-2 h-5 w-5" />
-            {lang === "fr" ? "Page précédente" : "Go back"}
-          </Button>
+          <GoBackButton label={lang === "fr" ? "Page précédente" : "Go back"} />
         </div>
       </div>
     </div>
