@@ -45,3 +45,5 @@ yarn-error.log*
 # Project specific
 instructions.txt
 *.docx
+
+backend

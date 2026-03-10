@@ -81,6 +81,7 @@ jobs:
           debug: true
           script: |
             cd /var/www/monsieurdanko-site/prod/front
+            cp /var/www/monsieurdanko-site/prod/envs/.env.prod .env
 
             # Login GHCR
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
