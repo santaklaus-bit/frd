@@ -17,9 +17,9 @@
   },
   "production": {
     "username": "root",
-    "password": "",
+    "password": "Admin@2026#",
     "database": "farid_db",
-    "host": "127.0.0.1",
+    "host": "mysql_server",
     "port": 3306,
     "dialect": "mysql"
   }
