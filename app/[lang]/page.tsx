@@ -62,18 +62,18 @@ export default async function HomePage({
       <HeroSection lang={lang} dict={dict} />
 
       {/* About Preview Section */}
-      <section className="py-24 border-b border-border">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+      <section className="py-16 md:py-24 border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div>
-              <h2 className="text-4xl font-bold mb-8 tracking-tight uppercase">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 md:mb-8 tracking-tight uppercase">
                 {dict.nav.about}
               </h2>
-              <div className="prose prose-lg dark:prose-invert">
-                <p className="text-muted-foreground leading-relaxed text-lg">
+              <div className="prose prose-base md:prose-lg dark:prose-invert">
+                <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
                   {dict.about.content1}
                 </p>
-                <p className="text-muted-foreground leading-relaxed mt-4 text-lg">
+                <p className="text-muted-foreground leading-relaxed mt-4 text-base md:text-lg">
                   {dict.about.content2.substring(0, 200)}...
                 </p>
               </div>
@@ -101,13 +101,13 @@ export default async function HomePage({
       </section>
 
       {/* Production Section */}
-      <section className="py-24 border-b border-border bg-muted/20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 tracking-tight uppercase">
+      <section className="py-16 md:py-24 border-b border-border bg-muted/20">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <div className="text-center mb-10 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight uppercase">
               {dict.production.title}
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
               {dict.production.description}
             </p>
           </div>
@@ -146,7 +146,7 @@ export default async function HomePage({
             <Link href={`/${lang}/production`}>
               <Button
                 variant="outline"
-                className="gap-2 px-10 py-6 rounded-full font-bold uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                className="gap-2 px-8 py-6 rounded-full font-bold uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors md:px-10"
               >
                 {lang === "fr"
                   ? "Voir toutes les productions"
@@ -158,13 +158,13 @@ export default async function HomePage({
       </section>
 
       {/* Initiatives Section */}
-      <section className="py-24 border-b border-border">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 tracking-tight uppercase">
+      <section className="py-16 md:py-24 border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <div className="text-center mb-10 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight uppercase">
               {dict.initiatives.title}
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
               {dict.initiatives.description}
             </p>
           </div>
@@ -223,13 +223,13 @@ export default async function HomePage({
       </section>
 
       {/* Blog Section */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 tracking-tight uppercase">
+      <section className="py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <div className="text-center mb-10 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight uppercase">
               {dict.nav.blog}
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
               {lang === "fr"
                 ? "Articles et réflexions récents"
                 : "Recent articles and reflections"}

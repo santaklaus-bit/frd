@@ -90,37 +90,39 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col items-center mx-auto"
+          style={{ width: "fit-content", maxWidth: "100%" }}
         >
-          <h1 className="text-[10vw] md:text-[8vw] lg:text-[8rem] font-serif font-semibold tracking-tighter uppercase leading-[0.8] mb-8 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
+          <h1 className="text-[12vw] sm:text-[10vw] md:text-[8vw] lg:text-[8rem] font-serif font-semibold tracking-tighter uppercase leading-[0.8] mb-4 sm:mb-6 whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
             {dict.home.title}
           </h1>
-          <p className="text-sm md:text-base font-bold uppercase tracking-[0.6em] text-muted-foreground opacity-60">
+          <p className="w-full text-center text-[2.5vw] sm:text-[2vw] md:text-[1.5vw] lg:text-[1.5rem] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] md:tracking-[0.35em] lg:tracking-[0.45em] text-muted-foreground opacity-60 text-wrap leading-tight sm:leading-snug">
             {dict.home.subtitle}
           </p>
         </motion.div>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-          className="text-xl md:text-2xl font-normal leading-tight text-muted-foreground/80 max-w-4xl mx-auto tracking-tight"
+          className="text-[4vw] sm:text-xl md:text-2xl font-normal leading-tight text-muted-foreground/80 max-w-4xl mx-auto tracking-tight px-4"
         >
           {dict.home.description}
-        </motion.p>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-          className="pt-8"
+          className="pt-4 sm:pt-6 md:pt-8"
         >
           <Link href={`/${lang}/about`}>
             <Button
               size="lg"
-              className="px-16 py-10 rounded-full text-xl font-bold uppercase tracking-widest hover:scale-105 transition-all shadow-2xl bg-black text-white dark:bg-white dark:text-black border-none group"
+              className="px-8 py-6 sm:px-12 sm:py-8 md:px-16 md:py-10 h-auto rounded-full text-sm sm:text-lg md:text-xl font-bold uppercase tracking-widest sm:tracking-widest hover:scale-105 transition-all shadow-xl sm:shadow-2xl bg-black text-white dark:bg-white dark:text-black border-none group"
             >
-              {dict.home.cta}
-              <ArrowRight className="ml-4 h-8 w-8 group-hover:translate-x-2 transition-transform" />
+              <span className="truncate">{dict.home.cta}</span>
+              <ArrowRight className="ml-3 sm:ml-4 h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 group-hover:translate-x-1 sm:group-hover:translate-x-2 transition-transform shrink-0" />
             </Button>
           </Link>
         </motion.div>

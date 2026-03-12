@@ -1,16 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getDictionary } from "@/lib/get-dictionary";
 import { Home } from "lucide-react";
 import { GoBackButton } from "@/components/go-back-button";
+import { usePathname } from "next/navigation";
 
-export default async function NotFound({
-  params,
-}: {
-  params: Promise<{ lang: string }>;
-}) {
-  const { lang } = await params;
-  const dict = await getDictionary(lang as "en" | "fr");
+export default function NotFound() {
+  const pathname = usePathname();
+  // Attempt to read language from path, defaulting to "fr" (middleware default)
+  const lang = pathname.startsWith("/en") ? "en" : "fr";
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-6">

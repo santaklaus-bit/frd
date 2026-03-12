@@ -48,15 +48,15 @@ export default async function ProductionPage({
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="max-w-7xl mx-auto px-6 py-24">
-        <div className="max-w-4xl mb-20 text-center mx-auto">
-          <h1 className="text-5xl md:text-6xl font-bold mb-8 uppercase tracking-tighter">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
+        <div className="max-w-4xl mb-12 md:mb-20 text-center mx-auto">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-8 uppercase tracking-tighter">
             {dict.production.title}
           </h1>
-          <p className="text-3xl font-medium leading-tight mb-6">
+          <p className="text-xl md:text-2xl lg:text-3xl font-medium leading-tight mb-4 md:mb-6">
             {dict.production.description}
           </p>
-          <p className="text-xl text-muted-foreground leading-relaxed">
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
             {dict.production.intro}
           </p>
         </div>
@@ -66,15 +66,15 @@ export default async function ProductionPage({
             <Link
               key={section.href}
               href={section.href}
-              className="group p-10 border border-border rounded-3xl bg-background hover:bg-muted/10 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
+              className="group p-8 md:p-10 border border-border rounded-3xl bg-background hover:bg-muted/10 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
             >
-              <div className="mb-8 p-4 rounded-2xl bg-muted/30 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors w-fit">
-                <section.icon className="h-8 w-8" />
+              <div className="mb-6 md:mb-8 p-3 md:p-4 rounded-2xl bg-muted/30 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors w-fit">
+                <section.icon className="h-6 w-6 md:h-8 md:w-8" />
               </div>
-              <h2 className="text-3xl font-bold mb-4 uppercase tracking-tighter">
+              <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 uppercase tracking-tighter">
                 {section.title}
               </h2>
-              <p className="text-muted-foreground leading-relaxed mb-6 font-medium">
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-4 md:mb-6 font-medium">
                 {section.description}
               </p>
               <p className="text-sm text-muted-foreground/60 mb-8 italic">
@@ -88,8 +88,8 @@ export default async function ProductionPage({
           ))}
         </div>
 
-        <div className="mt-32 p-12 rounded-3xl bg-black dark:bg-white text-white dark:text-black text-center">
-          <p className="text-2xl font-bold uppercase tracking-tight">
+        <div className="mt-20 md:mt-32 p-8 md:p-12 rounded-3xl bg-black dark:bg-white text-white dark:text-black text-center">
+          <p className="text-xl md:text-2xl font-bold uppercase tracking-tight">
             {dict.production.outro}
           </p>
         </div>

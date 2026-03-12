@@ -61,33 +61,33 @@ export default async function ContactPage({
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="max-w-7xl mx-auto px-6 py-24">
-        <div className="grid lg:grid-cols-2 gap-20 items-start">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
+        <div className="grid lg:grid-cols-2 gap-12 md:gap-20 items-start">
           {/* Left side: Header & Info */}
           <div>
-            <div className="mb-16">
-              <h1 className="text-5xl md:text-6xl font-bold mb-8 uppercase tracking-tighter">
+            <div className="mb-12 md:mb-16">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-8 uppercase tracking-tighter">
                 {dict.contact.title}
               </h1>
-              <p className="text-2xl text-muted-foreground leading-relaxed font-medium">
+              <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground leading-relaxed font-medium">
                 {lang === "fr"
                   ? "Pour ma page Contact, je souhaiterais faire un mix de l’esprit des deux pages de Barack Obama."
                   : "For my Contact page, I would like to have a mix of the spirit of Barack Obama's pages."}
               </p>
             </div>
 
-            <div className="space-y-12">
-              <div className="p-8 border border-border rounded-3xl bg-muted/20">
-                <h3 className="text-sm font-bold uppercase tracking-widest mb-6 text-muted-foreground">
+            <div className="space-y-8 md:space-y-12">
+              <div className="p-6 md:p-8 border border-border rounded-2xl md:rounded-3xl bg-muted/20 hover:scale-[1.02] transition-transform">
+                <h3 className="text-xs md:text-sm font-bold uppercase tracking-widest mb-4 md:mb-6 text-muted-foreground">
                   {lang === "fr" ? "Canal Officiel" : "Official Channel"}
                 </h3>
-                <div className="flex items-center gap-4 text-2xl font-bold tracking-tight">
-                  <Mail className="h-8 w-8" />
-                  <span>contact@fariddanko.com</span>
+                <div className="flex items-center gap-3 md:gap-4 text-xl md:text-2xl font-bold tracking-tight">
+                  <Mail className="h-6 w-6 md:h-8 md:w-8" />
+                  <span className="break-all">contact@fariddanko.com</span>
                 </div>
               </div>
 
-              <div className="p-8 border border-border rounded-3xl bg-muted/20">
+              <div className="p-6 md:p-8 border border-border rounded-2xl md:rounded-3xl bg-muted/20">
                 <h3 className="text-sm font-bold uppercase tracking-widest mb-6 text-muted-foreground">
                   {lang === "fr" ? "Réseaux Sociaux" : "Social Media"}
                 </h3>
@@ -124,16 +124,16 @@ export default async function ContactPage({
           </div>
 
           {/* Right side: Contact Form */}
-          <div className="sticky top-32">
-            <div className="p-10 border border-border rounded-[2.5rem] bg-background shadow-2xl relative overflow-hidden">
+          <div className="lg:sticky lg:top-32 w-full">
+            <div className="p-6 md:p-10 border border-border rounded-2xl md:rounded-[2.5rem] bg-background shadow-xl md:shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-muted/30 blur-3xl -z-10" />
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-muted/30 blur-3xl -z-10" />
 
-              <div className="mb-10">
-                <h2 className="text-3xl font-bold uppercase tracking-tighter mb-2">
+              <div className="mb-8 md:mb-10">
+                <h2 className="text-2xl md:text-3xl font-bold uppercase tracking-tighter mb-2">
                   {lang === "fr" ? "Envoyer un message" : "Send a message"}
                 </h2>
-                <p className="text-muted-foreground font-medium">
+                <p className="text-sm md:text-base text-muted-foreground font-medium">
                   {lang === "fr"
                     ? "Remplissez le formulaire ci-dessous."
                     : "Fill out the form below."}

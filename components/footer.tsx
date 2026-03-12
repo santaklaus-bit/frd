@@ -53,11 +53,11 @@ export default function Footer({ lang, dict }: { lang: string; dict: any }) {
   ];
 
   return (
-    <footer className="bg-background border-t border-border/40 py-24">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between items-start gap-16">
+    <footer className="bg-background border-t border-border/40 py-16 md:py-24">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-16">
           {/* Logo & Info */}
-          <div className="space-y-6 max-w-sm">
+          <div className="space-y-4 md:space-y-6 max-w-sm">
             <Link
               href={`/${lang}`}
               className="hover:opacity-80 transition-opacity"
@@ -76,8 +76,8 @@ export default function Footer({ lang, dict }: { lang: string; dict: any }) {
           </div>
 
           {/* Navigation Links */}
-          <div className="grid grid-cols-2 gap-16">
-            <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 md:gap-16 w-full lg:w-auto">
+            <div className="space-y-4 md:space-y-6">
               <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
                 Navigation
               </h4>
@@ -130,7 +130,7 @@ export default function Footer({ lang, dict }: { lang: string; dict: any }) {
           </div>
 
           {/* Social Links */}
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6 w-full lg:w-auto">
             <h4 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
               Social
             </h4>
@@ -154,12 +154,12 @@ export default function Footer({ lang, dict }: { lang: string; dict: any }) {
           </div>
         </div>
 
-        <div className="mt-24 pt-8 border-t border-border/40 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+        <div className="mt-16 md:mt-24 pt-8 border-t border-border/40 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
+          <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-muted-foreground">
             &copy; {new Date().getFullYear()} Farid DANKO.{" "}
             {lang === "fr" ? "Tous droits réservés." : "All rights reserved."}
           </p>
-          <div className="flex items-center gap-8">
+          <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8">
             <Link
               href="#"
               className="text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"

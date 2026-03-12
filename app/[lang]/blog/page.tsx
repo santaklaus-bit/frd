@@ -38,10 +38,10 @@ export default async function BlogPage({
   const { lang } = await params;
 
   return (
-    <div className="container max-w-6xl py-12 lg:py-16">
-      <div className="mb-12">
-        <h1 className="text-4xl font-bold tracking-tight mb-4">Blog</h1>
-        <p className="text-lg text-muted-foreground">
+    <div className="container max-w-6xl py-10 md:py-12 lg:py-16 px-4 md:px-6">
+      <div className="mb-10 md:mb-12">
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3 md:mb-4">Blog</h1>
+        <p className="text-base md:text-lg text-muted-foreground">
           Articles, réflexions et perspectives sur l&apos;entrepreneuriat
           social, le développement durable et l&apos;impact collectif.
         </p>
@@ -68,9 +68,9 @@ export default async function BlogPage({
                   />
                 </div>
               )}
-              <div className="flex flex-1 flex-col p-6">
+              <div className="flex flex-1 flex-col p-5 md:p-6">
                 <div className="flex-1">
-                  <h2 className="text-xl font-semibold tracking-tight mb-2 group-hover:text-primary transition-colors">
+                  <h2 className="text-lg md:text-xl font-semibold tracking-tight mb-2 group-hover:text-primary transition-colors">
                     {post.title}
                   </h2>
                   {post.description && (
