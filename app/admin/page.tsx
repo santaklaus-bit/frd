@@ -1,5 +1,5 @@
-import { 
-  getBlogPosts, 
+import {
+  getBlogPosts,
   getData,
   getContactMessagesCount,
   getSubscribersCount
@@ -17,11 +17,25 @@ import {
 import Link from "next/link";
 
 export default async function AdminDashboard() {
-  const posts = await getBlogPosts();
-  const initiatives = await getData("initiatives");
-  const production = await getData("production");
-  const contactCount = await getContactMessagesCount();
-  const subscriberCount = await getSubscribersCount();
+  let posts: any[] = [];
+  let initiatives: any[] = [];
+  let production: any[] = [];
+  let contactCount = 0;
+  let subscriberCount = 0;
+  let dbError = false;
+
+  try {
+    [posts, initiatives, production, contactCount, subscriberCount] =
+      await Promise.all([
+        getBlogPosts(),
+        getData("initiatives"),
+        getData("production"),
+        getContactMessagesCount(),
+        getSubscribersCount(),
+      ]);
+  } catch {
+    dbError = true;
+  }
 
   const stats = [
     { label: "Articles", value: posts.length, icon: FileText, href: "/admin/blog", color: "from-zinc-900 to-zinc-700 dark:from-zinc-100 dark:to-zinc-300" },
