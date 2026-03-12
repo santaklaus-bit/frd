@@ -1,12 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Briefcase, Video, Target } from "lucide-react";
+import { ArrowRight, Zap, TrendingUp, Users, BookOpen, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HeroSection } from "@/components/hero-section";
 import { docs, meta } from "@/.source";
 import { loader } from "fumadocs-core/source";
 import { createMDXSource } from "fumadocs-mdx";
 import { getDictionary } from "@/lib/get-dictionary";
+import { Newsletter } from "@/components/newsletter";
+import { Metadata } from "next";
 
 const blogSource = loader({
   baseUrl: "/blog",
@@ -21,9 +23,6 @@ const formatDate = (date: Date, lang: string): string => {
   });
 };
 
-import { Newsletter } from "@/components/newsletter";
-import { Metadata } from "next";
-
 export async function generateMetadata({
   params,
 }: {
@@ -31,7 +30,6 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const dict = await getDictionary(lang as "en" | "fr");
-
   return {
     title: dict.seo.home.title,
     description: dict.seo.home.description,
@@ -48,33 +46,92 @@ export default async function HomePage({
 
   const posts = blogSource
     .getPages()
-    .sort((a, b) => {
-      return (
+    .sort(
+      (a, b) =>
         new Date(b.data.date ?? 0).getTime() -
         new Date(a.data.date ?? 0).getTime()
-      );
-    })
-    .slice(0, 3);
+    )
+    .slice(0, 2);
+
+  const expertiseItems = [
+    {
+      icon: Zap,
+      title: dict.expertise.subpages.autonomisation.title,
+      desc: dict.expertise.subpages.autonomisation.desc,
+      href: `/${lang}/expertise/autonomisation`,
+    },
+    {
+      icon: TrendingUp,
+      title: dict.expertise.subpages.developpement.title,
+      desc: dict.expertise.subpages.developpement.desc,
+      href: `/${lang}/expertise/developpement`,
+    },
+    {
+      icon: Users,
+      title: dict.expertise.subpages.inclusion.title,
+      desc: dict.expertise.subpages.inclusion.desc,
+      href: `/${lang}/expertise/inclusion`,
+    },
+  ];
+
+  const projectCards = [
+    {
+      title: lang === "fr" ? "Diagnostic WASH – Bénin" : "WASH Diagnostic – Benin",
+      desc:
+        lang === "fr"
+          ? "Diagnostic sur la disponibilité et la fonctionnalité des infrastructures sanitaires dans les écoles publiques du Bénin. Un travail structurant pour orienter des interventions durables en eau, hygiène et assainissement."
+          : "Assessment of availability and functionality of sanitary infrastructure in public schools in Benin. Structuring work to guide sustainable interventions in water, hygiene and sanitation.",
+      image: null,
+      href: `/${lang}/projects/diagnostic-wash-benin`,
+    },
+    {
+      title: lang === "fr" ? "Filière viticole – Québec" : "Wine sector – Quebec",
+      desc:
+        lang === "fr"
+          ? "Observation terrain de la production pour mieux comprendre les leviers de valorisation, de structuration et de durabilité économique."
+          : "Field observation of production to better understand the levers of valorisation, structuring and economic sustainability.",
+      image: null,
+      href: `/${lang}/projects/filiere-viticole-quebec`,
+    },
+    {
+      title: lang === "fr" ? "Filière pomicole – Québec" : "Apple sector – Quebec",
+      desc:
+        lang === "fr"
+          ? "Lecture terrain des dynamiques de production locale et des opportunités de transformation à plus forte valeur ajoutée."
+          : "Field reading of local production dynamics and higher value-added transformation opportunities.",
+      image: null,
+      href: `/${lang}/projects/filiere-pomicole-quebec`,
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-background pb-24">
-      {/* Hero Section */}
+      {/* ── 1. HERO ── */}
       <HeroSection lang={lang} dict={dict} />
 
-      {/* About Preview Section */}
+      {/* ── 2. À PROPOS ── */}
       <section className="py-16 md:py-24 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+            <div className="relative aspect-[3/4] rounded-3xl overflow-hidden group shadow-2xl">
+              <Image
+                src="/farid-portrait.png"
+                alt="Farid Danko"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+            </div>
             <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-6 md:mb-8 tracking-tight uppercase">
                 {dict.nav.about}
               </h2>
-              <div className="prose prose-base md:prose-lg dark:prose-invert">
+              <div className="space-y-4">
                 <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
                   {dict.about.content1}
                 </p>
-                <p className="text-muted-foreground leading-relaxed mt-4 text-base md:text-lg">
-                  {dict.about.content2.substring(0, 200)}...
+                <p className="text-muted-foreground leading-relaxed text-base md:text-lg">
+                  {dict.about.content3.substring(0, 220)}...
                 </p>
               </div>
               <Link href={`/${lang}/about`} className="inline-block mt-8">
@@ -87,159 +144,183 @@ export default async function HomePage({
                 </Button>
               </Link>
             </div>
-            <div className="relative h-[600px] rounded-[2.5rem] overflow-hidden group shadow-2xl">
-              <Image
-                src="/farid-portrait.png"
-                alt="Farid Danko"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Production Section */}
+      {/* ── 3. EXPERTISE ── */}
       <section className="py-16 md:py-24 border-b border-border bg-muted/20">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="text-center mb-10 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight uppercase">
-              {dict.production.title}
+              {dict.expertise.title}
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-              {dict.production.description}
+              {dict.expertise.description}
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
-            {[
-              {
-                title: dict.production.subpages.interviews.title,
-                href: `/${lang}/production/interviews`,
-              },
-              {
-                title: dict.production.subpages.podcasts.title,
-                href: `/${lang}/production/podcasts`,
-              },
-              {
-                title: dict.production.subpages.capsules.title,
-                href: `/${lang}/production/capsules`,
-              },
-            ].map((item) => (
+            {expertiseItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className="group p-8 border border-border rounded-2xl bg-background hover:shadow-xl hover:-translate-y-1 transition-all"
               >
-                <Video className="h-10 w-10 mb-6 text-muted-foreground group-hover:text-foreground transition-colors" />
-                <h3 className="text-2xl font-bold mb-3">{item.title}</h3>
-                <div className="flex items-center text-muted-foreground font-semibold group-hover:text-foreground">
-                  {lang === "fr" ? "Découvrir" : "Explore"}
-                  <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                <div className="mb-6 p-3 rounded-xl bg-muted/30 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors w-fit">
+                  <item.icon className="h-7 w-7" />
+                </div>
+                <h3 className="text-xl font-bold mb-3 uppercase tracking-tight">
+                  {item.title}
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                  {item.desc}
+                </p>
+                <div className="flex items-center text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
+                  {lang === "fr" ? "Explorer" : "Explore"}
+                  <ArrowRight className="h-3.5 w-3.5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </div>
               </Link>
             ))}
           </div>
 
           <div className="text-center">
-            <Link href={`/${lang}/production`}>
+            <Link href={`/${lang}/expertise`}>
               <Button
                 variant="outline"
-                className="gap-2 px-8 py-6 rounded-full font-bold uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors md:px-10"
+                className="gap-2 px-8 py-6 rounded-full font-bold uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
               >
-                {lang === "fr"
-                  ? "Voir toutes les productions"
-                  : "View all productions"}
+                {lang === "fr" ? "Voir mon expertise" : "View my expertise"}
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Initiatives Section */}
+      {/* ── 3. FEATURED PROJECT ── */}
       <section className="py-16 md:py-24 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="text-center mb-10 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight uppercase">
-              {dict.initiatives.title}
-            </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-              {dict.initiatives.description}
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            {[
-              {
-                title:
-                  lang === "fr"
-                    ? "Programme d'apprentissage"
-                    : "Learning Programme",
-                desc:
-                  lang === "fr"
-                    ? "Programme pour les métiers du secteur de l'environnement."
-                    : "Environmental sector trades programme.",
-              },
-              {
-                title:
-                  lang === "fr"
-                    ? "Insertion socioprofessionnelle"
-                    : "Socio-professional Integration",
-                desc:
-                  lang === "fr"
-                    ? "Coordination de programmes d'employabilité."
-                    : "Employability programmes coordination.",
-              },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="p-10 border border-border rounded-2xl bg-background hover:shadow-lg transition-all group"
-              >
-                <Target className="h-12 w-12 mb-6 text-muted-foreground group-hover:text-foreground transition-colors" />
-                <h3 className="text-2xl font-bold mb-4 uppercase tracking-tight">
-                  {item.title}
-                </h3>
-                <p className="text-muted-foreground text-lg leading-relaxed">
-                  {item.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center">
-            <Link href={`/${lang}/initiatives`}>
-              <Button
-                variant="outline"
-                className="gap-2 px-10 py-6 rounded-full font-bold uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
-              >
-                {lang === "fr"
-                  ? "Découvrir les initiatives"
-                  : "Explore initiatives"}
-              </Button>
-            </Link>
+          <h2 className="text-3xl md:text-4xl font-bold mb-10 md:mb-16 tracking-tight uppercase text-center">
+            {dict.featuredProject.title}
+          </h2>
+          <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
+            <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-muted shadow-2xl group">
+              <Image
+                src="/farid-portrait.png"
+                alt="Champ de piri piri – Coopérative de femmes productrices, Kenya"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+              <p className="absolute bottom-4 left-4 right-4 text-white text-xs font-semibold uppercase tracking-widest opacity-80">
+                {dict.featuredProject.caption}
+              </p>
+            </div>
+            <div className="flex flex-col gap-6">
+              <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
+                {dict.featuredProject.description}
+              </p>
+              <Link href={dict.featuredProject.href} className="inline-block">
+                <Button className="gap-2 px-8 py-6 rounded-full font-bold uppercase bg-black text-white dark:bg-white dark:text-black hover:opacity-90 transition-all shadow-xl">
+                  {dict.featuredProject.cta}
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Blog Section */}
-      <section className="py-16 md:py-24">
+      {/* ── 4. PROJECTS ── */}
+      <section className="py-16 md:py-24 border-b border-border bg-muted/20">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="text-center mb-10 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight uppercase">
-              {dict.nav.blog}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight uppercase">
+              {dict.projects.title}
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-              {lang === "fr"
-                ? "Articles et réflexions récents"
-                : "Recent articles and reflections"}
-            </p>
+            <Link href={`/${lang}/projects`} className="shrink-0">
+              <Button
+                variant="ghost"
+                className="gap-2 font-bold uppercase text-sm hover:text-foreground text-muted-foreground"
+              >
+                {lang === "fr" ? "Voir tous les projets" : "All projects"}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
           </div>
 
-          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3 mb-16">
+          <div className="grid md:grid-cols-3 gap-8">
+            {projectCards.map((card, i) => (
+              <Link
+                key={i}
+                href={card.href}
+                className="group flex flex-col border border-border rounded-2xl bg-background overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all"
+              >
+                <div className="relative h-48 bg-muted overflow-hidden">
+                  <Image
+                    src="/farid-portrait.png"
+                    alt={card.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105 opacity-60"
+                  />
+                  <div className="absolute inset-0 bg-black/30 group-hover:bg-black/20 transition-colors" />
+                  <h3 className="absolute bottom-4 left-4 right-4 text-white font-bold text-lg uppercase tracking-tight leading-tight">
+                    {card.title}
+                  </h3>
+                </div>
+                <div className="p-6 flex-1 flex flex-col">
+                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">
+                    {card.desc}
+                  </p>
+                  <div className="flex items-center gap-2 mt-5 text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground transition-colors">
+                    {lang === "fr" ? "Lire le projet" : "Read project"}
+                    <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. BLOG ── */}
+      <section className="py-16 md:py-24 border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 md:mb-16">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-3 tracking-tight uppercase">
+                {lang === "fr" ? "Réflexions & analyses" : "Insights & analysis"}
+              </h2>
+              <div className="flex gap-3">
+                {[
+                  { label: lang === "fr" ? "Projets" : "Projects", icon: FileText },
+                  { label: lang === "fr" ? "Contenus" : "Content", icon: BookOpen },
+                ].map((cat) => (
+                  <span
+                    key={cat.label}
+                    className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-muted text-muted-foreground uppercase tracking-widest"
+                  >
+                    <cat.icon className="h-3 w-3" />
+                    {cat.label}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <Link href={`/${lang}/blog`} className="shrink-0">
+              <Button
+                variant="ghost"
+                className="gap-2 font-bold uppercase text-sm hover:text-foreground text-muted-foreground"
+              >
+                {lang === "fr" ? "Accéder au blog" : "Go to blog"}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-10">
             {posts.map((post) => {
               const date = post.data.date ? new Date(post.data.date) : null;
-
               return (
                 <Link
                   key={post.url}
@@ -247,53 +328,58 @@ export default async function HomePage({
                   className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card hover:shadow-2xl transition-all"
                 >
                   {post.data.thumbnail && (
-                    <div className="relative h-60 w-full overflow-hidden">
+                    <div className="relative h-52 w-full overflow-hidden">
                       <Image
                         src={post.data.thumbnail}
                         alt={post.data.title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
                     </div>
                   )}
-                  <div className="flex flex-1 flex-col p-8 text-left">
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-bold tracking-tight mb-4 group-hover:text-primary transition-colors leading-tight">
-                        {post.data.title}
-                      </h3>
-                      {post.data.description && (
-                        <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed">
-                          {post.data.description}
-                        </p>
-                      )}
-                    </div>
-                    <div className="mt-6 flex items-center justify-between">
-                      <div className="flex items-center gap-4 text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                        {date && <time>{formatDate(date, lang)}</time>}
-                      </div>
-                      <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                  <div className="flex flex-1 flex-col p-8">
+                    <h3 className="text-xl font-bold tracking-tight mb-3 group-hover:text-primary transition-colors leading-tight">
+                      {post.data.title}
+                    </h3>
+                    {post.data.description && (
+                      <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed flex-1">
+                        {post.data.description}
+                      </p>
+                    )}
+                    <div className="mt-5 flex items-center justify-between text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                      {date && <time>{formatDate(date, lang)}</time>}
+                      <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
                 </Link>
               );
             })}
           </div>
-
-          <div className="text-center">
-            <Link href={`/${lang}/blog`}>
-              <Button
-                variant="outline"
-                className="gap-2 px-10 py-6 rounded-full font-bold uppercase hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
-              >
-                {lang === "fr" ? "Voir tous les articles" : "View all articles"}
-              </Button>
-            </Link>
-          </div>
         </div>
       </section>
 
-      {/* Newsletter Section */}
+      {/* ── 6. CONTACT ── */}
+      <section className="py-20 md:py-32">
+        <div className="max-w-4xl mx-auto px-4 md:px-6 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 uppercase tracking-tighter">
+            {dict.home_contact.title}
+          </h2>
+          <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">
+            {dict.home_contact.description}
+          </p>
+          <Link href={`/${lang}/contact`}>
+            <Button
+              size="lg"
+              className="px-10 py-7 h-auto rounded-full font-bold uppercase tracking-widest bg-black text-white dark:bg-white dark:text-black hover:opacity-90 transition-all shadow-xl group"
+            >
+              {dict.home_contact.cta}
+              <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
+        </div>
+      </section>
+
+      {/* Newsletter */}
       <Newsletter lang={lang} dict={dict} />
     </div>
   );

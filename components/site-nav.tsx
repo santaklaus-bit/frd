@@ -7,11 +7,23 @@ import {
   Menu,
   X as XIcon,
   Linkedin,
-  Youtube,
-  Instagram,
   Facebook,
 } from "lucide-react";
 import { useState } from "react";
+
+// Custom Medium Icon
+const MediumIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z" />
+  </svg>
+);
+
+// Custom ResearchGate Icon
+const ResearchGateIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M19.586 0c-.818 0-1.508.19-2.073.565-.563.377-.97.936-1.213 1.68a12.148 12.148 0 0 0-.198 3.284l.012.23c-2.603.005-4.806.567-6.512 1.677C7.547 8.547 6.5 10.177 6.5 12.5c0 2.322 1.047 3.953 3.102 5.064 1.706 1.11 3.909 1.672 6.512 1.677l-.012.23a12.148 12.148 0 0 0 .198 3.284c.243.744.65 1.303 1.213 1.68.565.375 1.255.565 2.073.565.818 0 1.508-.19 2.073-.565.563-.377.97-.936 1.213-1.68a12.148 12.148 0 0 0 .198-3.284l-.012-.23H24V12.5h-1.94l.012-.23a12.148 12.148 0 0 0-.198-3.284c-.243-.744-.65-1.303-1.213-1.68C20.097.19 19.407 0 18.586 0Zm.003 2.003c.454 0 .788.115 1.006.345.217.23.38.6.48 1.11.099.51.135 1.163.109 1.96l-.028.582H17.03l-.028-.582c-.026-.797.01-1.45.11-1.96.099-.51.262-.88.48-1.11.217-.23.55-.345 1.006-.345ZM12 12.5c0-1.51.7-2.67 2.11-3.49 1.268-.736 2.964-1.128 5.046-1.14v5.269H24v.722H19.156v5.269c-2.082-.012-3.778-.404-5.046-1.14C12.7 17.17 12 16.01 12 14.5Zm6.586 9.497c-.454 0-.788-.115-1.006-.345-.217-.23-.38-.6-.48-1.11-.099-.51-.135-1.163-.109-1.96l.028-.582h3.134l.028.582c.026.797-.01 1.45-.11 1.96-.099.51-.262.88-.48 1.11-.217.23-.55.345-1.006.345Z" />
+  </svg>
+);
 
 // Custom TikTok Icon Component
 const TikTokIcon = ({ className }: { className?: string }) => (
@@ -20,12 +32,6 @@ const TikTokIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// Custom Medium Icon Component
-const MediumIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
-    <path d="M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z" />
-  </svg>
-);
 
 // Custom X Icon Component
 const XIconLogo = ({ className }: { className?: string }) => (
@@ -39,39 +45,36 @@ export function SiteNav({ lang }: { lang: "en" | "fr" }) {
 
   const socialLinks = [
     {
-      href: "https://www.linkedin.com/in/fariddanko/",
+      href: "https://www.linkedin.com/in/monsieurdanko/",
       icon: Linkedin,
       label: "LinkedIn",
     },
     {
-      href: "https://youtube.com/@fariddanko?si=cedaP3ZmzGQuri_Y",
-      icon: Youtube,
-      label: "YouTube",
+      href: "https://www.researchgate.net/profile/Farid-Danko",
+      icon: ResearchGateIcon,
+      label: "ResearchGate",
     },
-    { href: "https://tiktok.com", icon: TikTokIcon, label: "TikTok" },
     {
-      href: "https://www.instagram.com/fariddanko",
-      icon: Instagram,
-      label: "Instagram",
+      href: "https://medium.com/@monsieurdanko",
+      icon: MediumIcon,
+      label: "Medium",
     },
     {
       href: "https://www.facebook.com/farid.danko",
       icon: Facebook,
       label: "Facebook",
     },
-    { href: "https://x.com/monsieurdanko", icon: XIconLogo, label: "X" },
-    { href: "https://medium.com", icon: MediumIcon, label: "Medium" },
   ];
 
   const leftNavItems = [
     { href: `/${lang}`, label: lang === "en" ? "Home" : "Accueil" },
     { href: `/${lang}/about`, label: lang === "en" ? "About" : "À propos" },
-    { href: `/${lang}/production`, label: "PRODUCTION" },
+    { href: `/${lang}/expertise`, label: "EXPERTISE" },
   ];
 
   const rightNavItems = [
+    { href: `/${lang}/projects`, label: lang === "en" ? "PROJECTS" : "PROJETS" },
     { href: `/${lang}/blog`, label: "BLOG" },
-    { href: `/${lang}/initiatives`, label: "INITIATIVES" },
   ];
 
   return (

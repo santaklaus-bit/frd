@@ -14,10 +14,10 @@ export async function generateMetadata({
   const dict = await getDictionary(lang as "en" | "fr");
 
   return {
-    title: dict.seo.initiatives.title,
-    description: dict.seo.initiatives.description,
+    title: dict.seo.projects.title,
+    description: dict.seo.projects.description,
     alternates: {
-      canonical: `/${lang}/initiatives`,
+      canonical: `/${lang}/projects`,
     },
   };
 }
@@ -29,7 +29,7 @@ const ICON_MAP: Record<string, any> = {
   TrendingUp,
 };
 
-export default async function InitiativesPage({
+export default async function ProjectsPage({
   params,
 }: {
   params: Promise<{ lang: string }>;
@@ -54,13 +54,13 @@ export default async function InitiativesPage({
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
         <div className="max-w-4xl mb-12 md:mb-20 text-center mx-auto">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-semibold mb-4 md:mb-6 uppercase tracking-tighter">
-            {dict.initiatives.title}
+            {dict.projects.title}
           </h1>
           <p className="text-lg md:text-xl font-normal leading-tight mb-4 md:mb-6">
-            {dict.initiatives.intro}
+            {dict.projects.intro}
           </p>
           <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
-            {dict.initiatives.description}
+            {dict.projects.description}
           </p>
         </div>
 
@@ -95,7 +95,7 @@ export default async function InitiativesPage({
         <div className="mt-20 md:mt-32 p-10 md:p-16 rounded-[2rem] md:rounded-[3rem] bg-black dark:bg-white text-white dark:text-black text-center relative overflow-hidden">
           <div className="relative z-10">
             <p className="text-2xl md:text-3xl font-bold uppercase tracking-tighter mb-6 md:mb-8 leading-tight max-w-3xl mx-auto">
-              {dict.initiatives.outro}
+              {dict.projects.outro}
             </p>
             <Link href={`/${lang}/contact`}>
               <Button

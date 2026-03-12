@@ -116,7 +116,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
           className="pt-4 sm:pt-6 md:pt-8"
         >
-          <Link href={`/${lang}/about`}>
+          <Link href={`/${lang}${dict.home.cta_href ?? '/about'}`}>
             <Button
               size="lg"
               className="px-8 py-6 sm:px-12 sm:py-8 md:px-16 md:py-10 h-auto rounded-full text-sm sm:text-lg md:text-xl font-bold uppercase tracking-widest sm:tracking-widest hover:scale-105 transition-all shadow-xl sm:shadow-2xl bg-black text-white dark:bg-white dark:text-black border-none group"

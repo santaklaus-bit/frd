@@ -79,7 +79,7 @@ export function Newsletter({ lang, dict }: { lang: string; dict: any }) {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="px-8 md:px-10 py-4 md:py-5 h-auto rounded-full bg-white text-black dark:bg-black dark:text-white font-bold uppercase tracking-widest hover:scale-105 transition-transform w-full sm:w-auto"
+              className="px-8 md:px-10 py-4 md:py-5 h-auto rounded-full bg-white text-black dark:bg-black dark:text-white font-bold uppercase tracking-widest border-2 border-transparent hover:bg-transparent hover:text-white hover:border-white dark:hover:bg-transparent dark:hover:text-black dark:hover:border-black transition-all w-full sm:w-auto"
             >
               {isSubmitting ? "..." : dict.newsletter.button}
               <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
