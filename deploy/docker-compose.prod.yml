@@ -1,29 +1,40 @@
-# Docker Compose for Dev
-
 services:
   monsieurdanko:
     image: ghcr.io/aureldsk02/monsieurdanko:latest
     container_name: monsieurdanko
     restart: always
-    env_file:
-      - ../.env
     environment:
       - NODE_ENV=production
-    expose:
+    expose: 
       - 3000
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "100m"
+        max-file: "10" # 1GB max
+
     labels:
-      # Traefik integration
+      # Enable Traefik and specify instance
       - traefik.enable=true
       - traefik.instance=main
 
-      # Router: domain + entrypoints + TLS
-      - traefik.http.routers.monsieurdanko.rule=Host(`monsieurdanko.com`)
-      - traefik.http.routers.monsieurdanko.entrypoints=web,websecure
+      # Router: domain, entrypoints, TLS
+      # HTTP
+      - traefik.http.routers.monsieurdanko_http.rule=Host(`monsieurdanko.com`) && PathPrefix(`/`)
+      - traefik.http.routers.monsieurdanko_http.entrypoints=web
+      - traefik.http.routers.monsieurdanko_http.middlewares=https-redirect@file,security-headers@file
+
+      # HTTPS
+      - traefik.http.routers.monsieurdanko.rule=Host(`monsieurdanko.com`) && PathPrefix(`/`)
+      - traefik.http.routers.monsieurdanko.middlewares=security-headers@file
+      - traefik.http.routers.monsieurdanko.entrypoints=websecure
       - traefik.http.routers.monsieurdanko.tls=true
       - traefik.http.routers.monsieurdanko.tls.certresolver=main_resolver
 
       # Service internal port
       - traefik.http.services.monsieurdanko.loadbalancer.server.port=3000
+
 
     networks:
       - base-traefik
