@@ -17,6 +17,8 @@ import { cn } from "@/lib/utils";
 import "@/app/globals.css";
 import { Toaster } from "sonner";
 
+export const dynamic = "force-dynamic";
+
 const sidebarItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },

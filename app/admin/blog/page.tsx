@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Plus, Edit, Calendar, Hash, FileText } from "lucide-react";
 import { BlogDeleteButton } from "@/components/admin/blog-delete-button";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminBlogPage() {
   const posts = await getBlogPosts();
 

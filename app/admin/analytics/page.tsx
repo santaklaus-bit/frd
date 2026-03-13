@@ -15,6 +15,8 @@ import {
     TrendingDown,
 } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 function Delta({ value }: { value: number }) {
     const positive = value >= 0;
     return (

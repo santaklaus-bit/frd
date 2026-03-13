@@ -2,6 +2,8 @@ import { getBlogPost } from "@/lib/content-manager";
 import { BlogForm } from "@/components/admin/blog-form";
 import { notFound } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 export default async function EditBlogPage({
   params,
 }: {

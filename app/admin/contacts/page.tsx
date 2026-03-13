@@ -1,6 +1,8 @@
 import { Mail, Clock, MessageSquare, Circle, CheckCircle2 } from "lucide-react";
 import { getContactMessages } from "@/lib/content-manager";
 
+export const dynamic = "force-dynamic";
+
 const REQUEST_TYPES: Record<string, { label: string; color: string }> = {
   general: { label: "Général", color: "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300" },
   collaboration: { label: "Collaboration", color: "bg-blue-50 text-blue-600 dark:bg-blue-950 dark:text-blue-300" },
