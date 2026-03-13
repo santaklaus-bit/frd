@@ -1,6 +1,8 @@
 import { Users, Mail, Clock, Download } from "lucide-react";
 import { getSubscribers } from "@/lib/content-manager";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminNewsletterPage() {
   const subscribers = (await getSubscribers()) as any[];
 

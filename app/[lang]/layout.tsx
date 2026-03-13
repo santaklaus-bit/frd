@@ -23,6 +23,8 @@ import { SocialShare } from "@/components/social-share";
 import { getDictionary } from "@/lib/get-dictionary";
 import JsonLd from "@/components/json-ld";
 import "@/app/globals.css";
+import { GoogleAnalytics } from "@/components/google-analytics";
+import { Toaster } from "sonner";
 
 export const viewport: Viewport = {
   themeColor: "black",
@@ -106,13 +108,15 @@ export default async function RootLayout({
       className={`${inter.variable} ${cormorant.variable} antialiased font-sans`}
       suppressHydrationWarning
     >
-      <body>
+      <body suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
+          <GoogleAnalytics />
+          <Toaster richColors position="bottom-right" />
           <JsonLd lang={lang} dict={dict} />
           <SiteNav lang={lang as "en" | "fr"} />
           {children}

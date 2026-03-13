@@ -2,16 +2,17 @@
   "nav": {
     "home": "Accueil",
     "about": "À propos",
-    "production": "PRODUCTION",
+    "expertise": "EXPERTISE",
     "blog": "BLOG",
-    "initiatives": "INITIATIVES",
+    "projects": "PROJETS",
     "contact": "CONTACT"
   },
   "home": {
     "title": "Farid DANKO",
-    "subtitle": "Entrepreneur social • Conseiller en développement organisationnel",
-    "description": "Farid Danko est un entrepreneur social. Il accompagne les personnes, les entreprises et les organisations à clarifier leur vision, construire des solutions durables et renforcer leur impact dans la société.",
-    "cta": "Découvrir mon parcours"
+    "subtitle": "Entrepreneur social · Consultant en développement organisationnel",
+    "description": "Farid Danko conçoit et structure des stratégies et programmes qui renforcent durablement le pouvoir économique des femmes et des jeunes, tout en accompagnant les organisations dans le développement de solutions à fort impact.",
+    "cta": "Découvrir mon expertise",
+    "cta_href": "/expertise"
   },
   "about": {
     "title": "À propos de moi",
@@ -23,39 +24,41 @@
     "content6": "J’ai dirigé des projets d’envergure, notamment le Programme d’apprentissage en milieu de travail pour des métiers du secteur de l’environnement, coordonné des programmes liés à l’employabilité et à l’insertion socioprofessionnelle, et participé à des révisions de normes professionnelles. Mon expertise inclut également la gestion du changement en milieu organisationnel et la structuration de projets à impact social.",
     "content7": "Aujourd’hui, je mets cette expertise au service de celles et ceux qui souhaitent entreprendre autrement — avec clarté, cohérence et impact."
   },
-  "production": {
-    "title": "Production",
-    "description": "Je produis ici du contenu pour transmettre: Des idées, des voix, des réalités, des visions.",
-    "intro": "Cette section regroupe les formats que j’ai créés ou coordonnés : entrevues, capsules, réflexions filmées, podcasts ou moments captés sur le terrain.",
-    "outro": "Ce sont des productions personnelles, pensées comme des espaces de conversation, de documentation ou de transmission.",
+  "expertise": {
+    "title": "Expertise",
+    "description": "Stratégies et programmes à fort impact social et économique.",
+    "intro": "Une approche structurée qui allie vision, terrain et méthodologie rigoureuse pour générer des résultats durables.",
+    "outro": "Construisons ensemble des solutions qui changent des vies.",
     "subpages": {
-      "title": "Sous-pages",
-      "interviews": {
-        "title": "Entrevues",
-        "desc": "Conversations filmées ou audio avec des personnes inspirantes, expertes ou actrices du changement.",
-        "details": "Il peut s’agir de : discussions de fond, invités spéciaux, formats longs."
+      "title": "Domaines d'intervention",
+      "autonomisation": {
+        "title": "Autonomisation",
+        "desc": "Structuration d'activités génératrices de revenus et optimisation de la chaîne de valeur.",
+        "details": "Accompagnement, création de valeur, résilience."
       },
-      "podcasts": {
-        "title": "Podcasts / Audio",
-        "desc": "Contenus audio ou discussions plus libres, intimes ou analytiques.",
-        "details": "Il peut s’agir de : balados, échanges de fond sans forcément de support visuel."
+      "developpement": {
+        "title": "Développement",
+        "desc": "Accompagnement organisationnel, gouvernance et structuration stratégique.",
+        "details": "Stratégie, impact social, économie circulaire."
       },
-      "capsules": {
-        "title": "Capsules & Réflexions",
-        "desc": "Vidéos ou extraits courts où je partage une idée, une réflexion ou une observation.",
-        "details": "Il peut s’agir de : prises de parole directes, interventions rapides, contenus percutants."
-      },
-      "field": {
-        "title": "Sur le terrain",
-        "desc": "Productions réalisées en contexte : immersion dans une communauté, observation d’un projet, mission sur le terrain.",
-        "details": "Il peut s’agir de : documentaires courts, reportages, contenus tournés lors d’initiatives concrètes."
-      },
-      "lifestyle": {
-        "title": "Lifestyle & Perspectives",
-        "desc": "Contenus plus personnels qui montrent l’envers du décor : mon quotidien, mon parcours, mes inspirations.",
-        "details": "Il peut s’agir de : vlogs, moments spontanés."
+      "inclusion": {
+        "title": "Inclusion",
+        "desc": "Programmes d'insertion et initiatives à impact économique et social.",
+        "details": "Employabilité, formation, équité sociale."
       }
     }
+  },
+  "featuredProject": {
+    "title": "Projet mis en avant",
+    "caption": "Champ de piri piri – Coopérative de femmes productrices, Kenya.",
+    "description": "Analyse de la chaîne de valeur et des opportunités de transformation pour renforcer les revenus.",
+    "cta": "Lire le projet",
+    "href": "/fr/projects/cooperative-femmes-kenya"
+  },
+  "home_contact": {
+    "title": "Collaborer",
+    "description": "Disponible pour mandats stratégiques, missions terrain et accompagnement organisationnel.",
+    "cta": "Me contacter"
   },
   "contact": {
     "title": "Contact",
@@ -71,8 +74,8 @@
     "message": "Message",
     "submit": "Envoyer"
   },
-  "initiatives": {
-    "title": "Initiatives",
+  "projects": {
+    "title": "Projets",
     "intro": "Depuis toujours, je crois en l’importance d’agir et de contribuer à créer des opportunités.",
     "description": "Cette page présente quelques initiatives que j’ai portées ou accompagnées, à la croisée de l’entrepreneuriat, du développement organisationnel et de l’engagement.",
     "outro": "Des actions concrètes qui traduisent mon désir constant : être utile et contribuer à un impact durable."
@@ -94,12 +97,12 @@
       "title": "À propos - Farid DANKO",
       "description": "En savoir plus sur Farid Danko, son parcours d'entrepreneur social et son engagement pour un monde plus juste et durable."
     },
-    "production": {
-      "title": "Productions - Farid DANKO",
+    "expertise": {
+      "title": "Expertise - Farid DANKO",
       "description": "Explorez les productions de Farid Danko : entrevues, podcasts, capsules et réflexions sur le terrain pour transmettre des idées et des visions."
     },
-    "initiatives": {
-      "title": "Initiatives - Farid DANKO",
+    "projects": {
+      "title": "Projets - Farid DANKO",
       "description": "Découvrez les initiatives portées ou accompagnées par Farid Danko dans les secteurs de l'environnement, de l'employabilité et de l'innovation sociale."
     },
     "blog": {

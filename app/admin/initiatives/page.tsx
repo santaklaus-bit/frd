@@ -1,6 +1,8 @@
 import { getData } from "@/lib/content-manager";
 import InitiativesManager from "@/components/admin/initiatives-manager";
 
+export const dynamic = "force-dynamic";
+
 export default async function InitiativesAdminPage() {
   const initiatives = await getData("initiatives");
 
