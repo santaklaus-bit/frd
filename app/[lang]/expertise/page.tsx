@@ -54,36 +54,36 @@ export default async function ExpertisePage({
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
-        <div className="max-w-4xl mb-12 md:mb-20 text-center mx-auto">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-8 uppercase tracking-tighter">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-24">
+        <div className="max-w-4xl mb-10 md:mb-16 lg:mb-20 text-center mx-auto">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 lg:mb-8 uppercase tracking-tighter">
             {dict.expertise.title}
           </h1>
-          <p className="text-xl md:text-2xl lg:text-3xl font-medium leading-tight mb-4 md:mb-6">
+          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium leading-tight mb-3 md:mb-4 lg:mb-6">
             {dict.expertise.description}
           </p>
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed">
             {dict.expertise.intro}
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
           {sections.map((section) => (
             <Link
               key={section.key}
               href={section.href}
-              className="group p-8 md:p-10 border border-border rounded-3xl bg-background hover:bg-muted/10 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
+              className="group p-6 md:p-8 lg:p-10 border border-border rounded-2xl md:rounded-3xl bg-background hover:bg-muted/10 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
             >
-              <div className="mb-6 md:mb-8 p-3 md:p-4 rounded-2xl bg-muted/30 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors w-fit">
-                <section.icon className="h-6 w-6 md:h-8 md:w-8" />
+              <div className="mb-5 md:mb-6 lg:mb-8 p-2.5 md:p-3 lg:p-4 rounded-xl md:rounded-2xl bg-muted/30 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors w-fit">
+                <section.icon className="h-5 w-5 md:h-6 md:w-6 lg:h-8 lg:w-8" />
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 uppercase tracking-tighter">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 md:mb-3 lg:mb-4 uppercase tracking-tighter">
                 {section.title}
               </h2>
-              <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-4 md:mb-6 font-medium">
+              <p className="text-sm md:text-base lg:text-lg text-muted-foreground leading-relaxed mb-3 md:mb-4 lg:mb-6 font-medium">
                 {section.description}
               </p>
-              <p className="text-sm text-muted-foreground/60 mb-8 italic">
+              <p className="text-xs md:text-sm text-muted-foreground/60 mb-6 md:mb-8 italic">
                 {section.details}
               </p>
               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
@@ -94,8 +94,8 @@ export default async function ExpertisePage({
           ))}
         </div>
 
-        <div className="mt-20 md:mt-32 p-8 md:p-12 rounded-3xl bg-black dark:bg-white text-white dark:text-black text-center">
-          <p className="text-xl md:text-2xl font-bold uppercase tracking-tight">
+        <div className="mt-14 md:mt-24 lg:mt-32 p-6 sm:p-8 md:p-12 rounded-2xl md:rounded-3xl bg-black dark:bg-white text-white dark:text-black text-center">
+          <p className="text-lg sm:text-xl md:text-2xl font-bold uppercase tracking-tight">
             {dict.expertise.outro}
           </p>
         </div>

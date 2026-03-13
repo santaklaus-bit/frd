@@ -98,7 +98,7 @@ export function ContactForm({ lang, dict }: { lang: string; dict: any }) {
           onChange={handleChange}
           placeholder={lang === "fr" ? "Votre nom complet" : "Your full name"}
           required
-          className="w-full px-6 py-4 rounded-2xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all shadow-sm"
+          className="w-full px-5 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all shadow-sm"
         />
       </div>
 
@@ -125,7 +125,7 @@ export function ContactForm({ lang, dict }: { lang: string; dict: any }) {
           onChange={handleChange}
           placeholder="votre@email.com"
           required
-          className="w-full px-6 py-4 rounded-2xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all shadow-sm"
+          className="w-full px-5 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all shadow-sm"
         />
       </div>
 
@@ -142,7 +142,7 @@ export function ContactForm({ lang, dict }: { lang: string; dict: any }) {
           name="requestType"
           value={formData.requestType}
           onChange={handleChange}
-          className="w-full px-6 py-4 rounded-2xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all shadow-sm appearance-none cursor-pointer"
+          className="w-full px-5 py-3 rounded-xl border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all shadow-sm appearance-none cursor-pointer"
         >
           <option value="general">{dict.contact.options.general}</option>
           <option value="collaboration">
@@ -168,7 +168,7 @@ export function ContactForm({ lang, dict }: { lang: string; dict: any }) {
           placeholder={lang === "fr" ? "Votre message..." : "Your message..."}
           required
           rows={6}
-          className="w-full px-6 py-4 rounded-2xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all shadow-sm resize-none"
+          className="w-full px-5 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white transition-all shadow-sm resize-none"
         />
       </div>
 
@@ -177,7 +177,7 @@ export function ContactForm({ lang, dict }: { lang: string; dict: any }) {
         type="submit"
         size="lg"
         disabled={isSubmitting}
-        className="w-full py-8 rounded-2xl text-lg font-bold uppercase tracking-widest transition-transform hover:scale-[1.02]"
+        className="w-full py-5 rounded-xl text-base font-bold uppercase tracking-widest transition-transform hover:scale-[1.02]"
       >
         {isSubmitting
           ? lang === "fr"
