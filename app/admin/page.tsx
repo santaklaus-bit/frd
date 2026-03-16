@@ -41,8 +41,8 @@ export default async function AdminDashboard() {
 
   const stats = [
     { label: "Articles", value: posts.length, icon: FileText, href: "/admin/blog", color: "from-zinc-900 to-zinc-700 dark:from-zinc-100 dark:to-zinc-300" },
-    { label: "Initiatives", value: initiatives.length, icon: Target, href: "/admin/initiatives", color: "from-zinc-800 to-zinc-600 dark:from-zinc-200 dark:to-zinc-400" },
-    { label: "Productions", value: production.length, icon: Video, href: "/admin/production", color: "from-zinc-800 to-zinc-600 dark:from-zinc-200 dark:to-zinc-400" },
+    { label: "Expertise", value: initiatives.length, icon: Target, href: "/admin/initiatives", color: "text-blue-500" },
+    { label: "Projets", value: production.length, icon: Video, href: "/admin/production", color: "text-purple-500" },
     { label: "Messages", value: contactCount, icon: Mail, href: "/admin/contacts", color: "from-zinc-900 to-zinc-700 dark:from-zinc-100 dark:to-zinc-300" },
     { label: "Abonnés", value: subscriberCount, icon: Users, href: "/admin/newsletter", color: "from-zinc-800 to-zinc-600 dark:from-zinc-200 dark:to-zinc-400" },
     { label: "Langues", value: 2, icon: Globe, href: "/admin/content", color: "from-zinc-800 to-zinc-600 dark:from-zinc-200 dark:to-zinc-400" },
@@ -51,8 +51,8 @@ export default async function AdminDashboard() {
   const quickActions = [
     { href: "/admin/blog/new", label: "Nouvel article", description: "Rédiger et publier un article MDX", icon: FileText },
     { href: "/admin/content", label: "Éditer le contenu", description: "Modifier les textes FR / EN", icon: Globe },
-    { href: "/admin/initiatives", label: "Initiatives", description: "Gérer vos projets et missions", icon: Target },
-    { href: "/admin/production", label: "Production", description: "Interviews, podcasts, etc.", icon: Video },
+    { href: "/admin/initiatives", label: "Expertise", description: "Gérer vos domaines d'expertise", icon: Target },
+    { href: "/admin/production", label: "Projets", description: "Interviews, podcasts, réalisations, etc.", icon: Video },
     { href: "/admin/contacts", label: "Messages reçus", description: "Voir les demandes de contact", icon: Mail },
     { href: "/admin/newsletter", label: "Abonnés", description: "Liste des inscrits à la newsletter", icon: Users },
   ];

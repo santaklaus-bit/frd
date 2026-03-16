@@ -65,31 +65,32 @@ export default async function ProjectsPage({
         </div>
 
         <div className="grid sm:grid-cols-2 gap-6 md:gap-8 lg:gap-10">
-          {(initiatives as any[]).map((initiative: any, index: number) => (
-            <div
-              key={index}
-              className="p-6 sm:p-8 md:p-10 lg:p-12 border border-border rounded-2xl md:rounded-[2rem] lg:rounded-[2.5rem] bg-background hover:bg-muted/10 hover:shadow-2xl transition-all duration-300 group"
-            >
-              <div className="mb-5 md:mb-6 lg:mb-8 p-3 md:p-4 lg:p-5 rounded-xl md:rounded-2xl bg-muted/30 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors w-fit">
-                <initiative.icon className="h-7 w-7 md:h-8 md:w-8 lg:h-10 lg:w-10" />
-              </div>
-              <div className="flex items-center gap-3 mb-4 md:mb-6">
-                <span className="text-[10px] md:text-xs font-bold px-2.5 md:px-4 py-1 md:py-1.5 rounded-full bg-muted text-muted-foreground uppercase tracking-widest">
-                  {initiative.category}
-                </span>
-              </div>
-              <h2 className="text-xl md:text-2xl font-serif font-semibold mb-3 md:mb-4 uppercase tracking-tighter">
-                {initiative.title}
-              </h2>
-              <p className="text-sm md:text-base lg:text-lg text-muted-foreground leading-relaxed mb-5 md:mb-6 lg:mb-8">
-                {initiative.description}
-              </p>
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
-                {lang === "fr" ? "En savoir plus" : "Learn more"}
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-          ))}
+            {(initiatives as any[]).map((initiative: any, index: number) => (
+              <Link
+                key={index}
+                href={`/${lang}/projects/${initiative.slug}`}
+                className="p-6 sm:p-8 md:p-10 lg:p-12 border border-border rounded-2xl md:rounded-[2rem] lg:rounded-[2.5rem] bg-background hover:bg-muted/10 hover:shadow-2xl transition-all duration-300 group block"
+              >
+                <div className="mb-5 md:mb-6 lg:mb-8 p-3 md:p-4 lg:p-5 rounded-xl md:rounded-2xl bg-muted/30 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors w-fit">
+                  <initiative.icon className="h-7 w-7 md:h-8 md:w-8 lg:h-10 lg:w-10" />
+                </div>
+                <div className="flex items-center gap-3 mb-4 md:mb-6">
+                  <span className="text-[10px] md:text-xs font-bold px-2.5 md:px-4 py-1 md:py-1.5 rounded-full bg-muted text-muted-foreground uppercase tracking-widest">
+                    {initiative.category}
+                  </span>
+                </div>
+                <h2 className="text-xl md:text-2xl font-serif font-semibold mb-3 md:mb-4 uppercase tracking-tighter">
+                  {initiative.title}
+                </h2>
+                <p className="text-sm md:text-base lg:text-lg text-muted-foreground leading-relaxed mb-5 md:mb-6 lg:mb-8">
+                  {initiative.description}
+                </p>
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
+                  {lang === "fr" ? "En savoir plus" : "Learn more"}
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            ))}
         </div>
 
         <div className="mt-14 md:mt-24 lg:mt-32 p-8 sm:p-10 md:p-12 lg:p-16 rounded-2xl md:rounded-[2rem] lg:rounded-[3rem] bg-black dark:bg-white text-white dark:text-black text-center relative overflow-hidden">

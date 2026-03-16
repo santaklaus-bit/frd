@@ -72,10 +72,10 @@ export default function ProductionManager({
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
-            Productions
+            Projets
           </h1>
           <p className="text-sm text-muted-foreground">
-            Gérez vos sections de production (Interviews, Podcasts, etc.).
+            Gérez vos projets et réalisations (Interviews, Podcasts, etc.).
           </p>
         </div>
         <Button
@@ -232,12 +232,12 @@ export default function ProductionManager({
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest opacity-60">
-                    Lien (ex: /production/interviews)
+                    Lien (ex: /projects/interviews)
                   </label>
                   <Input
                     value={item.href}
                     onChange={(e) => updateItem(index, "href", e.target.value)}
-                    placeholder="/production/something"
+                    placeholder="/projects/something"
                     className="rounded-xl border-border/40 font-mono"
                   />
                 </div>

@@ -118,7 +118,9 @@ export default async function HomePage({
                 src="/farid-portrait.png"
                 alt="Farid Danko"
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                className="object-cover transition-transform duration-700 group-hover:scale-105 pointer-events-none no-copy"
+                priority
+                draggable={false}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>

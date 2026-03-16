@@ -125,7 +125,9 @@ export function SiteNav({ lang }: { lang: "en" | "fr" }) {
             <img
               src="/logo.png"
               alt="Farid Danko"
-              className="h-8 w-auto invert dark:invert-0"
+              className="h-8 w-auto invert dark:invert-0 no-copy"
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
             />
           </Link>
 
@@ -169,7 +171,9 @@ export function SiteNav({ lang }: { lang: "en" | "fr" }) {
             <img
               src="/logo.png"
               alt="Farid Danko"
-              className="h-6 w-auto invert dark:invert-0"
+              className="h-6 w-auto invert dark:invert-0 no-copy"
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
             />
           </Link>
 

@@ -94,8 +94,8 @@ function getMockAnalyticsData(): AnalyticsData {
             { path: "/", title: "Accueil", pageviews: 2_341, avgDuration: "1:48", bounceRate: 38 },
             { path: "/blog", title: "Blog", pageviews: 1_204, avgDuration: "2:32", bounceRate: 35 },
             { path: "/blog/entrepreneuriat-social", title: "Entrepreneuriat Social", pageviews: 876, avgDuration: "4:12", bounceRate: 22 },
-            { path: "/initiatives", title: "Initiatives", pageviews: 743, avgDuration: "2:58", bounceRate: 40 },
-            { path: "/production", title: "Production", pageviews: 612, avgDuration: "3:20", bounceRate: 31 },
+            { path: "/initiatives", title: "Expertise", pageviews: 743, avgDuration: "2:58", bounceRate: 40 },
+            { path: "/production", title: "Projets", pageviews: 612, avgDuration: "3:20", bounceRate: 31 },
             { path: "/blog/impact-local", title: "Impact Local", pageviews: 498, avgDuration: "5:01", bounceRate: 18 },
         ],
         trafficSources: [

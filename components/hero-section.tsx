@@ -96,7 +96,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           <h1 className="text-[12vw] sm:text-[10vw] md:text-[8vw] lg:text-[8rem] font-serif font-semibold tracking-tighter uppercase leading-[0.8] mb-4 sm:mb-6 whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
             {dict.home.title}
           </h1>
-          <p className="w-full text-center text-[2.5vw] sm:text-[2vw] md:text-[1.5vw] lg:text-[1.5rem] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] md:tracking-[0.35em] lg:tracking-[0.45em] text-muted-foreground opacity-60 text-wrap leading-tight sm:leading-snug">
+          <p className="w-full text-center text-[1.8vw] sm:text-[1.4vw] md:text-[1vw] lg:text-[1rem] font-bold uppercase tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.2em] lg:tracking-[0.25em] text-muted-foreground opacity-60 leading-tight whitespace-nowrap">
             {dict.home.subtitle}
           </p>
         </motion.div>

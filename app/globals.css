@@ -150,7 +150,11 @@
   body {
     @apply bg-background text-foreground;
   }
-
+  .no-copy {
+    @apply select-none pointer-events-none pointer-events-auto;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
   .shiki > div > button {
     border-top-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;

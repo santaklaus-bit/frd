@@ -68,10 +68,10 @@ export default function InitiativesManager({
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
-            Initiatives
+            Expertise
           </h1>
           <p className="text-sm text-muted-foreground">
-            Gérez vos projets et initiatives.
+            Gérez vos domaines d'expertise et compétences.
           </p>
         </div>
         <Button
