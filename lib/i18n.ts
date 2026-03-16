@@ -5,8 +5,8 @@ export const translations = {
         // Navigation
         nav: {
             about: 'À propos',
-            production: 'Production',
-            initiatives: 'Initiatives',
+            projects: 'Projets',
+            expertise: 'Expertise',
             contact: 'Contact',
         },
         // Homepage
@@ -21,15 +21,15 @@ export const translations = {
                 title: 'À propos',
                 readMore: 'En savoir plus',
             },
-            production: {
-                title: 'Production',
+            projects: {
+                title: 'Projets',
                 subtitle: 'Des idées, des voix, des réalités, des visions',
-                viewAll: 'Voir toutes les productions',
+                viewAll: 'Voir tous les projets',
             },
-            initiatives: {
-                title: 'Initiatives',
+            expertise: {
+                title: 'Expertise',
                 subtitle: 'Projets à impact social et entrepreneurial',
-                viewAll: 'Découvrir les initiatives',
+                viewAll: 'Découvrir mon expertise',
             },
             newsletter: {
                 title: 'Restez informé',
@@ -52,9 +52,9 @@ export const translations = {
             expertise: 'Expertise',
             memberships: 'Affiliations professionnelles',
         },
-        // Production page
-        production: {
-            title: 'Production',
+        // Projects page
+        projects: {
+            title: 'Projets',
             description: 'Je produis ici du contenu pour transmettre: Des idées, des voix, des réalités, des visions.',
             interviews: {
                 title: 'Entrevues',
@@ -70,16 +70,16 @@ export const translations = {
             },
             field: {
                 title: 'Sur le terrain',
-                description: 'Productions réalisées en contexte : immersion dans une communauté, observation d\'un projet, mission sur le terrain.',
+                description: 'Projets réalisés en contexte : immersion dans une communauté, observation d\'un projet, mission sur le terrain.',
             },
             lifestyle: {
                 title: 'Lifestyle & Perspectives',
                 description: 'Contenus plus personnels qui montrent l\'envers du décor : mon quotidien, mon parcours, mes inspirations.',
             },
         },
-        // Initiatives page
-        initiatives: {
-            title: 'Initiatives',
+        // Expertise page
+        expertise: {
+            title: 'Expertise',
             description: 'Depuis toujours, je crois en l\'importance d\'agir et de contribuer à créer des opportunités. Cette page présente quelques initiatives que j\'ai portées ou accompagnées, à la croisée de l\'entrepreneuriat, du développement organisationnel et de l\'engagement social.',
         },
         // Contact page
@@ -116,8 +116,8 @@ export const translations = {
         // Navigation
         nav: {
             about: 'About',
-            production: 'Production',
-            initiatives: 'Initiatives',
+            projects: 'Projects',
+            expertise: 'Expertise',
             contact: 'Contact',
         },
         // Homepage
@@ -132,15 +132,15 @@ export const translations = {
                 title: 'About',
                 readMore: 'Read more',
             },
-            production: {
-                title: 'Production',
+            projects: {
+                title: 'Projects',
                 subtitle: 'Ideas, voices, realities, visions',
-                viewAll: 'View all productions',
+                viewAll: 'View all projects',
             },
-            initiatives: {
-                title: 'Initiatives',
+            expertise: {
+                title: 'Expertise',
                 subtitle: 'Social and entrepreneurial impact projects',
-                viewAll: 'Discover initiatives',
+                viewAll: 'Discover expertise',
             },
             newsletter: {
                 title: 'Stay Informed',
@@ -163,9 +163,9 @@ export const translations = {
             expertise: 'Expertise',
             memberships: 'Professional Memberships',
         },
-        // Production page
-        production: {
-            title: 'Production',
+        // Projects page
+        projects: {
+            title: 'Projects',
             description: 'Here, I produce content to convey ideas, voices, realities and visions.',
             interviews: {
                 title: 'Interviews',
@@ -181,16 +181,16 @@ export const translations = {
             },
             field: {
                 title: 'In the Field',
-                description: 'Productions made in context: immersion in a community, observation of a project, field mission.',
+                description: 'Projects made in context: immersion in a community, observation of a project, field mission.',
             },
             lifestyle: {
                 title: 'Lifestyle & Perspectives',
                 description: 'More personal content that shows what goes on behind the scenes: my daily life, my journey, my inspirations.',
             },
         },
-        // Initiatives page
-        initiatives: {
-            title: 'Initiatives',
+        // Expertise page
+        expertise: {
+            title: 'Expertise',
             description: 'I have always believed in the importance of taking action and helping to create opportunities. This page presents some of the initiatives I have led or supported, at the crossroads of entrepreneurship, organisational development and social engagement.',
         },
         // Contact page

@@ -14,7 +14,7 @@
       "fr": "Il peut s’agir de : discussions de fond, invités spéciaux, formats longs.",
       "en": "This can include: in-depth discussions, special guests, long formats."
     },
-    "href": "/production/interviews"
+    "href": "/projects/interviews"
   },
   {
     "slug": "podcasts",
@@ -31,7 +31,7 @@
       "fr": "Il peut s’agir de : balados, échanges de fond sans forcément de support visuel.",
       "en": "This can include: podcasts, in-depth exchanges without necessarily visual support."
     },
-    "href": "/production/podcasts"
+    "href": "/projects/podcasts"
   },
   {
     "slug": "capsules",
@@ -48,7 +48,7 @@
       "fr": "Il peut s’agir de : prises de parole directes, interventions rapides, contenus percutants.",
       "en": "This can include: direct speech, quick interventions, impactful content."
     },
-    "href": "/production/capsules"
+    "href": "/projects/capsules"
   },
   {
     "slug": "field",
@@ -58,14 +58,14 @@
       "en": "On the ground"
     },
     "description": {
-      "fr": "Productions réalisées en contexte : immersion dans une communauté, observation d’un projet, mission sur le terrain.",
-      "en": "Productions carried out in context: immersion in a community, observation of a project, field mission."
+      "fr": "Expertises réalisées en contexte : immersion dans une communauté, observation d’un projet, mission sur le terrain.",
+      "en": "Expertise carried out in context: immersion in a community, observation of a project, field mission."
     },
     "details": {
-      "fr": "Il peut s’agir de : documentaires courts, reportages, contenus tournés lors d’initiatives concrètes.",
-      "en": "This can include: short documentaries, reports, content filmed during concrete initiatives."
+      "fr": "Il peut s’agir de : documentaires courts, reportages, contenus tournés lors d'expertises concrètes.",
+      "en": "This can include: short documentaries, reports, content filmed during concrete expertise."
     },
-    "href": "/production/field"
+    "href": "/projects/field"
   },
   {
     "slug": "lifestyle",
@@ -82,7 +82,6 @@
       "fr": "Il peut s’agir de : vlogs, moments spontanés.",
       "en": "This can include: vlogs, spontaneous moments."
     },
-    "href": "/production/lifestyle"
+    "href": "/projects/lifestyle"
   }
 ]
-

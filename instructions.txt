@@ -6,16 +6,16 @@ Page d'accueil de mon site internet, exactement dans une disposition pareille: F
 
 À gauche: Exactement dans le même ordre. On commence par les Réseaux sociaux avec des icônes comme sur le site de Farida. Mais l'ordre doit être: Linkedin, Youtube, Tik tok, Instagram, Facebook, X et medium.
 
-On continue ensuite avec : Home (Accueil), About (À propos) et PRODUCTION.
+On continue ensuite avec : Home (Accueil), About (À propos) et PROJETS.
 
-À droite: BLOG, INITIATIVES et CONTACT (J’aimerais que mon bouton Contact soit de la même dimension que sur le site de Farid, avec seule exception que vu les tons de couleurs de mon site, il sera dans un gros bouton noir (si je ne me trompe).
+À droite: BLOG, EXPERTISE et CONTACT (J’aimerais que mon bouton Contact soit de la même dimension que sur le site de Farid, avec seule exception que vu les tons de couleurs de mon site, il sera dans un gros bouton noir (si je ne me trompe).
 
 Avant ou après le bouton CONTACT, intégrer le bouton qui traduction automatique EN/FR
 
 
 
 
-En bas du grand titre qui sera : Farid Danko, écrire: Farid Danko est un entrepreneur social. Il accompagne les personnes, les entreprises et les organisations à clarifier leur vision, construire des solutions durables et renforcer leur impact dans la société.
+En bas du grand titre qui sera : Farid Danko, écrire:Farid Danko est un entrepreneur social. Il accompagne les personnes, les entreprises et les organisations à clarifier leur vision, construire des solutions durables et renforcer leur impact dans la société.
 
 English:Farid Danko is a dedicated social entrepreneur. He helps individuals, businesses, and organisations to clarify their vision, develop sustainable solutions, and increase their positive impact on society.
 Je souhaiterais que chaque contenu (page) ait l’option permettant de facilement la partager sur les réseaux sociaux.
@@ -41,8 +41,8 @@ In addition to my academic background in Political Science and Law at the Univer
 I have led large-scale projects, including the Workplace Learning Programme for Environmental Trades, coordinated programmes related to employability and socio-professional integration, and contributed to the revision of professional standards. I am also an expert in change management in organisational settings and in structuring projects with a social impact.
 My membership of professional bodies in Quebec demonstrates my commitment to maintaining the highest standards of governance, management and professionalism.
 Today, I offer my expertise to those who wish to conduct business differently — with clarity, consistency and impact.
-Page - Production
-Production
+Page - Projets
+Projets
 Je produis ici du contenu pour transmettre: Des idées, des voix, des réalités, des visions.
 Cette section regroupe les formats que j’ai créés ou coordonnés : entrevues, capsules, réflexions filmées, podcasts ou moments captés sur le terrain.
 Ce sont des productions personnelles, pensées comme des espaces de conversation, de documentation ou de transmission.
@@ -62,8 +62,8 @@ Il peut s’agir de : documentaires courts, reportages, contenus tournés lors d
 Lifestyle & Perspectives 
 → Contenus plus personnels qui montrent l’envers du décor : mon quotidien, mon parcours, mes inspirations. 
 Il peut s’agir de : vlogs, moments spontanés.
-Page - Production
-Production
+Page - Projets
+Projets
 Here, I produce content to convey ideas, voices, realities and visions.
 This section brings together the formats I have created or coordinated: interviews, short videos, filmed reflections, podcasts and moments captured in the field.
 These are personal productions, designed as spaces for conversation, documentation or transmission.
@@ -88,13 +88,13 @@ Pour ma page Contact, je souhaiterais faire un mix de l’esprit des deux pages 
 Nom complet (obligatoire)
 Adresse e-mail (obligatoire, seul canal de réponse)
 Type de demande (menu déroulant)
-	•	Message général 
-	•	Collaboration / événement 
+	•	Message général
+	•	Collaboration / événement
 	•	Média / entrevue
 Message: xxxxxx
-Initiatives
+Expertise
 Depuis toujours, je crois en l’importance d’agir et de contribuer à créer des opportunités.
- Cette page présente quelques initiatives que j’ai portées ou accompagnées, à la croisée de l’entrepreneuriat, du développement organisationnel et de l’engagement social. Des actions concrètes qui traduisent mon désir constant : être utile et contribuer à un impact durable.
+Cette page présente quelques initiatives que j’ai portées ou accompagnées, à la croisée de l’entrepreneuriat, du développement organisationnel et de l’engagement social.Des actions concrètes qui traduisent mon désir constant : être utile et contribuer à un impact durable.
 Page - Contact (English version)
 Full name (required)
 Email address (required, sole means of response)
@@ -103,7 +103,7 @@ Type of request (drop-down menu)
 	•	Collaboration/event
 	•	Media/interview
 Message: xxxxxx
-Initiatives (English version)
+Expertise (English version)
 I have always believed in the importance of taking action and helping to create opportunities.
 This page presents some of the initiatives I have led or supported, at the crossroads of entrepreneurship, organisational development and social engagement.
 These are concrete actions that reflect my constant desire to be useful and contribute to a lasting impact.
@@ -111,6 +111,6 @@ Important: abonnement newsletter
 Site d’inspiration général: https://lairdandgoodcompany.com/
 Site d’inspiration pour police des textes (articles): How A Designer Brought Comfort & Soul To This London Home | SheerLuxe
 
-Preuve sociale- Collaborations & Clients (Accompagnement) 
+Preuve sociale- Collaborations & Clients (Accompagnement)
 
 

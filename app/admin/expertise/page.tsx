@@ -3,8 +3,8 @@ import InitiativesManager from "@/components/admin/initiatives-manager";
 
 export const dynamic = "force-dynamic";
 
-export default async function InitiativesAdminPage() {
-  const initiatives = await getData("initiatives");
+export default async function ExpertiseAdminPage() {
+  const expertise = await getData("expertise");
 
-  return <InitiativesManager initialData={initiatives} />;
+  return <InitiativesManager initialData={expertise} />;
 }

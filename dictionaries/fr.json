@@ -17,8 +17,8 @@
   "about": {
     "title": "À propos de moi",
     "content1": "Je suis un entrepreneur social animé par un rêve, un désir profond : être utile à l’humanité. Dès l’âge de 10 ans, j’ai ressenti un besoin — celui de contribuer à créer des opportunités là où elles manquent, de transformer les idées en solutions concrètes, de contribuer à un monde plus juste.",
-    "content2": "Issu d’un environnement entrepreneurial (avec des parents entrepreneurs), j’ai grandi avec un sens des responsabilités développé, nourri par la curiosité, la débrouillardise et des valeurs humaines fortes : la générosité, l’écoute, le partage. Ces principes ont façonné mon rapport au leadership, toujours orienté vers l’impact collectif.",
-    "content3": "Créateur compulsif d’idées et bâtisseur de projets, j’ai accompagné au fil des ans plus d’une cinquantaine de personnes et organisations à clarifier leur vision, structurer leurs initiatives et poser les bases de projets porteurs de sens. J’interviens notamment en création d’entreprise, développement organisationnel, gestion de projet, positionnement stratégique et accompagnement au changement.",
+    "content2": "Issu d’un environnement entrepreneurial (avec des parents entrepreneurs), j’ai grandi avec un surcroît de responsabilités nourri par la curiosité, la débrouillardise et des valeurs humaines fortes : la générosité, l’écoute, le partage. Ces principes ont façonné mon rapport au leadership, toujours orienté vers l’impact collectif.",
+    "content3": "Créateur impulsif d’idées et bâtisseur de projets, j’ai accompagné au fil des ans plus d’une cinquantaine de personnes et organisations à clarifier leur vision, structurer leurs initiatives et poser les bases de projets porteurs de sens. J’interviens notamment en création d’entreprise, développement organisationnel, gestion de projet, positionnement stratégique et accompagnement au changement.",
     "content4": "J’ai également soutenu plusieurs organisations — tant à but non lucratif que dans le secteur privé — dans la recherche de financement, que ce soit auprès d’institutions bancaires, de bailleurs de fonds ou dans le cadre d’appels à projets. Mon rôle est d’accompagner, de structurer les idées et de renforcer la posture stratégique pour maximiser les chances de succès.",
     "content5": "En plus de mon parcours universitaire à la Faculté de science politique et de droit de l’Université du Québec à Montréal (UQAM), j’ai approfondi mes compétences grâce à des formations spécialisées portant sur l’économie circulaire, le développement durable, l’intervention en milieu rural et l’accompagnement en contexte international, notamment auprès de l’Organisation internationale du Travail. Ces expériences m’ont permis d’affiner une approche humaine, systémique et solidement ancrée dans les réalités de terrain.",
     "content6": "J’ai dirigé des projets d’envergure, notamment le Programme d’apprentissage en milieu de travail pour des métiers du secteur de l’environnement, coordonné des programmes liés à l’employabilité et à l’insertion socioprofessionnelle, et participé à des révisions de normes professionnelles. Mon expertise inclut également la gestion du changement en milieu organisationnel et la structuration de projets à impact social.",
@@ -43,7 +43,7 @@
       },
       "inclusion": {
         "title": "Inclusion",
-        "desc": "Programmes d'insertion et initiatives à impact économique et social.",
+        "desc": "Programmes d'insertion et expertises à impact économique et social.",
         "details": "Employabilité, formation, équité sociale."
       }
     }
@@ -77,7 +77,7 @@
   "projects": {
     "title": "Projets",
     "intro": "Depuis toujours, je crois en l’importance d’agir et de contribuer à créer des opportunités.",
-    "description": "Cette page présente quelques initiatives que j’ai portées ou accompagnées, à la croisée de l’entrepreneuriat, du développement organisationnel et de l’engagement.",
+    "description": "Cette page présente quelques expertises que j’ai portées ou accompagnées, à la croisée de l’entrepreneuriat, du développement organisationnel et de l’engagement.",
     "outro": "Des actions concrètes qui traduisent mon désir constant : être utile et contribuer à un impact durable."
   },
   "newsletter": {
@@ -103,7 +103,7 @@
     },
     "projects": {
       "title": "Projets - Farid DANKO",
-      "description": "Découvrez les initiatives portées ou accompagnées par Farid Danko dans les secteurs de l'environnement, de l'employabilité et de l'innovation sociale."
+      "description": "Découvrez l'expertise portée ou accompagnée par Farid Danko dans les secteurs de l'environnement, de l'employabilité et de l'innovation sociale."
     },
     "blog": {
       "title": "Blog & Réflexions - Farid DANKO",

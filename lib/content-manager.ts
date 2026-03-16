@@ -80,14 +80,14 @@ export async function saveDictionary(lang: "en" | "fr", data: any) {
 }
 
 // ============================================================================
-// DATA (Initiatives, Production)
+// DATA (Expertise, Projects)
 // ============================================================================
 
 export async function getData(filename: string) {
-  if (filename === "initiatives") {
-    const initiatives = await Initiative.findAll({ order: [["order", "ASC"]] });
+  if (filename === "expertise" || filename === "initiatives") {
+    const expertiseItems = await Initiative.findAll({ order: [["order", "ASC"]] });
     // Transform back to JSON structure expected by the frontend
-    return initiatives.map((i) => {
+    return expertiseItems.map((i) => {
       const data = i.toJSON();
       return {
         slug: data.slug,
@@ -100,10 +100,10 @@ export async function getData(filename: string) {
     });
   }
 
-  if (filename === "production") {
-    const productions = await Production.findAll({ order: [["order", "ASC"]] });
+  if (filename === "projects" || filename === "production") {
+    const projects = await Production.findAll({ order: [["order", "ASC"]] });
     // Transform back to JSON
-    return productions.map((p) => {
+    return projects.map((p) => {
       const data = p.toJSON();
       return {
         slug: data.slug,
@@ -123,7 +123,7 @@ export async function saveData(filename: string, data: any) {
   // Since the legacy format sends the entire array to `saveData`,
   // we need to sync it to the DB (destroy all, then create all)
   
-  if (filename === "initiatives") {
+  if (filename === "expertise") {
     await Initiative.destroy({ truncate: true }); // Wipe table
     const records = data.map((i: any, index: number) => ({
       slug: i.slug,
@@ -140,7 +140,7 @@ export async function saveData(filename: string, data: any) {
     await Initiative.bulkCreate(records);
   }
 
-  if (filename === "production") {
+  if (filename === "projects") {
     await Production.destroy({ truncate: true }); // Wipe table
     const records = data.map((p: any, index: number) => ({
       slug: p.slug,
