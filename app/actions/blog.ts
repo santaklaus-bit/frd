@@ -11,6 +11,7 @@ export async function createOrUpdateBlogPost(formData: FormData) {
   const description = formData.get("description") as string;
   const date = formData.get("date") as string;
   const content = formData.get("content") as string;
+  const authorName = formData.get("authorName") as string;
   
   const thumbnailFile = formData.get("thumbnail");
   let thumbnailUrl = formData.get("currentThumbnail") as string;
@@ -30,11 +31,31 @@ export async function createOrUpdateBlogPost(formData: FormData) {
     thumbnailUrl = `/uploads/${filename}`;
   }
 
+  const authorPhotoFile = formData.get("authorPhoto");
+  let authorPhotoUrl = formData.get("currentAuthorPhoto") as string;
+
+  if (authorPhotoFile instanceof File && authorPhotoFile.size > 0) {
+    const bytes = await authorPhotoFile.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const filename = `author-${Date.now()}-${authorPhotoFile.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
+    const uploadDir = path.join(process.cwd(), "public/uploads");
+
+    await fs.mkdir(uploadDir, { recursive: true });
+
+    const filePath = path.join(uploadDir, filename);
+    await fs.writeFile(filePath, buffer);
+
+    authorPhotoUrl = `/uploads/${filename}`;
+  }
+
   const frontmatter = {
     title,
     date,
     description,
     thumbnail: thumbnailUrl || "",
+    authorName: authorName || "",
+    authorPhoto: authorPhotoUrl || "",
   };
 
   await saveBlogPost(slug, frontmatter, content);

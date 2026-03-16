@@ -8,7 +8,6 @@ import { getBlogPost } from "@/lib/content-manager";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getMDXComponents } from "@/mdx-components";
 import { AuthorCard } from "@/components/author-card";
-import { authors } from "@/lib/authors";
 import { TableOfContents } from "@/components/table-of-contents";
 
 export async function generateMetadata({
@@ -61,7 +60,12 @@ export default async function BlogPost({ params }: PageProps) {
 
   const date = new Date(page.date);
   const formattedDate = formatDate(date, lang);
-  const author = authors.dillion; // Default author as per existing code patterns
+  
+  const author = {
+    name: (page as any).authorName || "Farid DANKO", // fallback to site creator
+    position: lang === "fr" ? "Auteur" : "Author",
+    avatar: (page as any).authorPhoto || "/farid-portrait.png", // fallback photo
+  };
 
   return (
     <div className="min-h-screen bg-background relative">

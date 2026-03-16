@@ -8,6 +8,8 @@ export class BlogPost extends Model {
   public declare description: string;
   public declare date: string;
   public declare thumbnail: string;
+  public declare authorName: string;
+  public declare authorPhoto: string;
   public declare content: string;
   public declare readonly createdAt: Date;
   public declare readonly updatedAt: Date;
@@ -37,6 +39,12 @@ BlogPost.init(
       allowNull: false,
     },
     thumbnail: {
+      type: DataTypes.STRING,
+    },
+    authorName: {
+      type: DataTypes.STRING,
+    },
+    authorPhoto: {
       type: DataTypes.STRING,
     },
     content: {

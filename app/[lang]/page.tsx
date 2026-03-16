@@ -3,17 +3,10 @@ import Image from "next/image";
 import { ArrowRight, Zap, TrendingUp, Users, BookOpen, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HeroSection } from "@/components/hero-section";
-import { docs, meta } from "@/.source";
-import { loader } from "fumadocs-core/source";
-import { createMDXSource } from "fumadocs-mdx";
 import { getDictionary } from "@/lib/get-dictionary";
+import { getBlogPosts } from "@/lib/content-manager";
 import { Newsletter } from "@/components/newsletter";
 import { Metadata } from "next";
-
-const blogSource = loader({
-  baseUrl: "/blog",
-  source: createMDXSource(docs, meta),
-});
 
 const formatDate = (date: Date, lang: string): string => {
   return date.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", {
@@ -44,14 +37,12 @@ export default async function HomePage({
   const { lang } = await params;
   const dict = await getDictionary(lang as "en" | "fr");
 
-  const posts = blogSource
-    .getPages()
-    .sort(
-      (a, b) =>
-        new Date(b.data.date ?? 0).getTime() -
-        new Date(a.data.date ?? 0).getTime()
-    )
-    .slice(0, 2);
+  const postsSource = await getBlogPosts();
+  const posts = postsSource.sort(
+    (a: any, b: any) =>
+      new Date(b.date ?? 0).getTime() -
+      new Date(a.date ?? 0).getTime()
+  ).slice(0, 2);
 
   const expertiseItems = [
     {
@@ -321,19 +312,19 @@ export default async function HomePage({
           </div>
 
           <div className="grid sm:grid-cols-2 gap-6 md:gap-8 lg:gap-10">
-            {posts.map((post) => {
-              const date = post.data.date ? new Date(post.data.date) : null;
+            {posts.map((post: any) => {
+              const date = post.date ? new Date(post.date) : null;
               return (
                 <Link
-                  key={post.url}
-                  href={`/${lang}${post.url}`}
+                  key={post.slug}
+                  href={`/${lang}/blog/${post.slug}`}
                   className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card hover:shadow-2xl transition-all"
                 >
-                  {post.data.thumbnail && (
+                  {post.thumbnail && (
                     <div className="relative h-44 sm:h-48 md:h-52 w-full overflow-hidden">
                       <Image
-                        src={post.data.thumbnail}
-                        alt={post.data.title}
+                        src={post.thumbnail}
+                        alt={post.title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
                       />
@@ -341,11 +332,11 @@ export default async function HomePage({
                   )}
                   <div className="flex flex-1 flex-col p-5 sm:p-6 md:p-8">
                     <h3 className="text-lg md:text-xl font-bold tracking-tight mb-2 md:mb-3 group-hover:text-primary transition-colors leading-tight">
-                      {post.data.title}
+                      {post.title}
                     </h3>
-                    {post.data.description && (
+                    {post.description && (
                       <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed flex-1">
-                        {post.data.description}
+                        {post.description}
                       </p>
                     )}
                     <div className="mt-4 md:mt-5 flex items-center justify-between text-xs font-bold text-muted-foreground uppercase tracking-widest">

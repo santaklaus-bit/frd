@@ -12,6 +12,7 @@
     "db:setup": "npx sequelize-cli db:create || true && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all || true"
   },
   "dependencies": {
+    "@google-analytics/data": "^5.2.1",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
     "@radix-ui/react-accordion": "^1.2.3",

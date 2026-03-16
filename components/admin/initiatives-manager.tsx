@@ -18,7 +18,6 @@ export default function InitiativesManager({
 
   const addItem = () => {
     setItems([
-      ...items,
       {
         slug: "",
         icon: "Lightbulb",
@@ -26,6 +25,7 @@ export default function InitiativesManager({
         description: { fr: "", en: "" },
         category: { fr: "", en: "" },
       },
+      ...items,
     ]);
   };
 
@@ -59,7 +59,7 @@ export default function InitiativesManager({
 
   const onSave = async () => {
     setLoading(true);
-    await updateData("initiatives", items);
+    await updateData("expertise", items);
     setLoading(false);
   };
 

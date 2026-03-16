@@ -18,7 +18,6 @@ export default function ProductionManager({
 
   const addItem = () => {
     setItems([
-      ...items,
       {
         slug: "",
         icon: "Video",
@@ -27,6 +26,7 @@ export default function ProductionManager({
         details: { fr: "", en: "" },
         href: "",
       },
+      ...items,
     ]);
   };
 
@@ -63,7 +63,7 @@ export default function ProductionManager({
 
   const onSave = async () => {
     setLoading(true);
-    await updateData("production", items);
+    await updateData("projects", items);
     setLoading(false);
   };
 

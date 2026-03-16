@@ -18,6 +18,8 @@ interface BlogFormProps {
     description: string;
     date: string;
     thumbnail: string;
+    authorName: string;
+    authorPhoto: string;
     content: string;
   };
 }
@@ -49,12 +51,21 @@ export function BlogForm({ initialData }: BlogFormProps) {
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState(initialData?.content || "");
   const [previewURL, setPreviewURL] = useState<string | null>(initialData?.thumbnail || null);
+  const [authorPreviewURL, setAuthorPreviewURL] = useState<string | null>(initialData?.authorPhoto || null);
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const url = URL.createObjectURL(file);
       setPreviewURL(url);
+    }
+  };
+
+  const handleAuthorPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setAuthorPreviewURL(url);
     }
   };
 
@@ -140,6 +151,41 @@ export function BlogForm({ initialData }: BlogFormProps) {
                 className="rounded-xl border-border/40 bg-background"
               />
             </Field>
+
+            <div className="grid grid-cols-2 gap-5">
+              <Field label="Nom de l'auteur">
+                <Input
+                  name="authorName"
+                  defaultValue={initialData?.authorName}
+                  placeholder="Farid DANKO"
+                  className="rounded-xl border-border/40 bg-background"
+                />
+              </Field>
+
+              <Field label="Photo de l'auteur" hint="JPG, PNG, WEBP">
+                <input type="hidden" name="currentAuthorPhoto" value={initialData?.authorPhoto || ""} />
+                <div className="flex items-center gap-4">
+                  {authorPreviewURL ? (
+                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-border/40">
+                      <img src={authorPreviewURL} alt="Author Preview" className="h-full w-full object-cover" />
+                    </div>
+                  ) : (
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-dashed border-border/40 bg-muted/20">
+                      <ImageIcon className="h-4 w-4 text-muted-foreground/40" />
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <Input
+                      name="authorPhoto"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAuthorPhotoChange}
+                      className="rounded-xl border-border/40 bg-background file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                    />
+                  </div>
+                </div>
+              </Field>
+            </div>
 
             <Field label="Image de couverture" hint="Formats recommandés : JPG, PNG, WEBP">
               <input type="hidden" name="currentThumbnail" value={initialData?.thumbnail || ""} />

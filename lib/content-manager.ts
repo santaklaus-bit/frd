@@ -29,6 +29,8 @@ export async function saveBlogPost(
       description: frontmatter.description,
       date: frontmatter.date,
       thumbnail: frontmatter.thumbnail,
+      authorName: frontmatter.authorName,
+      authorPhoto: frontmatter.authorPhoto,
       content,
     });
   } else {
@@ -38,6 +40,8 @@ export async function saveBlogPost(
       description: frontmatter.description,
       date: frontmatter.date,
       thumbnail: frontmatter.thumbnail,
+      authorName: frontmatter.authorName,
+      authorPhoto: frontmatter.authorPhoto,
       content,
     });
   }
