@@ -22,10 +22,15 @@ const useDrawer = () => {
 
 interface DrawerProps {
     children: React.ReactNode;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }
 
-export function Drawer({ children }: DrawerProps) {
-    const [isOpen, setIsOpen] = useState(false);
+export function Drawer({ children, open: controlledOpen, onOpenChange }: DrawerProps) {
+    const [internalOpen, setInternalOpen] = useState(false);
+    
+    const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen;
+    const setIsOpen = onOpenChange !== undefined ? onOpenChange : setInternalOpen;
 
     useEffect(() => {
         if (isOpen) {

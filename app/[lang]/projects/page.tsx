@@ -53,7 +53,7 @@ export default async function ProjectsPage({
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-24">
         <div className="max-w-4xl mb-10 md:mb-16 lg:mb-20 text-center mx-auto">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-semibold mb-4 md:mb-6 uppercase tracking-tighter">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-4 md:mb-6 uppercase tracking-tighter">
             {dict.projects.title}
           </h1>
           <p className="text-base sm:text-lg md:text-xl font-normal leading-tight mb-3 md:mb-6">
@@ -79,7 +79,7 @@ export default async function ProjectsPage({
                     {initiative.category}
                   </span>
                 </div>
-                <h2 className="text-xl md:text-2xl font-serif font-semibold mb-3 md:mb-4 uppercase tracking-tighter">
+                <h2 className="text-xl md:text-2xl font-semibold mb-3 md:mb-4 uppercase tracking-tighter">
                   {initiative.title}
                 </h2>
                 <p className="text-sm md:text-base lg:text-lg text-muted-foreground leading-relaxed mb-5 md:mb-6 lg:mb-8">

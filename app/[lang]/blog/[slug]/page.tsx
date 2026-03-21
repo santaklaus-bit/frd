@@ -92,7 +92,7 @@ export default async function BlogPost({ params }: PageProps) {
             </Button>
 
             <div className="space-y-6">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-semibold tracking-tighter text-balance leading-[0.9] uppercase">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tighter text-balance leading-[0.9] uppercase">
                 {page.title}
               </h1>
 
@@ -122,7 +122,7 @@ export default async function BlogPost({ params }: PageProps) {
                 />
               </div>
             )}
-            <div className="prose dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-semibold prose-headings:tracking-tighter prose-headings:uppercase prose-p:text-muted-foreground prose-p:leading-relaxed prose-lg">
+            <div className="prose dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:tracking-tighter prose-headings:uppercase prose-p:text-muted-foreground prose-p:leading-relaxed prose-lg">
               <MDXRemote source={page.content} components={getMDXComponents()} />
             </div>
           </main>

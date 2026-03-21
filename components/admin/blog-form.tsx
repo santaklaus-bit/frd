@@ -6,10 +6,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { createOrUpdateBlogPost } from "@/app/actions/blog";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ArrowLeft, Save, Loader2, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { WysiwygEditor } from "./wysiwyg-editor";
+import { MediaUpload } from "./media-upload";
 
 interface BlogFormProps {
   initialData?: {
@@ -39,7 +40,9 @@ function Field({
         <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
           {label}
         </label>
-        {hint && <span className="text-[10px] text-muted-foreground/50">{hint}</span>}
+        {hint && (
+          <span className="text-[10px] text-muted-foreground/50">{hint}</span>
+        )}
       </div>
       {children}
     </div>
@@ -50,30 +53,22 @@ export function BlogForm({ initialData }: BlogFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState(initialData?.content || "");
-  const [previewURL, setPreviewURL] = useState<string | null>(initialData?.thumbnail || null);
-  const [authorPreviewURL, setAuthorPreviewURL] = useState<string | null>(initialData?.authorPhoto || null);
-
-  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setPreviewURL(url);
-    }
-  };
-
-  const handleAuthorPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setAuthorPreviewURL(url);
-    }
-  };
+  const [thumbnailUrl, setThumbnailUrl] = useState(initialData?.thumbnail || "");
+  const [authorPhotoUrl, setAuthorPhotoUrl] = useState(
+    initialData?.authorPhoto || ""
+  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     try {
       const formData = new FormData(e.currentTarget);
+      // Content is handled separately because it's in state
+      formData.set("content", content);
+      // Media URLs are in state and hidden inputs, but we ensure they are set
+      formData.set("thumbnail", thumbnailUrl);
+      formData.set("authorPhoto", authorPhotoUrl);
+
       await createOrUpdateBlogPost(formData);
       toast.success("Article enregistré avec succès !");
       router.push("/admin/blog");
@@ -108,25 +103,67 @@ export function BlogForm({ initialData }: BlogFormProps) {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Metadata block */}
-        <div className="rounded-2xl border border-border/40 bg-card overflow-hidden">
-          <div className="px-6 py-4 border-b border-border/40 bg-muted/20">
-            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/70">
-              Métadonnées
-            </p>
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main Content Column */}
+          <div className="lg:col-span-2 space-y-8">
+            {/* Title Block */}
+            <div className="rounded-2xl border border-border/40 bg-card p-6 space-y-6">
+              <Field label="Titre de l'article">
+                <Input
+                  name="title"
+                  defaultValue={initialData?.title}
+                  placeholder="Le futur de l'entrepreneuriat social..."
+                  required
+                  className="rounded-xl border-border/40 bg-background text-lg font-medium h-12"
+                />
+              </Field>
+
+              <Field label="Description / Résumé SEO" hint="Court résumé">
+                <Textarea
+                  name="description"
+                  defaultValue={initialData?.description}
+                  placeholder="Un court résumé de l'article..."
+                  className="rounded-xl border-border/40 bg-background min-h-[100px] resize-none"
+                />
+              </Field>
+            </div>
+
+            {/* Editor Block */}
+            <div className="rounded-2xl border border-border/40 bg-card overflow-hidden">
+              <div className="px-6 py-4 border-b border-border/40 bg-muted/20">
+                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/70">
+                  Contenu de l'article
+                </p>
+              </div>
+              <div className="p-0">
+                <WysiwygEditor
+                  value={content}
+                  onChange={setContent}
+                  placeholder="Commencez à rédiger..."
+                  className="min-h-[600px] border-0"
+                />
+              </div>
+            </div>
           </div>
-          <div className="p-6 space-y-5">
-            <div className="grid grid-cols-2 gap-5">
-              <Field label="Slug (URL)" hint={initialData ? "Lecture seule" : "unique"}>
+
+          {/* Sidebar Column */}
+          <div className="space-y-8">
+            {/* Metadata & Media */}
+            <div className="rounded-2xl border border-border/40 bg-card p-6 space-y-6">
+              <Field
+                label="Slug (URL)"
+                hint={initialData ? "Lecture seule" : "unique"}
+              >
                 <Input
                   name="slug"
                   defaultValue={initialData?.slug}
                   placeholder="mon-article-seo"
                   required
                   readOnly={!!initialData}
-                  className="rounded-xl border-border/40 bg-background"
+                  className="rounded-xl border-border/40 bg-background font-mono text-xs"
                 />
               </Field>
+
               <Field label="Date de publication">
                 <Input
                   name="date"
@@ -140,20 +177,25 @@ export function BlogForm({ initialData }: BlogFormProps) {
                   className="rounded-xl border-border/40 bg-background"
                 />
               </Field>
+
+              <div className="pt-4 border-t border-border/40">
+                <MediaUpload
+                  label="Image à la une"
+                  value={thumbnailUrl}
+                  onChange={setThumbnailUrl}
+                  onRemove={() => setThumbnailUrl("")}
+                />
+                <input type="hidden" name="thumbnail" value={thumbnailUrl} />
+              </div>
             </div>
 
-            <Field label="Titre">
-              <Input
-                name="title"
-                defaultValue={initialData?.title}
-                placeholder="Le futur de l'entrepreneuriat social..."
-                required
-                className="rounded-xl border-border/40 bg-background"
-              />
-            </Field>
-
-            <div className="grid grid-cols-2 gap-5">
-              <Field label="Nom de l'auteur">
+            {/* Author Block */}
+            <div className="rounded-2xl border border-border/40 bg-card p-6 space-y-6">
+              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/70 border-b border-border/40 pb-2">
+                Auteur
+              </p>
+              
+              <Field label="Nom">
                 <Input
                   name="authorName"
                   defaultValue={initialData?.authorName}
@@ -162,106 +204,45 @@ export function BlogForm({ initialData }: BlogFormProps) {
                 />
               </Field>
 
-              <Field label="Photo de l'auteur" hint="JPG, PNG, WEBP">
-                <input type="hidden" name="currentAuthorPhoto" value={initialData?.authorPhoto || ""} />
-                <div className="flex items-center gap-4">
-                  {authorPreviewURL ? (
-                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-border/40">
-                      <img src={authorPreviewURL} alt="Author Preview" className="h-full w-full object-cover" />
-                    </div>
-                  ) : (
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-dashed border-border/40 bg-muted/20">
-                      <ImageIcon className="h-4 w-4 text-muted-foreground/40" />
-                    </div>
-                  )}
-                  <div className="flex-1">
-                    <Input
-                      name="authorPhoto"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleAuthorPhotoChange}
-                      className="rounded-xl border-border/40 bg-background file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-                    />
-                  </div>
-                </div>
-              </Field>
+              <MediaUpload
+                label="Photo de l'auteur"
+                value={authorPhotoUrl}
+                onChange={setAuthorPhotoUrl}
+                onRemove={() => setAuthorPhotoUrl("")}
+              />
+              <input type="hidden" name="authorPhoto" value={authorPhotoUrl} />
             </div>
 
-            <Field label="Image de couverture" hint="Formats recommandés : JPG, PNG, WEBP">
-              <input type="hidden" name="currentThumbnail" value={initialData?.thumbnail || ""} />
-              <div className="flex items-center gap-6">
-                {previewURL ? (
-                  <div className="relative h-24 w-40 shrink-0 overflow-hidden rounded-xl border border-border/40">
-                    <img src={previewURL} alt="Preview" className="h-full w-full object-cover" />
-                  </div>
+            {/* Actions */}
+            <div className="sticky bottom-8 space-y-3">
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-2xl h-12 bg-foreground text-background font-bold uppercase tracking-widest text-xs shadow-xl hover:opacity-90 transition-all"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Enregistrement...
+                  </>
                 ) : (
-                  <div className="flex h-24 w-40 shrink-0 items-center justify-center rounded-xl border border-dashed border-border/40 bg-muted/20">
-                    <ImageIcon className="h-6 w-6 text-muted-foreground/40" />
-                  </div>
+                  <>
+                    <Save className="mr-2 h-4 w-4" />
+                    Publier / Enregistrer
+                  </>
                 )}
-                <div className="flex-1">
-                  <Input
-                    name="thumbnail"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleThumbnailChange}
-                    className="rounded-xl border-border/40 bg-background file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-                  />
-                  <p className="mt-2 text-[10px] text-muted-foreground">Sélectionnez une nouvelle image pour remplacer l'existante.</p>
-                </div>
-              </div>
-            </Field>
-
-            <Field label="Description" hint="Résumé SEO">
-              <Textarea
-                name="description"
-                defaultValue={initialData?.description}
-                placeholder="Un court résumé de l'article visible dans les résultats de recherche..."
-                className="rounded-xl border-border/40 bg-background min-h-[80px] resize-none"
-              />
-            </Field>
+              </Button>
+              <Link href="/admin/blog" className="block">
+                <Button
+                  variant="outline"
+                  type="button"
+                  className="w-full rounded-2xl h-12 text-xs font-bold uppercase tracking-widest"
+                >
+                  Annuler & Quitter
+                </Button>
+              </Link>
+            </div>
           </div>
-        </div>
-
-        {/* Content block */}
-        <div className="rounded-2xl border border-border/40 bg-card overflow-hidden">
-          <div className="px-6 py-4 border-b border-border/40 bg-muted/20 flex items-center justify-between">
-            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/70">
-              Contenu
-            </p>
-            <span className="text-[10px] text-muted-foreground/50">
-              Éditeur de texte enrichi complet
-            </span>
-          </div>
-          <div className="p-6">
-            <input type="hidden" name="content" value={content} />
-            <WysiwygEditor
-              value={content}
-              onChange={setContent}
-              placeholder="Commencez à rédiger votre article ici..."
-              className="min-h-[480px]"
-            />
-          </div>
-        </div>
-
-        {/* Submit */}
-        <div className="flex items-center justify-end gap-3 pt-2">
-          <Link href="/admin/blog">
-            <Button variant="outline" type="button" className="rounded-full px-6 h-9 text-xs font-semibold uppercase tracking-widest">
-              Annuler
-            </Button>
-          </Link>
-          <Button
-            type="submit"
-            disabled={loading}
-            className="rounded-full px-8 h-9 bg-foreground text-background text-xs font-semibold uppercase tracking-widest hover:opacity-80 transition-opacity"
-          >
-            {loading ? (
-              <><Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />Sauvegarde...</>
-            ) : (
-              <><Save className="mr-2 h-3.5 w-3.5" />Enregistrer</>
-            )}
-          </Button>
         </div>
       </form>
     </div>

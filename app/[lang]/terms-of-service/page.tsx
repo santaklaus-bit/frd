@@ -26,7 +26,7 @@ export default async function TermsOfServicePage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-16 md:py-24">
-        <h1 className="text-3xl sm:text-4xl font-serif font-semibold tracking-tighter uppercase mb-2">
+        <h1 className="text-3xl sm:text-4xl font-semibold tracking-tighter uppercase mb-2">
           {isFr ? "Conditions générales d'utilisation" : "Terms of Service"}
         </h1>
         <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold mb-10 md:mb-14">

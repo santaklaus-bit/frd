@@ -1,7 +1,26 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @import "tw-animate-css";
 @import "fumadocs-ui/css/neutral.css";
 @import "fumadocs-ui/css/preset.css";
+
+/* Fix for Tiptap / Tailwind v4 bold styling */
+.prose {
+  font-family: var(--font-sans) !important;
+}
+
+.prose strong, 
+.prose b,
+.prose h1,
+.prose h2,
+.prose h3 {
+  font-weight: 700 !important;
+}
+
+/* Ensure editor is visible */
+.tiptap p {
+  margin: 1em 0;
+}
 
 @custom-variant dark (&:is(.dark *));
 
