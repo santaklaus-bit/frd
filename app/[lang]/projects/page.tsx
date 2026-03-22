@@ -1,11 +1,11 @@
 import { Target, Users, Lightbulb, TrendingUp, ArrowRight } from "lucide-react";
 import { getDictionary } from "@/lib/get-dictionary";
 import { getData } from "@/lib/content-manager";
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
-
-export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

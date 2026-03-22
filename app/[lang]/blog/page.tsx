@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { Metadata } from "next";
 import { getDictionary } from "@/lib/get-dictionary";
 import { getBlogPosts } from "@/lib/content-manager";

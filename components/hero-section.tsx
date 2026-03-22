@@ -37,7 +37,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           src="/hero-bg.webp"
           alt="Hero Background"
           fill
-          className="object-cover"
+          className="object-cover scale-y-[-1]"
           priority
         />
         <div className="absolute inset-0 bg-black/60" />
