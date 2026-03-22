@@ -97,7 +97,7 @@ export function SiteNav({ lang }: { lang: "en" | "fr" }) {
                     className="text-muted-foreground hover:text-foreground transition-colors"
                     aria-label={social.label}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-5 w-5" />
                   </a>
                 );
               })}

@@ -79,8 +79,8 @@ export default async function HomePage({
       title: lang === "fr" ? "Filière viticole – Québec" : "Wine sector – Quebec",
       desc:
         lang === "fr"
-          ? "Observation terrain de la production pour mieux comprendre les leviers de valorisation, de structuration et de durabilité économique."
-          : "Field observation of production to better understand the levers of valorisation, structuring and economic sustainability.",
+          ? "Filière viticole – Québec.\nObservation terrain de la production pour mieux comprendre les leviers de valorisation, de structuration et de durabilité économique."
+          : "Wine sector – Quebec.\nField observation of production to better understand the levers of valorisation, structuring and economic sustainability.",
       image: null,
       href: `/${lang}/projects/filiere-viticole-quebec`,
     },
@@ -88,8 +88,8 @@ export default async function HomePage({
       title: lang === "fr" ? "Filière pomicole – Québec" : "Apple sector – Quebec",
       desc:
         lang === "fr"
-          ? "Lecture terrain des dynamiques de production locale et des opportunités de transformation à plus forte valeur ajoutée."
-          : "Field reading of local production dynamics and higher value-added transformation opportunities.",
+          ? "Filière pomicole – Québec.\nLecture terrain des dynamiques de production locale et des opportunités de transformation à plus forte valeur ajoutée."
+          : "Apple sector – Quebec.\nField reading of local production dynamics and higher value-added transformation opportunities.",
       image: null,
       href: `/${lang}/projects/filiere-pomicole-quebec`,
     },
@@ -205,9 +205,10 @@ export default async function HomePage({
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-              <p className="absolute bottom-3 md:bottom-4 left-3 md:left-4 right-3 md:right-4 text-white text-[10px] md:text-xs font-semibold uppercase tracking-widest opacity-80">
-                {dict.featuredProject.caption}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <p className="absolute bottom-3 md:bottom-4 left-3 md:left-4 right-3 md:right-4 text-white text-xs leading-snug">
+                <span className="font-bold block">{dict.featuredProject.caption}</span>
+                <span className="text-white/70 text-[11px] mt-0.5 block">{dict.featuredProject.description}</span>
               </p>
             </div>
             <div className="flex flex-col gap-4 md:gap-6">

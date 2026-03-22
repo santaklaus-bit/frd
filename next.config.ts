@@ -6,7 +6,7 @@ const withMDX = createMDX();
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   transpilePackages: ["geist"],
-  serverExternalPackages: ["sequelize", "mysql2"],
+  serverExternalPackages: ["sequelize", "mysql2", "sqlite3"],
   async headers() {
     return [
       {

@@ -4,16 +4,30 @@ import { BlogPost, Dictionary, Initiative, Production } from "./db/models";
 // BLOG POSTS
 // ============================================================================
 
+// ~200 words per minute reading speed
+function calcReadTime(content: string, lang: "en" | "fr" = "fr"): string {
+  const words = content?.trim().split(/\s+/).length ?? 0;
+  const minutes = Math.max(1, Math.round(words / 200));
+  return lang === "fr" ? `${minutes} min` : `${minutes} min`;
+}
+
 export async function getBlogPosts() {
   const posts = await BlogPost.findAll({
     order: [["date", "DESC"]],
   });
-  return posts.map((p) => p.toJSON());
+  return posts.map((p) => {
+    const json = p.toJSON() as any;
+    json.readTime = calcReadTime(json.content ?? "");
+    return json;
+  });
 }
 
 export async function getBlogPost(slug: string) {
   const post = await BlogPost.findOne({ where: { slug } });
-  return post ? post.toJSON() : null;
+  if (!post) return null;
+  const json = post.toJSON() as any;
+  json.readTime = calcReadTime(json.content ?? "");
+  return json;
 }
 
 export async function saveBlogPost(
