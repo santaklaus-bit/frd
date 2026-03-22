@@ -87,12 +87,6 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                 {title}
               </h1>
             </div>
-<<<<<<< HEAD
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tighter uppercase leading-[0.9] text-balance">
-              {title}
-            </h1>
-=======
->>>>>>> 232ed3e (update)
           </div>
         </div>
       </div>
