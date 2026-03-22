@@ -112,6 +112,8 @@ export async function getData(filename: string) {
         icon: data.icon,
         title: { fr: data.titleFr, en: data.titleEn },
         description: { fr: data.descriptionFr, en: data.descriptionEn },
+        details: { fr: data.detailsFr, en: data.detailsEn },
+        image: data.image,
         category: { fr: data.categoryFr, en: data.categoryEn },
         link: data.link,
       };
@@ -150,6 +152,9 @@ export async function saveData(filename: string, data: any) {
       titleEn: i.title?.en || "",
       descriptionFr: i.description?.fr || "",
       descriptionEn: i.description?.en || "",
+      detailsFr: i.details?.fr || null,
+      detailsEn: i.details?.en || null,
+      image: i.image || null,
       categoryFr: i.category?.fr || "",
       categoryEn: i.category?.en || "",
       link: i.link || null,

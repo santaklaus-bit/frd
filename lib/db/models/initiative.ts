@@ -9,6 +9,9 @@ export class Initiative extends Model {
   public declare titleEn: string;
   public declare descriptionFr: string;
   public declare descriptionEn: string;
+  public declare detailsFr: string;
+  public declare detailsEn: string;
+  public declare image: string;
   public declare categoryFr: string;
   public declare categoryEn: string;
   public declare link: string;
@@ -26,6 +29,9 @@ Initiative.init(
     titleEn: { type: DataTypes.STRING, allowNull: false },
     descriptionFr: { type: DataTypes.TEXT, allowNull: false },
     descriptionEn: { type: DataTypes.TEXT, allowNull: false },
+    detailsFr: { type: DataTypes.TEXT, allowNull: true },
+    detailsEn: { type: DataTypes.TEXT, allowNull: true },
+    image: { type: DataTypes.STRING, allowNull: true },
     categoryFr: { type: DataTypes.STRING, allowNull: false },
     categoryEn: { type: DataTypes.STRING, allowNull: false },
     link: { type: DataTypes.STRING },

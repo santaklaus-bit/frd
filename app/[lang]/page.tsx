@@ -67,30 +67,30 @@ export default async function HomePage({
 
   const projectCards = [
     {
-      title: lang === "fr" ? "Diagnostic WASH – Bénin" : "WASH Diagnostic – Benin",
-      desc:
-        lang === "fr"
-          ? "Diagnostic sur la disponibilité et la fonctionnalité des infrastructures sanitaires dans les écoles publiques du Bénin. Un travail structurant pour orienter des interventions durables en eau, hygiène et assainissement."
-          : "Assessment of availability and functionality of sanitary infrastructure in public schools in Benin. Structuring work to guide sustainable interventions in water, hygiene and sanitation.",
-      image: null,
-      href: `/${lang}/projects/diagnostic-wash-benin`,
-    },
-    {
       title: lang === "fr" ? "Filière viticole – Québec" : "Wine sector – Quebec",
       desc:
         lang === "fr"
-          ? "Filière viticole – Québec.\nObservation terrain de la production pour mieux comprendre les leviers de valorisation, de structuration et de durabilité économique."
-          : "Wine sector – Quebec.\nField observation of production to better understand the levers of valorisation, structuring and economic sustainability.",
-      image: null,
+          ? "Observation terrain de la production pour mieux comprendre les leviers de valorisation, de structuration et de durabilité économique."
+          : "Field observation of production to better understand the levers of valorisation, structuring and economic sustainability.",
+      image: "/projects/image3.jpg",
       href: `/${lang}/projects/filiere-viticole-quebec`,
+    },
+    {
+      title: lang === "fr" ? "Champ de piri piri – Coopérative de femmes productrices, Kenya" : "Piri piri field – Women producers' cooperative, Kenya",
+      desc:
+        lang === "fr"
+          ? "Analyse de la chaîne de valeur et des opportunités de transformation pour renforcer les revenus."
+          : "Analysis of the value chain and transformation opportunities to strengthen incomes.",
+      image: "/projects/image2.png",
+      href: `/${lang}/projects/piri-piri-kenya`,
     },
     {
       title: lang === "fr" ? "Filière pomicole – Québec" : "Apple sector – Quebec",
       desc:
         lang === "fr"
-          ? "Filière pomicole – Québec.\nLecture terrain des dynamiques de production locale et des opportunités de transformation à plus forte valeur ajoutée."
-          : "Apple sector – Quebec.\nField reading of local production dynamics and higher value-added transformation opportunities.",
-      image: null,
+          ? "Lecture terrain des dynamiques de production locale et des opportunités de transformation à plus forte valeur ajoutée."
+          : "Field reading of local production dynamics and higher value-added transformation opportunities.",
+      image: "/projects/image4.jpg",
       href: `/${lang}/projects/filiere-pomicole-quebec`,
     },
   ];
@@ -200,7 +200,7 @@ export default async function HomePage({
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
             <div className="relative aspect-[4/3] rounded-2xl md:rounded-3xl overflow-hidden bg-muted shadow-xl md:shadow-2xl group">
               <Image
-                src="/farid-portrait.png"
+                src="/projects/image2.png"
                 alt="Champ de piri piri – Coopérative de femmes productrices, Kenya"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -253,7 +253,7 @@ export default async function HomePage({
               >
                 <div className="relative h-40 sm:h-44 md:h-48 bg-muted overflow-hidden">
                   <Image
-                    src="/farid-portrait.png"
+                    src={card.image || "/farid-portrait.png"}
                     alt={card.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105 opacity-60"
