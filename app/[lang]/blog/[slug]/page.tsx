@@ -64,7 +64,7 @@ export default async function BlogPost({ params }: PageProps) {
   const author = {
     name: (page as any).authorName || "Farid DANKO", // fallback to site creator
     position: lang === "fr" ? "Auteur" : "Author",
-    avatar: (page as any).authorPhoto || "/farid-portrait.png", // fallback photo
+    avatar: (page as any).authorPhoto || "/farid-portrait.webp", // fallback photo
   };
 
   return (

@@ -106,7 +106,7 @@ export default async function HomePage({
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
             <div className="relative aspect-[3/4] max-h-[500px] md:max-h-none rounded-2xl md:rounded-3xl overflow-hidden group shadow-xl md:shadow-2xl">
               <Image
-                src="/farid-portrait.png"
+                src="/farid-portrait.webp"
                 alt="Farid Danko"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105 pointer-events-none no-copy"
@@ -253,7 +253,7 @@ export default async function HomePage({
               >
                 <div className="relative h-40 sm:h-44 md:h-48 bg-muted overflow-hidden">
                   <Image
-                    src={card.image || "/farid-portrait.png"}
+                    src={card.image || "/farid-portrait.webp"}
                     alt={card.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105 opacity-60"

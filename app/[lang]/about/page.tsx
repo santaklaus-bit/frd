@@ -71,7 +71,7 @@ export default async function AboutPage({
           {/* Right Side: Sticky Photo */}
           <div className="order-first lg:order-last lg:sticky lg:top-32 h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[85vh] rounded-2xl sm:rounded-[2rem] lg:rounded-[3.5rem] bg-muted overflow-hidden shadow-xl md:shadow-2xl group w-full">
             <Image
-              src="/farid-portrait.png"
+              src="/farid-portrait.webp"
               alt="Farid Danko Portrait"
               fill
               className="object-cover transition-transform duration-1000 group-hover:scale-105"

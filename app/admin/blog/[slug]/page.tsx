@@ -24,7 +24,7 @@ export default async function EditBlogPage({
       date: post.date,
       thumbnail: post.thumbnail || "",
       authorName: post.authorName || "Farid DANKO",
-      authorPhoto: post.authorPhoto || "/farid-portrait.png",
+      authorPhoto: post.authorPhoto || "/farid-portrait.webp",
       content: post.content,
     };
 

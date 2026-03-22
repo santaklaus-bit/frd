@@ -33,7 +33,7 @@ async function run() {
         fr: "Diagnostic sur la disponibilité et la fonctionnalité des infrastructures sanitaires dans les écoles publiques du Bénin.\\n\\nUn travail structurant pour orienter des interventions durables en eau, hygiène et assainissement.",
         en: "Diagnostic on the availability and functionality of sanitary infrastructures in public schools in Benin.\\n\\nStructuring work to guide sustainable interventions in water, hygiene and sanitation."
       },
-      image: "/projects/image5.jpg",
+      image: "/projects/image5.webp",
       link: null
     },
     {

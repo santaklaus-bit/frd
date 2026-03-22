@@ -34,7 +34,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
     >
       <div className="absolute inset-0 z-0">
         <Image
-          src="/hero-bg.JPG"
+          src="/hero-bg.webp"
           alt="Hero Background"
           fill
           className="object-cover"
