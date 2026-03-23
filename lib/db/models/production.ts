@@ -11,6 +11,7 @@ export class Production extends Model {
   public declare descriptionEn: string;
   public declare detailsFr: string;
   public declare detailsEn: string;
+  public declare image: string;
   public declare href: string;
   public declare order: number;
   public declare readonly createdAt: Date;
@@ -28,6 +29,7 @@ Production.init(
     descriptionEn: { type: DataTypes.TEXT, allowNull: false },
     detailsFr: { type: DataTypes.STRING, allowNull: false },
     detailsEn: { type: DataTypes.STRING, allowNull: false },
+    image: { type: DataTypes.STRING, allowNull: true },
     href: { type: DataTypes.STRING, allowNull: false },
     order: { type: DataTypes.INTEGER, defaultValue: 0 },
   },

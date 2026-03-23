@@ -1,6 +1,8 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Metadata } from "next";
+import Image from "next/image";
+import { getData } from "@/lib/content-manager";
 
 export const metadata: Metadata = {
   title: "Inclusion — Expertise | Farid Danko",
@@ -13,6 +15,9 @@ export default async function InclusionPage({
 }) {
   const { lang } = await params;
   const isFr = lang === "fr";
+
+  const initiatives = await getData("expertise");
+  const initiative = initiatives.find((i: any) => i.slug === "inclusion");
 
   const axes = isFr
     ? [
@@ -35,7 +40,21 @@ export default async function InclusionPage({
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="max-w-3xl mx-auto px-6 md:px-12 py-16 md:py-24">
+      {/* ── BANNER IMAGE ── */}
+      {initiative?.image && (
+        <div className="relative w-full h-[30vh] md:h-[45vh] overflow-hidden">
+          <Image
+            src={initiative.image}
+            alt={(initiative.title as any)[lang] || "Inclusion"}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-background" />
+        </div>
+      )}
+
+      <div className="max-w-3xl mx-auto px-6 md:px-12 py-16 md:py-24 relative z-10">
 
         {/* Back */}
         <Link

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { getDictionary } from "@/lib/get-dictionary";
 import { Metadata } from "next";
+import { getData } from "@/lib/content-manager";
+import Image from "next/image";
 
 export async function generateMetadata({
   params,
@@ -27,35 +29,16 @@ export default async function ExpertisePage({
   const { lang } = await params;
   const isFr = lang === "fr";
 
-  const blocks = [
-    {
-      key: "autonomisation",
-      num: "01",
-      title: isFr ? "Autonomisation" : "Empowerment",
-      desc: isFr
-        ? "Entrepreneuriat, chaînes de valeur et création de revenus."
-        : "Entrepreneurship, value chains and income generation.",
-      href: `/${lang}/expertise/autonomisation`,
-    },
-    {
-      key: "developpement",
-      num: "02",
-      title: isFr ? "Développement" : "Development",
-      desc: isFr
-        ? "Structuration organisationnelle, gouvernance et accompagnement stratégique."
-        : "Organizational structuring, governance and strategic support.",
-      href: `/${lang}/expertise/developpement`,
-    },
-    {
-      key: "inclusion",
-      num: "03",
-      title: "Inclusion",
-      desc: isFr
-        ? "Initiatives à impact économique et social, ancrées dans les réalités locales."
-        : "Initiatives with economic and social impact, rooted in local realities.",
-      href: `/${lang}/expertise/inclusion`,
-    },
-  ];
+  const rawInitiatives = await getData("expertise");
+  const initiatives = rawInitiatives
+    .filter((item: any) => item.slug) // skip empty drafts
+    .map((item: any, index: number) => ({
+      ...item,
+      num: String(index + 1).padStart(2, "0"),
+      title: item.title?.[lang] ?? item.title?.fr ?? "",
+      desc: item.description?.[lang] ?? item.description?.fr ?? "",
+      href: `/${lang}/expertise/${item.slug}`,
+    }));
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -85,27 +68,40 @@ export default async function ExpertisePage({
 
         {/* ── BLOCKS ── Horizontal list style */}
         <div className="flex flex-col divide-y divide-border/40">
-          {blocks.map((block) => (
-            <Link
-              key={block.key}
-              href={block.href}
-              className="group flex items-center justify-between gap-8 py-10 md:py-12 hover:pl-3 transition-all duration-300"
-            >
-              <div className="flex items-start gap-8 md:gap-12">
-                <span className="text-xs font-bold tabular-nums text-muted-foreground/40 pt-1.5 shrink-0">
-                  {block.num}
-                </span>
-                <div>
-                  <h2 className="text-2xl md:text-4xl font-bold uppercase tracking-tight mb-2 group-hover:text-foreground transition-colors">
-                    {block.title}
-                  </h2>
-                  <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
-                    {block.desc}
-                  </p>
+          {(initiatives as any[]).map((block) => (
+            <div key={block.slug} className="group relative">
+              <Link
+                href={block.href}
+                className="flex flex-col md:flex-row items-center justify-between gap-8 py-10 md:py-12 hover:pl-3 transition-all duration-300"
+              >
+                <div className="flex items-start gap-8 md:gap-12 flex-1">
+                  <span className="text-xs font-bold tabular-nums text-muted-foreground/40 pt-1.5 shrink-0">
+                    {block.num}
+                  </span>
+                  <div className="flex-1">
+                    <h2 className="text-2xl md:text-4xl font-bold uppercase tracking-tight mb-4 group-hover:text-foreground transition-colors">
+                      {block.title}
+                    </h2>
+                    <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
+                      {block.desc}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground/40 group-hover:text-foreground group-hover:translate-x-1 transition-all duration-300" />
-            </Link>
+
+                {block.image && (
+                  <div className="relative w-full md:w-64 aspect-video rounded-xl overflow-hidden shadow-lg transform group-hover:scale-105 transition-transform duration-300">
+                    <Image
+                      src={block.image}
+                      alt={block.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+
+                <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground/40 group-hover:text-foreground group-hover:translate-x-1 transition-all duration-300 md:block hidden" />
+              </Link>
+            </div>
           ))}
         </div>
 

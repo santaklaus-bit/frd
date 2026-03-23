@@ -3,6 +3,7 @@ import { ArrowLeft, Target, Users, Lightbulb, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { getData } from "@/lib/content-manager";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import { HashScrollHandler } from "@/components/hash-scroll-handler";
@@ -55,16 +56,33 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-background relative">
       <HashScrollHandler />
-      <div className="absolute top-0 left-0 z-0 w-full h-[200px] [mask-image:linear-gradient(to_top,transparent_25%,black_95%)]">
-        <FlickeringGrid
-          className="absolute top-0 left-0 size-full"
-          squareSize={4}
-          gridGap={6}
-          color="#6B7280"
-          maxOpacity={0.2}
-          flickerChance={0.05}
-        />
-      </div>
+
+      {/* ── BANNER IMAGE ── */}
+      {initiative.image && (
+        <div className="relative w-full h-[40vh] md:h-[55vh] overflow-hidden">
+          <Image
+            src={initiative.image}
+            alt={title}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-background" />
+        </div>
+      )}
+
+      {!initiative.image && (
+        <div className="absolute top-0 left-0 z-0 w-full h-[200px] [mask-image:linear-gradient(to_top,transparent_25%,black_95%)]">
+          <FlickeringGrid
+            className="absolute top-0 left-0 size-full"
+            squareSize={4}
+            gridGap={6}
+            color="#6B7280"
+            maxOpacity={0.2}
+            flickerChance={0.05}
+          />
+        </div>
+      )}
 
       <div className="border-b border-border relative z-10 bg-background/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 py-12 md:py-20">

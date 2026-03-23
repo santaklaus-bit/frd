@@ -1,6 +1,7 @@
 import { Target, Users, Lightbulb, TrendingUp, ArrowRight } from "lucide-react";
 import { getDictionary } from "@/lib/get-dictionary";
 import { getData } from "@/lib/content-manager";
+import Image from "next/image";
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
@@ -69,25 +70,41 @@ export default async function ProjectsPage({
             <Link
               key={index}
               href={`/${lang}/projects/${initiative.slug}`}
-              className="p-6 sm:p-8 border border-border rounded-2xl bg-background hover:bg-muted/10 hover:shadow-2xl transition-all duration-300 group block"
+              className="border border-border rounded-2xl bg-background hover:bg-muted/10 hover:shadow-2xl transition-all duration-300 group block overflow-hidden"
             >
-              <div className="mb-5 p-3 rounded-xl bg-muted/30 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors w-fit">
-                <initiative.icon className="h-7 w-7" />
-              </div>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-muted text-muted-foreground uppercase tracking-widest">
-                  {initiative.category}
-                </span>
-              </div>
-              <h2 className="text-xl font-semibold mb-3 uppercase tracking-tighter">
-                {initiative.title}
-              </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-                {initiative.description}
-              </p>
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
-                {lang === "fr" ? "En savoir plus" : "Learn more"}
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              {/* Banner Image */}
+              {initiative.image ? (
+                <div className="relative w-full aspect-[16/9] overflow-hidden">
+                  <Image
+                    src={initiative.image}
+                    alt={initiative.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+              ) : null}
+
+              <div className="p-6 sm:p-8">
+                {!initiative.image && (
+                  <div className="mb-5 p-3 rounded-xl bg-muted/30 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors w-fit">
+                    <initiative.icon className="h-7 w-7" />
+                  </div>
+                )}
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-muted text-muted-foreground uppercase tracking-widest">
+                    {initiative.category}
+                  </span>
+                </div>
+                <h2 className="text-xl font-semibold mb-3 uppercase tracking-tighter">
+                  {initiative.title}
+                </h2>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-5">
+                  {initiative.description}
+                </p>
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
+                  {lang === "fr" ? "En savoir plus" : "Learn more"}
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
             </Link>
           ))}

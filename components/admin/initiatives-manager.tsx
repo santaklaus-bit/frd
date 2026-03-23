@@ -60,6 +60,7 @@ export default function InitiativesManager({
       title: { fr: "", en: "" },
       description: { fr: "", en: "" },
       category: { fr: "", en: "" },
+      image: "",
       link: "",
     });
     setIsDrawerOpen(true);
@@ -389,7 +390,13 @@ export default function InitiativesManager({
                       </div>
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="space-y-4">
+                    <MediaUpload
+                      label="Image de bannière (Hero)"
+                      value={editForm.image}
+                      onChange={(url) => setEditForm({ ...editForm, image: url })}
+                      onRemove={() => setEditForm({ ...editForm, image: "" })}
+                    />
                     <MediaUpload
                       label="Média / Lien (PDF, Image...)"
                       value={editForm.link}

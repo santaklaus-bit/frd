@@ -59,6 +59,7 @@ export default function ProductionManager({
       title: { fr: "", en: "" },
       description: { fr: "", en: "" },
       details: { fr: "", en: "" },
+      image: "",
       href: "",
     });
     setIsDrawerOpen(true);
@@ -388,9 +389,15 @@ export default function ProductionManager({
                       </div>
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="space-y-4">
                     <MediaUpload
-                      label="Fichier Multimédia (Vidéo, Image...)"
+                      label="Image de bannière (Hero)"
+                      value={editForm.image}
+                      onChange={(url) => setEditForm({ ...editForm, image: url })}
+                      onRemove={() => setEditForm({ ...editForm, image: "" })}
+                    />
+                    <MediaUpload
+                      label="Fichier Multimédia (Vidéo, Document...)"
                       value={editForm.href}
                       onChange={(url) => setEditForm({ ...editForm, href: url })}
                       onRemove={() => setEditForm({ ...editForm, href: "" })}

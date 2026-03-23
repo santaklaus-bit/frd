@@ -131,6 +131,7 @@ export async function getData(filename: string) {
         title: { fr: data.titleFr, en: data.titleEn },
         description: { fr: data.descriptionFr, en: data.descriptionEn },
         details: { fr: data.detailsFr, en: data.detailsEn },
+        image: data.image,
         href: data.href,
       };
     });
@@ -174,6 +175,7 @@ export async function saveData(filename: string, data: any) {
       descriptionEn: p.description?.en || "",
       detailsFr: p.details?.fr || "",
       detailsEn: p.details?.en || "",
+      image: p.image || null,
       href: p.href || "",
       order: index,
     }));
