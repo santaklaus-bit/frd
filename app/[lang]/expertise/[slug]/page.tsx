@@ -25,8 +25,8 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug, lang } = await params;
-  const projects = (await getData("projects")) as any[];
-  const initiative = projects.find((i: any) => i.slug === slug);
+  const initiatives = (await getData("expertise")) as any[];
+  const initiative = initiatives.find((i: any) => i.slug === slug);
 
   if (!initiative) return {};
 
@@ -39,10 +39,10 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProjectDetailPage({ params }: PageProps) {
+export default async function ExpertiseDetailPage({ params }: PageProps) {
   const { slug, lang } = await params;
-  const projects = (await getData("projects")) as any[];
-  const initiative = projects.find((i: any) => i.slug === slug);
+  const initiatives = (await getData("expertise")) as any[];
+  const initiative = initiatives.find((i: any) => i.slug === slug);
 
   if (!initiative) {
     notFound();
@@ -51,7 +51,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const title = initiative.title[lang as keyof typeof initiative.title] || initiative.title.fr;
   const description = initiative.description[lang as keyof typeof initiative.description] || initiative.description.fr;
   const category = initiative.category[lang as keyof typeof initiative.category] || initiative.category.fr;
-  const Icon = ICON_MAP[initiative.icon] || Lightbulb;
+  const Icon = ICON_MAP[initiative.icon] || Target;
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -88,9 +88,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         <div className="max-w-7xl mx-auto px-6 py-12 md:py-20">
           <div className="flex flex-col gap-8">
             <Button variant="ghost" asChild className="w-fit -ml-4 hover:bg-muted/50">
-              <Link href={`/${lang}/projects`} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-bold uppercase text-xs tracking-widest">
+              <Link href={`/${lang}/expertise`} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-bold uppercase text-xs tracking-widest">
                 <ArrowLeft className="w-4 h-4" />
-                {lang === "fr" ? "Retour aux projets" : "Back to projects"}
+                {lang === "fr" ? "Retour à l'expertise" : "Back to expertise"}
               </Link>
             </Button>
 
@@ -116,16 +116,6 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               {description}
             </p>
 
-            {initiative.image && (
-              <div className="relative aspect-video rounded-3xl overflow-hidden border border-border/40 shadow-2xl group">
-                <img
-                  src={initiative.image}
-                  alt={title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              </div>
-            )}
-
             {initiative.details && (
               <div className="prose dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-semibold prose-headings:tracking-tighter prose-headings:uppercase prose-p:text-muted-foreground prose-p:leading-relaxed prose-lg whitespace-pre-wrap">
                 <p>{(initiative.details as any)[lang] || initiative.details.fr}</p>
@@ -136,7 +126,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               <div className="pt-8">
                 <Button asChild size="lg" className="rounded-full px-8 py-6 font-bold uppercase tracking-widest transition-transform hover:scale-105">
                   <a href={initiative.link} target="_blank" rel="noopener noreferrer">
-                    {lang === "fr" ? "Voir la réalisation" : "View achievement"}
+                    {lang === "fr" ? "Voir la réalisation" : "View implementation"}
                   </a>
                 </Button>
               </div>
@@ -144,7 +134,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           </main>
 
           <aside className="hidden lg:block">
-            {/* Keeping it simple without TOC for projects unless requested, acting as spacer to match the blog */}
+            {/* Sidebar content if needed */}
           </aside>
         </div>
       </div>

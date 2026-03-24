@@ -41,9 +41,10 @@ export default async function ProjectsPage({
   const dict = await getDictionary(lang as "en" | "fr");
 
   // Dynamic read — reflects admin changes instantly without a rebuild
-  const rawInitiatives = await getData("initiatives");
-  const initiatives = rawInitiatives
+  const rawProjects = await getData("projects");
+  const initiatives = rawProjects
     .filter((item: any) => item.slug) // skip empty drafts
+
     .map((item: any) => ({
       ...item,
       icon: ICON_MAP[item.icon] || Lightbulb,
