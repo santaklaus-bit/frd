@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getData, saveData } from "@/lib/content-manager";
 import { Initiative } from "@/lib/db/models";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 const LocalizedFieldSchema = z.object({
   fr: z.string(),
@@ -14,6 +15,7 @@ const InitiativeSchema = z.object({
   title: LocalizedFieldSchema,
   description: LocalizedFieldSchema,
   category: LocalizedFieldSchema,
+  image: z.string().optional().nullable(),
   link: z.string().url().optional().or(z.literal("")),
   order: z.number().optional().default(0),
 });
@@ -71,9 +73,12 @@ export async function POST(request: NextRequest) {
       descriptionEn: data.description.en,
       categoryFr: data.category.fr,
       categoryEn: data.category.en,
+      image: (data as any).image || null,
       link: data.link || null,
       order: nextOrder,
     });
+
+    revalidatePath("/", "layout");
 
     return NextResponse.json(
       { success: true, initiative: data },
@@ -114,6 +119,8 @@ export async function PUT(request: NextRequest) {
 
     const initiatives = parsedItems.map((r) => (r as any).data);
     await saveData("initiatives", initiatives);
+
+    revalidatePath("/", "layout");
 
     return NextResponse.json({ success: true, initiatives });
   } catch (error) {

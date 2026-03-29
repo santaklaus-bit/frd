@@ -113,9 +113,7 @@ export async function getData(filename: string) {
         title: { fr: data.titleFr, en: data.titleEn },
         description: { fr: data.descriptionFr, en: data.descriptionEn },
         details: { fr: data.detailsFr, en: data.detailsEn },
-        image: data.image,
         category: { fr: data.categoryFr, en: data.categoryEn },
-        link: data.link,
       };
     });
   }
@@ -130,6 +128,7 @@ export async function getData(filename: string) {
         icon: data.icon,
         title: { fr: data.titleFr, en: data.titleEn },
         description: { fr: data.descriptionFr, en: data.descriptionEn },
+        category: { fr: data.categoryFr, en: data.categoryEn },
         details: { fr: data.detailsFr, en: data.detailsEn },
         image: data.image,
         href: data.href,
@@ -144,7 +143,7 @@ export async function saveData(filename: string, data: any) {
   // Since the legacy format sends the entire array to `saveData`,
   // we need to sync it to the DB (destroy all, then create all)
   
-  if (filename === "expertise") {
+  if (filename === "expertise" || filename === "initiatives") {
     await Initiative.destroy({ truncate: true }); // Wipe table
     const records = data.map((i: any, index: number) => ({
       slug: i.slug,
@@ -155,16 +154,14 @@ export async function saveData(filename: string, data: any) {
       descriptionEn: i.description?.en || "",
       detailsFr: i.details?.fr || null,
       detailsEn: i.details?.en || null,
-      image: i.image || null,
       categoryFr: i.category?.fr || "",
       categoryEn: i.category?.en || "",
-      link: i.link || null,
       order: index,
     }));
     await Initiative.bulkCreate(records);
   }
 
-  if (filename === "projects") {
+  if (filename === "projects" || filename === "production") {
     await Production.destroy({ truncate: true }); // Wipe table
     const records = data.map((p: any, index: number) => ({
       slug: p.slug,
@@ -173,6 +170,8 @@ export async function saveData(filename: string, data: any) {
       titleEn: p.title?.en || "",
       descriptionFr: p.description?.fr || "",
       descriptionEn: p.description?.en || "",
+      categoryFr: p.category?.fr || "",
+      categoryEn: p.category?.en || "",
       detailsFr: p.details?.fr || "",
       detailsEn: p.details?.en || "",
       image: p.image || null,

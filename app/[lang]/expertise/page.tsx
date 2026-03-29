@@ -88,16 +88,6 @@ export default async function ExpertisePage({
                   </div>
                 </div>
 
-                {block.image && (
-                  <div className="relative w-full md:w-64 aspect-video rounded-xl overflow-hidden shadow-lg transform group-hover:scale-105 transition-transform duration-300">
-                    <Image
-                      src={block.image}
-                      alt={block.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                )}
 
                 <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground/40 group-hover:text-foreground group-hover:translate-x-1 transition-all duration-300 md:block hidden" />
               </Link>

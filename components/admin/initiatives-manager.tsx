@@ -60,8 +60,6 @@ export default function InitiativesManager({
       title: { fr: "", en: "" },
       description: { fr: "", en: "" },
       category: { fr: "", en: "" },
-      image: "",
-      link: "",
     });
     setIsDrawerOpen(true);
   };
@@ -252,12 +250,24 @@ export default function InitiativesManager({
                         </label>
                         <Input
                           value={editForm.title.fr}
-                          onChange={(e) =>
+                          onChange={(e) => {
+                            const newTitle = e.target.value;
+                            const slugified = newTitle
+                              .toLowerCase()
+                              .normalize("NFD")
+                              .replace(/[\u0300-\u036f]/g, "")
+                              .replace(/\s+/g, "-")
+                              .replace(/[^\w-]+/g, "")
+                              .replace(/--+/g, "-")
+                              .trim();
+                            
                             setEditForm({
                               ...editForm,
-                              title: { ...editForm.title, fr: e.target.value },
-                            })
-                          }
+                              title: { ...editForm.title, fr: newTitle },
+                              // Auto-generate slug if it's currently empty or strictly matches the old title
+                              slug: (!editForm.slug || editForm.slug === "" || editForm.slug === editForm.title.fr.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-").replace(/[^\w-]+/g, "").replace(/--+/g, "-")) ? slugified : editForm.slug
+                            });
+                          }}
                           className="rounded-xl border-border/40"
                         />
                       </div>
@@ -391,18 +401,9 @@ export default function InitiativesManager({
                   </div>
 
                   <div className="space-y-4">
-                    <MediaUpload
-                      label="Image de bannière (Hero)"
-                      value={editForm.image}
-                      onChange={(url) => setEditForm({ ...editForm, image: url })}
-                      onRemove={() => setEditForm({ ...editForm, image: "" })}
-                    />
-                    <MediaUpload
-                      label="Média / Lien (PDF, Image...)"
-                      value={editForm.link}
-                      onChange={(url) => setEditForm({ ...editForm, link: url })}
-                      onRemove={() => setEditForm({ ...editForm, link: "" })}
-                    />
+                    <p className="text-[10px] text-muted-foreground italic leading-relaxed">
+                      L'image de bannière a été retirée pour simplifier l'interface. Les modifications seront visibles dès l'enregistrement.
+                    </p>
                   </div>
                 </div>
               </>

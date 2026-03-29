@@ -61,7 +61,7 @@ export default function Footer({ lang, dict }: { lang: string; dict: any }) {
                 className="h-10 w-auto invert dark:invert-0"
               />
             </Link>
-            <p className="text-muted-foreground leading-relaxed font-medium">
+            <p className="text-muted-foreground leading-relaxed font-medium ml-4">
               {lang === "fr"
                 ? "Entrepreneur social passionné par l'impact collectif et le développement durable."
                 : "Social entrepreneur passionate about collective impact and sustainable development."}

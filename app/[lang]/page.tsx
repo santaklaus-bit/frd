@@ -2,13 +2,22 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Zap, TrendingUp, Users, BookOpen, FileText } from "lucide-react";
+import { ArrowRight, Zap, TrendingUp, Users, BookOpen, FileText, Target, Lightbulb, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HeroSection } from "@/components/hero-section";
 import { getDictionary } from "@/lib/get-dictionary";
-import { getBlogPosts } from "@/lib/content-manager";
+import { getBlogPosts, getData } from "@/lib/content-manager";
 import { Newsletter } from "@/components/newsletter";
 import { Metadata } from "next";
+
+const ICON_MAP: Record<string, any> = {
+  Zap,
+  TrendingUp,
+  Users,
+  Target,
+  Lightbulb,
+  Video,
+};
 
 const formatDate = (date: Date, lang: string): string => {
   return date.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", {
@@ -46,56 +55,21 @@ export default async function HomePage({
       new Date(a.date ?? 0).getTime()
   ).slice(0, 2);
 
-  const expertiseItems = [
-    {
-      icon: Zap,
-      title: dict.expertise.subpages.autonomisation.title,
-      desc: dict.expertise.subpages.autonomisation.desc,
-      href: `/${lang}/expertise/autonomisation`,
-    },
-    {
-      icon: TrendingUp,
-      title: dict.expertise.subpages.developpement.title,
-      desc: dict.expertise.subpages.developpement.desc,
-      href: `/${lang}/expertise/developpement`,
-    },
-    {
-      icon: Users,
-      title: dict.expertise.subpages.inclusion.title,
-      desc: dict.expertise.subpages.inclusion.desc,
-      href: `/${lang}/expertise/inclusion`,
-    },
-  ];
+  const rawExpertise = await getData("expertise");
+  const expertiseItems = rawExpertise.slice(0, 3).map((item: any) => ({
+    icon: ICON_MAP[item.icon] || Lightbulb,
+    title: item.title?.[lang] || item.title?.fr || "",
+    desc: item.description?.[lang] || item.description?.fr || "",
+    href: `/${lang}/expertise/${item.slug}`,
+  }));
 
-  const projectCards = [
-    {
-      title: lang === "fr" ? "Filière viticole – Québec" : "Wine sector – Quebec",
-      desc:
-        lang === "fr"
-          ? "Observation terrain de la production pour mieux comprendre les leviers de valorisation, de structuration et de durabilité économique."
-          : "Field observation of production to better understand the levers of valorisation, structuring and economic sustainability.",
-      image: "/projects/image3.jpg",
-      href: `/${lang}/projects/filiere-viticole-quebec`,
-    },
-    {
-      title: lang === "fr" ? "Champ de piri piri – Coopérative de femmes productrices, Kenya" : "Piri piri field – Women producers' cooperative, Kenya",
-      desc:
-        lang === "fr"
-          ? "Analyse de la chaîne de valeur et des opportunités de transformation pour renforcer les revenus."
-          : "Analysis of the value chain and transformation opportunities to strengthen incomes.",
-      image: "/projects/image2.png",
-      href: `/${lang}/projects/piri-piri-kenya`,
-    },
-    {
-      title: lang === "fr" ? "Filière pomicole – Québec" : "Apple sector – Quebec",
-      desc:
-        lang === "fr"
-          ? "Lecture terrain des dynamiques de production locale et des opportunités de transformation à plus forte valeur ajoutée."
-          : "Field reading of local production dynamics and higher value-added transformation opportunities.",
-      image: "/projects/image4.jpg",
-      href: `/${lang}/projects/filiere-pomicole-quebec`,
-    },
-  ];
+  const rawProjects = await getData("projects");
+  const projectCards = rawProjects.slice(0, 3).map((item: any) => ({
+    title: item.title?.[lang] || item.title?.fr || "",
+    desc: item.description?.[lang] || item.description?.fr || "",
+    image: item.image || "/farid-portrait.webp",
+    href: `/${lang}/projects/${item.slug}`,
+  }));
 
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-24">

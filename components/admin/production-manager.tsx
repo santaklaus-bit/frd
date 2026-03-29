@@ -58,6 +58,7 @@ export default function ProductionManager({
       icon: "Video",
       title: { fr: "", en: "" },
       description: { fr: "", en: "" },
+      category: { fr: "", en: "" },
       details: { fr: "", en: "" },
       image: "",
       href: "",
@@ -251,10 +252,40 @@ export default function ProductionManager({
                         </label>
                         <Input
                           value={editForm.title.fr}
+                          onChange={(e) => {
+                            const newTitle = e.target.value;
+                            const slugified = newTitle
+                              .toLowerCase()
+                              .normalize("NFD")
+                              .replace(/[\u0300-\u036f]/g, "")
+                              .replace(/\s+/g, "-")
+                              .replace(/[^\w-]+/g, "")
+                              .replace(/--+/g, "-")
+                              .trim();
+
+                            setEditForm({
+                              ...editForm,
+                              title: { ...editForm.title, fr: newTitle },
+                               // Auto-generate slug if it's currently empty or strictly matches the old title
+                               slug: (!editForm.slug || editForm.slug === "" || editForm.slug === editForm.title.fr.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "-").replace(/[^\w-]+/g, "").replace(/--+/g, "-")) ? slugified : editForm.slug
+                            });
+                          }}
+                          className="rounded-xl border-border/40"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                          Catégorie
+                        </label>
+                        <Input
+                          value={editForm.category.fr}
                           onChange={(e) =>
                             setEditForm({
                               ...editForm,
-                              title: { ...editForm.title, fr: e.target.value },
+                              category: {
+                                ...editForm.category,
+                                fr: e.target.value,
+                              },
                             })
                           }
                           className="rounded-xl border-border/40"
@@ -314,6 +345,24 @@ export default function ProductionManager({
                             setEditForm({
                               ...editForm,
                               title: { ...editForm.title, en: e.target.value },
+                            })
+                          }
+                          className="rounded-xl border-border/40"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                          Category
+                        </label>
+                        <Input
+                          value={editForm.category.en}
+                          onChange={(e) =>
+                            setEditForm({
+                              ...editForm,
+                              category: {
+                                ...editForm.category,
+                                en: e.target.value,
+                              },
                             })
                           }
                           className="rounded-xl border-border/40"

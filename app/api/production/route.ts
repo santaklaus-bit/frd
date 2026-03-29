@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getData, saveData } from "@/lib/content-manager";
 import { Production } from "@/lib/db/models";
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 
 const LocalizedFieldSchema = z.object({
   fr: z.string(),
@@ -13,8 +14,10 @@ const ProductionItemSchema = z.object({
   icon: z.string().min(1, "Icon is required"),
   title: LocalizedFieldSchema,
   description: LocalizedFieldSchema,
+  category: LocalizedFieldSchema,
   details: LocalizedFieldSchema,
   href: z.string().min(1, "Href is required"),
+  image: z.string().optional().nullable(),
   videoUrl: z.string().url().optional().or(z.literal("")),
   order: z.number().optional().default(0),
 });
@@ -60,6 +63,8 @@ export async function PUT(request: NextRequest) {
     const production = parsedItems.map((r) => (r as any).data);
     await saveData("production", production);
 
+    revalidatePath("/", "layout");
+
     return NextResponse.json({ success: true, production });
   } catch (error) {
     console.error("[PUT /api/production]", error);
@@ -103,11 +108,16 @@ export async function POST(request: NextRequest) {
       titleEn: data.title.en,
       descriptionFr: data.description.fr,
       descriptionEn: data.description.en,
+      categoryFr: data.category.fr,
+      categoryEn: data.category.en,
       detailsFr: data.details.fr,
       detailsEn: data.details.en,
       href: data.href,
+      image: (data as any).image || null,
       order: nextOrder,
     });
+
+    revalidatePath("/", "layout");
 
     return NextResponse.json(
       { success: true, item: data },
