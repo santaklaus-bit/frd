@@ -71,7 +71,7 @@ export default function ProjectsList({ initialData }: { initialData: any[] }) {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
             Gestion du contenu
           </p>
-          <h1 className="text-4xl font-semibold tracking-tight">Projets & Productions</h1>
+          <h1 className="text-4xl font-semibold tracking-tight">Projets</h1>
         </div>
         <div className="flex items-center gap-3">
           <Button
