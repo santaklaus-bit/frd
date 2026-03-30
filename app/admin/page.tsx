@@ -201,9 +201,11 @@ export default async function AdminDashboard() {
                 Consultez la documentation ou contactez le support technique pour toute question sur la gestion de votre site.
               </p>
             </div>
-            <Button variant="outline" className="w-full rounded-2xl h-11 text-xs font-bold uppercase tracking-widest border-border/60">
-              Voir la doc
-            </Button>
+            <Link href="/admin/docs" className="block w-full">
+              <Button variant="outline" className="w-full rounded-2xl h-11 text-xs font-bold uppercase tracking-widest border-border/60">
+                Voir la doc
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
