@@ -9,7 +9,6 @@ import Image from "next/image";
 import { getBlogPost } from "@/lib/content-manager";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getMDXComponents } from "@/mdx-components";
-import { AuthorCard } from "@/components/author-card";
 import { TableOfContents } from "@/components/table-of-contents";
 
 export async function generateMetadata({
@@ -98,9 +97,14 @@ export default async function BlogPost({ params }: PageProps) {
                 {page.title}
               </h1>
 
-              <div className="flex flex-wrap items-center gap-6 pt-4 border-t border-border/40">
-                <AuthorCard author={author} />
-                <div className="h-8 w-px bg-border/40 hidden sm:block" />
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-4 border-t border-border/40">
+                <img
+                  src={author.avatar}
+                  alt={author.name}
+                  className="rounded-full w-8 h-8 flex-shrink-0 border border-border object-cover"
+                />
+                <span className="text-sm font-semibold tracking-tight text-foreground">{author.name}</span>
+                <span className="text-muted-foreground/40 hidden sm:inline">•</span>
                 <time className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
                   {formattedDate}
                 </time>

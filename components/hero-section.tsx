@@ -128,7 +128,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           <Link href={`/${lang}${dict.home.cta_href ?? '/about'}`}>
             <Button
               size="lg"
-              className="px-8 py-6 sm:px-12 sm:py-8 md:px-16 md:py-10 h-auto rounded-full text-sm sm:text-lg md:text-xl font-bold uppercase tracking-widest sm:tracking-widest hover:scale-105 transition-all shadow-xl sm:shadow-2xl bg-white text-black border-none group"
+              className="px-8 py-6 sm:px-12 sm:py-8 md:px-16 md:py-10 h-auto rounded-full text-sm sm:text-lg md:text-xl font-bold uppercase tracking-widest sm:tracking-widest hover:scale-105 hover:bg-white/90 hover:text-black transition-all shadow-xl sm:shadow-2xl bg-white text-black border-none group"
             >
               <span className="truncate">{dict.home.cta}</span>
               <ArrowRight className="ml-3 sm:ml-4 h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 group-hover:translate-x-1 sm:group-hover:translate-x-2 transition-transform shrink-0" />
