@@ -75,7 +75,25 @@ async function run() {
       changed = true;
     }
 
-    if (!changed) {
+    console.log('\n🔄 Migrating image URLs from /uploads/ to /api/uploads/...');
+    const [results] = await sequelize.query(
+      "SELECT id, image FROM Productions WHERE image LIKE '/uploads/%'"
+    );
+    
+    for (const row of results) {
+      const newUrl = row.image.replace('/uploads/', '/api/uploads/');
+      await sequelize.query(
+        "UPDATE Productions SET image = ? WHERE id = ?",
+        { replacements: [newUrl, row.id] }
+      );
+      console.log(`✅ Migrated image URL for Production ID ${row.id}: ${newUrl}`);
+    }
+
+    if (results.length === 0) {
+      console.log('ℹ️  No image URLs needed migration.');
+    }
+
+    if (!changed && results.length === 0) {
       console.log('✅ Schema is already up-to-date. Nothing to do.');
     } else {
       console.log('\n🎉 Schema fix complete. Restart the app if it is running.');
