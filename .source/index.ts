@@ -1,16 +1,5 @@
 // @ts-nocheck -- skip type checking
-<<<<<<< HEAD
-import * as docs_4 from "../blog/content/react-portfolio-templates.mdx?collection=docs&hash=1774818011700"
-import * as docs_3 from "../blog/content/react-native-libraries.mdx?collection=docs&hash=1774818011700"
-import * as docs_2 from "../blog/content/react-landing-page-templates.mdx?collection=docs&hash=1774818011700"
-import * as docs_1 from "../blog/content/react-animation-libraries.mdx?collection=docs&hash=1774818011700"
-import * as docs_0 from "../blog/content/nextjs-portfolio-templates.mdx?collection=docs&hash=1774818011700"
-import { _runtime } from "fumadocs-mdx"
-import * as _source from "../source.config"
-export const docs = _runtime.doc<typeof _source.docs>([{ info: {"path":"nextjs-portfolio-templates.mdx","absolutePath":"/Users/aureldsk/Farid/blog/content/nextjs-portfolio-templates.mdx"}, data: docs_0 }, { info: {"path":"react-animation-libraries.mdx","absolutePath":"/Users/aureldsk/Farid/blog/content/react-animation-libraries.mdx"}, data: docs_1 }, { info: {"path":"react-landing-page-templates.mdx","absolutePath":"/Users/aureldsk/Farid/blog/content/react-landing-page-templates.mdx"}, data: docs_2 }, { info: {"path":"react-native-libraries.mdx","absolutePath":"/Users/aureldsk/Farid/blog/content/react-native-libraries.mdx"}, data: docs_3 }, { info: {"path":"react-portfolio-templates.mdx","absolutePath":"/Users/aureldsk/Farid/blog/content/react-portfolio-templates.mdx"}, data: docs_4 }]);
-=======
 import { _runtime } from "fumadocs-mdx"
 import * as _source from "../source.config"
 export const docs = _runtime.doc<typeof _source.docs>([]);
->>>>>>> 4c9548aa0595fc8ebebb600b9a7866502fe32372
 export const meta = _runtime.meta<typeof _source.meta>([]);
