@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,6 +9,8 @@ import Image from "next/image";
 import { getBlogPost } from "@/lib/content-manager";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getMDXComponents } from "@/mdx-components";
+import { AuthorCard } from "@/components/author-card";
+import { TableOfContents } from "@/components/table-of-contents";
 
 export async function generateMetadata({
   params,
@@ -35,8 +39,8 @@ interface PageProps {
   params: Promise<{ slug: string; lang: string }>;
 }
 
-const formatDate = (date: Date): string => {
-  return date.toLocaleDateString("en-US", {
+const formatDate = (date: Date, lang: string): string => {
+  return date.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -57,7 +61,13 @@ export default async function BlogPost({ params }: PageProps) {
   }
 
   const date = new Date(page.date);
-  const formattedDate = formatDate(date);
+  const formattedDate = formatDate(date, lang);
+  
+  const author = {
+    name: (page as any).authorName || "Farid DANKO", // fallback to site creator
+    position: lang === "fr" ? "Auteur" : "Author",
+    avatar: (page as any).authorPhoto || "/farid-portrait.webp", // fallback photo
+  };
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -73,51 +83,58 @@ export default async function BlogPost({ params }: PageProps) {
         />
       </div>
 
-      <div className="space-y-4 border-b border-border relative z-10">
-        <div className="max-w-7xl mx-auto flex flex-col gap-6 p-6">
-          <div className="flex flex-wrap items-center gap-3 gap-y-5 text-sm text-muted-foreground">
-            <Button variant="outline" asChild className="h-6 w-6">
-              <Link href={`/${lang}/blog`}>
+      <div className="border-b border-border relative z-10 bg-background/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-6 py-12 md:py-20">
+          <div className="flex flex-col gap-8">
+            <Button variant="ghost" asChild className="w-fit -ml-4 hover:bg-muted/50">
+              <Link href={`/${lang}/blog`} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-bold uppercase text-xs tracking-widest">
                 <ArrowLeft className="w-4 h-4" />
-                <span className="sr-only">Back to all articles</span>
+                {lang === "fr" ? "Retour aux articles" : "Back to articles"}
               </Link>
             </Button>
-            <time className="font-medium text-muted-foreground">
-              {formattedDate}
-            </time>
+
+            <div className="space-y-6">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tighter text-balance leading-[0.9] uppercase">
+                {page.title}
+              </h1>
+
+              <div className="flex flex-wrap items-center gap-6 pt-4 border-t border-border/40">
+                <AuthorCard author={author} />
+                <div className="h-8 w-px bg-border/40 hidden sm:block" />
+                <time className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                  {formattedDate}
+                </time>
+              </div>
+            </div>
           </div>
-
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-serif font-semibold tracking-tighter text-balance">
-            {page.title}
-          </h1>
-
-          {page.description && (
-            <p className="text-muted-foreground max-w-4xl md:text-lg md:text-balance">
-              {page.description}
-            </p>
-          )}
         </div>
       </div>
-      <div className="flex divide-x divide-border relative max-w-7xl mx-auto px-4 md:px-0 z-10">
-        <div className="absolute max-w-7xl mx-auto left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] lg:w-full h-full border-x border-border p-0 pointer-events-none" />
-        <main className="w-full p-0 overflow-hidden border-r-0">
-          {page.thumbnail && (
-            <div className="relative w-full h-[500px] overflow-hidden object-cover border border-transparent border-r-0">
-              <Image
-                src={page.thumbnail}
-                alt={page.title}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          )}
-          <div className="p-6 lg:p-10 border-r-0">
-            <div className="prose dark:prose-invert max-w-none prose-headings:scroll-mt-8 prose-headings:font-semibold prose-a:no-underline prose-headings:tracking-tight prose-headings:text-balance prose-p:tracking-tight prose-p:text-balance prose-lg">
+
+      <div className="max-w-7xl mx-auto px-6 py-12 md:py-20 relative z-10">
+        <div className="grid lg:grid-cols-[1fr_250px] gap-12 lg:gap-20">
+          <main className="space-y-12">
+            {page.thumbnail && (
+              <div className="relative aspect-video rounded-3xl overflow-hidden border border-border/40 shadow-2xl group">
+                <Image
+                  src={page.thumbnail}
+                  alt={page.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  priority
+                />
+              </div>
+            )}
+            <div className="prose dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:tracking-tighter prose-headings:uppercase prose-p:text-muted-foreground prose-p:leading-relaxed prose-lg">
               <MDXRemote source={page.content} components={getMDXComponents()} />
             </div>
-          </div>
-        </main>
+          </main>
+
+          <aside className="hidden lg:block">
+            <div className="sticky top-32 space-y-10">
+              <TableOfContents />
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   );

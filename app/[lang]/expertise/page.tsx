@@ -1,7 +1,11 @@
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
-import { Zap, TrendingUp, Users, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { getDictionary } from "@/lib/get-dictionary";
 import { Metadata } from "next";
+import { getData } from "@/lib/content-manager";
+import Image from "next/image";
 
 export async function generateMetadata({
   params,
@@ -23,82 +27,74 @@ export default async function ExpertisePage({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const dict = await getDictionary(lang as "en" | "fr");
+  const isFr = lang === "fr";
 
-  const sections = [
-    {
-      key: "autonomisation",
-      icon: Zap,
-      title: dict.expertise.subpages.autonomisation.title,
-      description: dict.expertise.subpages.autonomisation.desc,
-      details: dict.expertise.subpages.autonomisation.details,
-      href: `/${lang}/expertise/autonomisation`,
-    },
-    {
-      key: "developpement",
-      icon: TrendingUp,
-      title: dict.expertise.subpages.developpement.title,
-      description: dict.expertise.subpages.developpement.desc,
-      details: dict.expertise.subpages.developpement.details,
-      href: `/${lang}/expertise/developpement`,
-    },
-    {
-      key: "inclusion",
-      icon: Users,
-      title: dict.expertise.subpages.inclusion.title,
-      description: dict.expertise.subpages.inclusion.desc,
-      details: dict.expertise.subpages.inclusion.details,
-      href: `/${lang}/expertise/inclusion`,
-    },
-  ];
+  const rawInitiatives = await getData("expertise");
+  const initiatives = rawInitiatives
+    .filter((item: any) => item.slug) // skip empty drafts
+    .map((item: any, index: number) => ({
+      ...item,
+      num: String(index + 1).padStart(2, "0"),
+      title: item.title?.[lang] ?? item.title?.fr ?? "",
+      desc: item.description?.[lang] ?? item.description?.fr ?? "",
+      href: `/${lang}/expertise/${item.slug}`,
+    }));
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 md:py-24">
-        <div className="max-w-4xl mb-10 md:mb-16 lg:mb-20 text-center mx-auto">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 lg:mb-8 uppercase tracking-tighter">
-            {dict.expertise.title}
-          </h1>
-          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium leading-tight mb-3 md:mb-4 lg:mb-6">
-            {dict.expertise.description}
-          </p>
-          <p className="text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed">
-            {dict.expertise.intro}
-          </p>
-        </div>
+      <div className="max-w-5xl mx-auto px-6 md:px-12 py-16 md:py-28">
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
-          {sections.map((section) => (
-            <Link
-              key={section.key}
-              href={section.href}
-              className="group p-6 md:p-8 lg:p-10 border border-border rounded-2xl md:rounded-3xl bg-background hover:bg-muted/10 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
-            >
-              <div className="mb-5 md:mb-6 lg:mb-8 p-2.5 md:p-3 lg:p-4 rounded-xl md:rounded-2xl bg-muted/30 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors w-fit">
-                <section.icon className="h-5 w-5 md:h-6 md:w-6 lg:h-8 lg:w-8" />
-              </div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 md:mb-3 lg:mb-4 uppercase tracking-tighter">
-                {section.title}
-              </h2>
-              <p className="text-sm md:text-base lg:text-lg text-muted-foreground leading-relaxed mb-3 md:mb-4 lg:mb-6 font-medium">
-                {section.description}
-              </p>
-              <p className="text-xs md:text-sm text-muted-foreground/60 mb-6 md:mb-8 italic">
-                {section.details}
-              </p>
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
-                {lang === "fr" ? "Explorer" : "Explore"}
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </Link>
+        {/* ── HEADER ── */}
+        <header className="mb-16 md:mb-24 border-b border-border/50 pb-12 md:pb-16">
+          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground/60 mb-4">
+            {isFr ? "Domaines d'intervention" : "Areas of intervention"}
+          </p>
+          <h1 className="text-5xl md:text-7xl font-bold uppercase tracking-tight mb-8">
+            {isFr ? "Expertise" : "Expertise"}
+          </h1>
+          <div className="max-w-2xl space-y-3">
+            <p className="text-lg md:text-xl text-foreground leading-relaxed">
+              {isFr
+                ? "Farid Danko intervient à l'intersection de l'autonomisation économique, du développement organisationnel et de l'inclusion."
+                : "Farid Danko works at the intersection of economic empowerment, organizational development and inclusion."}
+            </p>
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
+              {isFr
+                ? "Son approche relie lecture stratégique, travail de terrain et structuration de solutions à fort impact."
+                : "His approach connects strategic insight, fieldwork and the design of high-impact solutions."}
+            </p>
+          </div>
+        </header>
+
+        {/* ── BLOCKS ── Horizontal list style */}
+        <div className="flex flex-col divide-y divide-border/40">
+          {(initiatives as any[]).map((block) => (
+            <div key={block.slug} className="group relative">
+              <Link
+                href={block.href}
+                className="flex flex-col md:flex-row items-center justify-between gap-8 py-10 md:py-12 hover:pl-3 transition-all duration-300"
+              >
+                <div className="flex items-start gap-8 md:gap-12 flex-1">
+                  <span className="text-xs font-bold tabular-nums text-muted-foreground/40 pt-1.5 shrink-0">
+                    {block.num}
+                  </span>
+                  <div className="flex-1">
+                    <h2 className="text-2xl md:text-4xl font-bold uppercase tracking-tight mb-4 group-hover:text-foreground transition-colors">
+                      {block.title}
+                    </h2>
+                    <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl">
+                      {block.desc}
+                    </p>
+                  </div>
+                </div>
+
+
+                <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground/40 group-hover:text-foreground group-hover:translate-x-1 transition-all duration-300 md:block hidden" />
+              </Link>
+            </div>
           ))}
         </div>
 
-        <div className="mt-14 md:mt-24 lg:mt-32 p-6 sm:p-8 md:p-12 rounded-2xl md:rounded-3xl bg-black dark:bg-white text-white dark:text-black text-center">
-          <p className="text-lg sm:text-xl md:text-2xl font-bold uppercase tracking-tight">
-            {dict.expertise.outro}
-          </p>
-        </div>
       </div>
     </div>
   );

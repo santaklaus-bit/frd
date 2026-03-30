@@ -47,3 +47,4 @@ instructions.txt
 *.docx
 
 backend
+public/uploads

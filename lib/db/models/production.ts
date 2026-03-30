@@ -9,8 +9,11 @@ export class Production extends Model {
   public declare titleEn: string;
   public declare descriptionFr: string;
   public declare descriptionEn: string;
+  public declare categoryFr: string;
+  public declare categoryEn: string;
   public declare detailsFr: string;
   public declare detailsEn: string;
+  public declare image: string;
   public declare href: string;
   public declare order: number;
   public declare readonly createdAt: Date;
@@ -26,8 +29,11 @@ Production.init(
     titleEn: { type: DataTypes.STRING, allowNull: false },
     descriptionFr: { type: DataTypes.TEXT, allowNull: false },
     descriptionEn: { type: DataTypes.TEXT, allowNull: false },
-    detailsFr: { type: DataTypes.STRING, allowNull: false },
-    detailsEn: { type: DataTypes.STRING, allowNull: false },
+    categoryFr: { type: DataTypes.STRING, allowNull: false, defaultValue: "" },
+    categoryEn: { type: DataTypes.STRING, allowNull: false, defaultValue: "" },
+    detailsFr: { type: DataTypes.TEXT, allowNull: false },
+    detailsEn: { type: DataTypes.TEXT, allowNull: false },
+    image: { type: DataTypes.STRING, allowNull: true },
     href: { type: DataTypes.STRING, allowNull: false },
     order: { type: DataTypes.INTEGER, defaultValue: 0 },
   },

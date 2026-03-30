@@ -34,7 +34,7 @@ export default async function AboutPage({
           {/* Left Side: Consolidated Block Content */}
           <div className="space-y-8 md:space-y-12 lg:space-y-16">
             <div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-serif font-semibold mb-6 md:mb-10 uppercase tracking-tighter leading-[0.9]">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tighter uppercase leading-[0.9] text-balance">
                 {dict.about.title}
               </h1>
               <div className="space-y-4 md:space-y-6 lg:space-y-8 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed font-normal text-muted-foreground">
@@ -71,7 +71,7 @@ export default async function AboutPage({
           {/* Right Side: Sticky Photo */}
           <div className="order-first lg:order-last lg:sticky lg:top-32 h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[85vh] rounded-2xl sm:rounded-[2rem] lg:rounded-[3.5rem] bg-muted overflow-hidden shadow-xl md:shadow-2xl group w-full">
             <Image
-              src="/farid-portrait.png"
+              src="/farid-portrait.webp"
               alt="Farid Danko Portrait"
               fill
               className="object-cover transition-transform duration-1000 group-hover:scale-105"

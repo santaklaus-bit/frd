@@ -4,7 +4,7 @@ export default function JsonLd({ lang, dict }: { lang: string; dict: any }) {
     "@type": "Person",
     name: "Farid DANKO",
     url: "https://fariddanko.com",
-    image: "https://fariddanko.com/farid-portrait.png",
+    image: "https://fariddanko.com/farid-portrait.webp",
     jobTitle: lang === "fr" ? "Entrepreneur Social" : "Social Entrepreneur",
     description: dict.seo.home.description,
     sameAs: [

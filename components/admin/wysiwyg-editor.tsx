@@ -5,6 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
+import { useState, useRef } from "react";
 import {
   Bold,
   Italic,
@@ -16,7 +17,9 @@ import {
   ListOrdered,
   Link as LinkIcon,
   ImageIcon,
+  Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface WysiwygEditorProps {
   value: string;
@@ -26,15 +29,45 @@ interface WysiwygEditorProps {
 }
 
 const MenuBar = ({ editor }: { editor: any }) => {
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   if (!editor) {
     return null;
   }
 
-  const addImage = () => {
-    const url = window.prompt("URL de l'image");
-    if (url) {
-      editor.chain().focus().setImage({ src: url }).run();
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error("Upload failed");
+
+      const data = await res.json();
+      editor.chain().focus().setImage({ src: data.url }).run();
+      toast.success("Image insérée !");
+    } catch (err) {
+      console.error(err);
+      toast.error("Erreur lors de l'envoi de l'image.");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     }
+  };
+
+  const addImage = () => {
+    fileInputRef.current?.click();
   };
 
   const setLink = () => {
@@ -146,11 +179,23 @@ const MenuBar = ({ editor }: { editor: any }) => {
       <button
         type="button"
         onClick={addImage}
-        className="p-2 rounded-md hover:bg-muted text-muted-foreground"
+        disabled={uploading}
+        className="p-2 rounded-md hover:bg-muted text-muted-foreground disabled:opacity-50"
         title="Insérer une image"
       >
-        <ImageIcon className="w-4 h-4" />
+        {uploading ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <ImageIcon className="w-4 h-4" />
+        )}
       </button>
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        accept="image/*"
+        className="hidden"
+      />
     </div>
   );
 };

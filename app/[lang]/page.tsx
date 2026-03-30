@@ -1,19 +1,23 @@
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Zap, TrendingUp, Users, BookOpen, FileText } from "lucide-react";
+import { ArrowRight, Zap, TrendingUp, Users, BookOpen, FileText, Target, Lightbulb, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HeroSection } from "@/components/hero-section";
-import { docs, meta } from "@/.source";
-import { loader } from "fumadocs-core/source";
-import { createMDXSource } from "fumadocs-mdx";
 import { getDictionary } from "@/lib/get-dictionary";
+import { getBlogPosts, getData } from "@/lib/content-manager";
 import { Newsletter } from "@/components/newsletter";
 import { Metadata } from "next";
 
-const blogSource = loader({
-  baseUrl: "/blog",
-  source: createMDXSource(docs, meta),
-});
+const ICON_MAP: Record<string, any> = {
+  Zap,
+  TrendingUp,
+  Users,
+  Target,
+  Lightbulb,
+  Video,
+};
 
 const formatDate = (date: Date, lang: string): string => {
   return date.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", {
@@ -44,65 +48,28 @@ export default async function HomePage({
   const { lang } = await params;
   const dict = await getDictionary(lang as "en" | "fr");
 
-  const posts = blogSource
-    .getPages()
-    .sort(
-      (a, b) =>
-        new Date(b.data.date ?? 0).getTime() -
-        new Date(a.data.date ?? 0).getTime()
-    )
-    .slice(0, 2);
+  const postsSource = await getBlogPosts();
+  const posts = postsSource.sort(
+    (a: any, b: any) =>
+      new Date(b.date ?? 0).getTime() -
+      new Date(a.date ?? 0).getTime()
+  ).slice(0, 2);
 
-  const expertiseItems = [
-    {
-      icon: Zap,
-      title: dict.expertise.subpages.autonomisation.title,
-      desc: dict.expertise.subpages.autonomisation.desc,
-      href: `/${lang}/expertise/autonomisation`,
-    },
-    {
-      icon: TrendingUp,
-      title: dict.expertise.subpages.developpement.title,
-      desc: dict.expertise.subpages.developpement.desc,
-      href: `/${lang}/expertise/developpement`,
-    },
-    {
-      icon: Users,
-      title: dict.expertise.subpages.inclusion.title,
-      desc: dict.expertise.subpages.inclusion.desc,
-      href: `/${lang}/expertise/inclusion`,
-    },
-  ];
+  const rawExpertise = await getData("expertise");
+  const expertiseItems = rawExpertise.slice(0, 3).map((item: any) => ({
+    icon: ICON_MAP[item.icon] || Lightbulb,
+    title: item.title?.[lang] || item.title?.fr || "",
+    desc: item.description?.[lang] || item.description?.fr || "",
+    href: `/${lang}/expertise/${item.slug}`,
+  }));
 
-  const projectCards = [
-    {
-      title: lang === "fr" ? "Diagnostic WASH – Bénin" : "WASH Diagnostic – Benin",
-      desc:
-        lang === "fr"
-          ? "Diagnostic sur la disponibilité et la fonctionnalité des infrastructures sanitaires dans les écoles publiques du Bénin. Un travail structurant pour orienter des interventions durables en eau, hygiène et assainissement."
-          : "Assessment of availability and functionality of sanitary infrastructure in public schools in Benin. Structuring work to guide sustainable interventions in water, hygiene and sanitation.",
-      image: null,
-      href: `/${lang}/projects/diagnostic-wash-benin`,
-    },
-    {
-      title: lang === "fr" ? "Filière viticole – Québec" : "Wine sector – Quebec",
-      desc:
-        lang === "fr"
-          ? "Observation terrain de la production pour mieux comprendre les leviers de valorisation, de structuration et de durabilité économique."
-          : "Field observation of production to better understand the levers of valorisation, structuring and economic sustainability.",
-      image: null,
-      href: `/${lang}/projects/filiere-viticole-quebec`,
-    },
-    {
-      title: lang === "fr" ? "Filière pomicole – Québec" : "Apple sector – Quebec",
-      desc:
-        lang === "fr"
-          ? "Lecture terrain des dynamiques de production locale et des opportunités de transformation à plus forte valeur ajoutée."
-          : "Field reading of local production dynamics and higher value-added transformation opportunities.",
-      image: null,
-      href: `/${lang}/projects/filiere-pomicole-quebec`,
-    },
-  ];
+  const rawProjects = await getData("projects");
+  const projectCards = rawProjects.slice(0, 3).map((item: any) => ({
+    title: item.title?.[lang] || item.title?.fr || "",
+    desc: item.description?.[lang] || item.description?.fr || "",
+    image: item.image || "/farid-portrait.webp",
+    href: `/${lang}/projects/${item.slug}`,
+  }));
 
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-24">
@@ -115,10 +82,12 @@ export default async function HomePage({
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
             <div className="relative aspect-[3/4] max-h-[500px] md:max-h-none rounded-2xl md:rounded-3xl overflow-hidden group shadow-xl md:shadow-2xl">
               <Image
-                src="/farid-portrait.png"
+                src="/farid-portrait.webp"
                 alt="Farid Danko"
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                className="object-cover transition-transform duration-700 group-hover:scale-105 pointer-events-none no-copy"
+                priority
+                draggable={false}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
@@ -207,14 +176,15 @@ export default async function HomePage({
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
             <div className="relative aspect-[4/3] rounded-2xl md:rounded-3xl overflow-hidden bg-muted shadow-xl md:shadow-2xl group">
               <Image
-                src="/farid-portrait.png"
+                src="/projects/image2.png"
                 alt="Champ de piri piri – Coopérative de femmes productrices, Kenya"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-              <p className="absolute bottom-3 md:bottom-4 left-3 md:left-4 right-3 md:right-4 text-white text-[10px] md:text-xs font-semibold uppercase tracking-widest opacity-80">
-                {dict.featuredProject.caption}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <p className="absolute bottom-3 md:bottom-4 left-3 md:left-4 right-3 md:right-4 text-white text-xs leading-snug">
+                <span className="font-bold block">{dict.featuredProject.caption}</span>
+                <span className="text-white/70 text-[11px] mt-0.5 block">{dict.featuredProject.description}</span>
               </p>
             </div>
             <div className="flex flex-col gap-4 md:gap-6">
@@ -259,7 +229,7 @@ export default async function HomePage({
               >
                 <div className="relative h-40 sm:h-44 md:h-48 bg-muted overflow-hidden">
                   <Image
-                    src="/farid-portrait.png"
+                    src={card.image || "/farid-portrait.webp"}
                     alt={card.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105 opacity-60"
@@ -319,19 +289,19 @@ export default async function HomePage({
           </div>
 
           <div className="grid sm:grid-cols-2 gap-6 md:gap-8 lg:gap-10">
-            {posts.map((post) => {
-              const date = post.data.date ? new Date(post.data.date) : null;
+            {posts.map((post: any) => {
+              const date = post.date ? new Date(post.date) : null;
               return (
                 <Link
-                  key={post.url}
-                  href={`/${lang}${post.url}`}
+                  key={post.slug}
+                  href={`/${lang}/blog/${post.slug}`}
                   className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card hover:shadow-2xl transition-all"
                 >
-                  {post.data.thumbnail && (
+                  {post.thumbnail && (
                     <div className="relative h-44 sm:h-48 md:h-52 w-full overflow-hidden">
                       <Image
-                        src={post.data.thumbnail}
-                        alt={post.data.title}
+                        src={post.thumbnail}
+                        alt={post.title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
                       />
@@ -339,11 +309,11 @@ export default async function HomePage({
                   )}
                   <div className="flex flex-1 flex-col p-5 sm:p-6 md:p-8">
                     <h3 className="text-lg md:text-xl font-bold tracking-tight mb-2 md:mb-3 group-hover:text-primary transition-colors leading-tight">
-                      {post.data.title}
+                      {post.title}
                     </h3>
-                    {post.data.description && (
+                    {post.description && (
                       <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed flex-1">
-                        {post.data.description}
+                        {post.description}
                       </p>
                     )}
                     <div className="mt-4 md:mt-5 flex items-center justify-between text-xs font-bold text-muted-foreground uppercase tracking-widest">

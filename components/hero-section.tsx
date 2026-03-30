@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -31,9 +32,17 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
       className="relative h-[90vh] flex items-center justify-center overflow-hidden border-b border-border/40"
       aria-label="Introduction"
     >
-      <div className="absolute inset-0 -z-10">
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/hero-bg.webp"
+          alt="Hero Background"
+          fill
+          className="object-cover scale-y-[-1]"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/60" />
         <FlickeringGrid
-          className="w-full h-full"
+          className="w-full h-full opacity-30"
           squareSize={4}
           gridGap={6}
           color="#60A5FA"
@@ -41,15 +50,15 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           flickerChance={0.03}
         />
         {/* Radial Gradient Glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(96,165,250,0.1),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(96,165,250,0.05),transparent_50%)]" />
 
         {/* Large Decorative Text */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none overflow-hidden w-full text-center">
           <motion.h2
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.03 }}
+            animate={{ opacity: 0.05 }}
             transition={{ duration: 2 }}
-            className="text-[25vw] font-serif font-bold uppercase tracking-tighter whitespace-nowrap leading-none"
+            className="text-[25vw] font-serif font-bold uppercase tracking-tighter whitespace-nowrap leading-none text-white"
           >
             FARID DANKO
           </motion.h2>
@@ -93,10 +102,10 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           className="flex flex-col items-center mx-auto"
           style={{ width: "fit-content", maxWidth: "100%" }}
         >
-          <h1 className="text-[12vw] sm:text-[10vw] md:text-[8vw] lg:text-[8rem] font-serif font-semibold tracking-tighter uppercase leading-[0.8] mb-4 sm:mb-6 whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/70">
+          <h1 className="text-[12vw] sm:text-[10vw] md:text-[8vw] lg:text-[8rem] font-serif font-semibold tracking-tighter uppercase leading-[0.8] mb-4 sm:mb-6 whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70">
             {dict.home.title}
           </h1>
-          <p className="w-full text-center text-[2.5vw] sm:text-[2vw] md:text-[1.5vw] lg:text-[1.5rem] font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] md:tracking-[0.35em] lg:tracking-[0.45em] text-muted-foreground opacity-60 text-wrap leading-tight sm:leading-snug">
+          <p className="w-full text-center text-[1.8vw] sm:text-[1.4vw] md:text-[1vw] lg:text-[1rem] font-bold uppercase tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.2em] lg:tracking-[0.25em] text-white/60 leading-tight whitespace-nowrap">
             {dict.home.subtitle}
           </p>
         </motion.div>
@@ -105,7 +114,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-          className="text-[4vw] sm:text-xl md:text-2xl font-normal leading-tight text-muted-foreground/80 max-w-4xl mx-auto tracking-tight px-4"
+          className="text-[4vw] sm:text-xl md:text-2xl font-normal leading-tight text-white/80 max-w-4xl mx-auto tracking-tight px-4"
         >
           {dict.home.description}
         </motion.div>
@@ -119,7 +128,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           <Link href={`/${lang}${dict.home.cta_href ?? '/about'}`}>
             <Button
               size="lg"
-              className="px-8 py-6 sm:px-12 sm:py-8 md:px-16 md:py-10 h-auto rounded-full text-sm sm:text-lg md:text-xl font-bold uppercase tracking-widest sm:tracking-widest hover:scale-105 transition-all shadow-xl sm:shadow-2xl bg-black text-white dark:bg-white dark:text-black border-none group"
+              className="px-8 py-6 sm:px-12 sm:py-8 md:px-16 md:py-10 h-auto rounded-full text-sm sm:text-lg md:text-xl font-bold uppercase tracking-widest sm:tracking-widest hover:scale-105 transition-all shadow-xl sm:shadow-2xl bg-white text-black border-none group"
             >
               <span className="truncate">{dict.home.cta}</span>
               <ArrowRight className="ml-3 sm:ml-4 h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 group-hover:translate-x-1 sm:group-hover:translate-x-2 transition-transform shrink-0" />

@@ -1,16 +1,11 @@
+export const dynamic = "force-dynamic";
+
 import { Metadata } from "next";
 import { getDictionary } from "@/lib/get-dictionary";
+import { getBlogPosts } from "@/lib/content-manager";
 import Link from "next/link";
 import Image from "next/image";
 import { Clock } from "lucide-react";
-import { docs, meta } from "@/.source";
-import { loader } from "fumadocs-core/source";
-import { createMDXSource } from "fumadocs-mdx";
-
-const blogSource = loader({
-  baseUrl: "/blog",
-  source: createMDXSource(docs, meta),
-});
 
 export async function generateMetadata({
   params,
@@ -35,10 +30,7 @@ const formatDate = (date: Date, lang: string): string => {
   });
 };
 
-const CATEGORIES = {
-  fr: ["Tout", "Projets", "Contenus"],
-  en: ["All", "Projects", "Content"],
-};
+
 
 export default async function BlogPage({
   params,
@@ -48,13 +40,12 @@ export default async function BlogPage({
   const { lang } = await params;
   const dict = await getDictionary(lang as "en" | "fr");
 
-  const posts = blogSource
-    .getPages()
-    .sort(
-      (a, b) =>
-        new Date(b.data.date ?? 0).getTime() -
-        new Date(a.data.date ?? 0).getTime()
-    );
+  const postsSource = await getBlogPosts();
+  const posts = postsSource.sort(
+    (a: any, b: any) =>
+      new Date(b.date ?? 0).getTime() -
+      new Date(a.date ?? 0).getTime()
+  );
 
   const isFr = lang === "fr";
   const featured = posts[0] ?? null;
@@ -86,34 +77,18 @@ export default async function BlogPage({
           </h1>
         </header>
 
-        {/* ── CATEGORY FILTER (decorative) ── */}
-        <nav className="flex gap-6 md:gap-10 py-8 border-b border-border/40 overflow-x-auto">
-          {(isFr ? CATEGORIES.fr : CATEGORIES.en).map((cat, i) => (
-            <button
-              key={cat}
-              className={`text-xs font-bold uppercase tracking-[0.25em] whitespace-nowrap pb-1 transition-colors ${i === 0
-                ? "text-foreground border-b-2 border-foreground"
-                : "text-muted-foreground/60 hover:text-foreground border-b-2 border-transparent hover:border-foreground/30"
-                }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </nav>
+
 
         {/* ── FEATURED ARTICLE ── */}
         {featured && (
           <section className="py-16 md:py-24 border-b border-border/40">
-            <Link
-              href={`/${lang}${featured.url}`}
-              className="group grid md:grid-cols-2 gap-10 md:gap-16 items-start"
-            >
+            <article className="group grid md:grid-cols-2 gap-10 md:gap-16 items-start">
               {/* Image */}
-              {featured.data.thumbnail ? (
+              {featured.thumbnail ? (
                 <div className="relative aspect-[3/2] overflow-hidden bg-muted">
                   <Image
-                    src={featured.data.thumbnail}
-                    alt={featured.data.title}
+                    src={featured.thumbnail}
+                    alt={featured.title}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     priority
@@ -128,30 +103,29 @@ export default async function BlogPage({
                 <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground/60">
                   {isFr ? "Article à la une" : "Featured article"}
                 </p>
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-tight group-hover:opacity-70 transition-opacity">
-                  {featured.data.title}
-                </h2>
-                {featured.data.description && (
+                <Link href={`/${lang}/blog/${featured.slug}`} className="w-fit">
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-tight hover:underline">
+                    {featured.title}
+                  </h2>
+                </Link>
+                {featured.description && (
                   <p className="text-muted-foreground leading-relaxed line-clamp-3">
-                    {featured.data.description}
+                    {featured.description}
                   </p>
                 )}
                 <div className="flex items-center gap-4 text-xs text-muted-foreground/70 font-medium uppercase tracking-widest">
-                  {featured.data.date && (
-                    <time>{formatDate(new Date(featured.data.date), lang)}</time>
+                  {featured.date && (
+                    <time>{formatDate(new Date(featured.date), lang)}</time>
                   )}
-                  {featured.data.readTime && (
+                  {featured.readTime && (
                     <span className="flex items-center gap-1.5">
                       <Clock className="h-3 w-3" />
-                      {featured.data.readTime}
+                      {featured.readTime}
                     </span>
                   )}
                 </div>
-                <span className="text-xs font-bold uppercase tracking-[0.3em] underline underline-offset-4 decoration-1 group-hover:decoration-foreground transition-all">
-                  {isFr ? "Lire l'article" : "Read article"}
-                </span>
               </div>
-            </Link>
+            </article>
           </section>
         )}
 
@@ -159,21 +133,17 @@ export default async function BlogPage({
         {rest.length > 0 && (
           <section className="py-16 md:py-24">
             <div className="grid md:grid-cols-2 gap-x-12 lg:gap-x-20 gap-y-16 md:gap-y-24">
-              {rest.map((post, idx) => {
-                const date = post.data.date ? new Date(post.data.date) : null;
+              {rest.map((post: any, idx: number) => {
+                const date = post.date ? new Date(post.date) : null;
 
                 return (
-                  <Link
-                    key={post.url}
-                    href={`/${lang}${post.url}`}
-                    className="group flex flex-col gap-6"
-                  >
+                  <article key={post.slug} className="group flex flex-col gap-6">
                     {/* Image */}
                     <div className="relative aspect-[3/2] overflow-hidden bg-muted/60">
-                      {post.data.thumbnail ? (
+                      {post.thumbnail ? (
                         <Image
-                          src={post.data.thumbnail}
-                          alt={post.data.title}
+                          src={post.thumbnail}
+                          alt={post.title}
                           fill
                           className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
@@ -184,28 +154,27 @@ export default async function BlogPage({
 
                     {/* Content */}
                     <div className="flex flex-col gap-3">
-                      <h2 className="text-2xl md:text-3xl font-bold tracking-tight leading-snug group-hover:opacity-70 transition-opacity">
-                        {post.data.title}
-                      </h2>
+                      <Link href={`/${lang}/blog/${post.slug}`} className="w-fit">
+                        <h2 className="text-2xl md:text-3xl font-bold tracking-tight leading-snug hover:underline">
+                          {post.title}
+                        </h2>
+                      </Link>
                       <div className="flex items-center gap-4 text-xs text-muted-foreground/60 font-medium uppercase tracking-widest">
                         {date && <time>{formatDate(date, lang)}</time>}
-                        {post.data.readTime && (
+                        {post.readTime && (
                           <span className="flex items-center gap-1.5">
                             <Clock className="h-3 w-3" />
-                            {post.data.readTime}
+                            {post.readTime}
                           </span>
                         )}
                       </div>
-                      {post.data.description && (
+                      {post.description && (
                         <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
-                          {post.data.description}
+                          {post.description}
                         </p>
                       )}
-                      <span className="text-xs font-bold uppercase tracking-[0.3em] underline underline-offset-4 decoration-1 decoration-muted-foreground/40 group-hover:decoration-foreground transition-all mt-1">
-                        {isFr ? "Lire" : "Read"}
-                      </span>
                     </div>
-                  </Link>
+                  </article>
                 );
               })}
             </div>

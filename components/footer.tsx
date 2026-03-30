@@ -61,7 +61,7 @@ export default function Footer({ lang, dict }: { lang: string; dict: any }) {
                 className="h-10 w-auto invert dark:invert-0"
               />
             </Link>
-            <p className="text-muted-foreground leading-relaxed font-medium">
+            <p className="text-muted-foreground leading-relaxed font-medium ml-4">
               {lang === "fr"
                 ? "Entrepreneur social passionné par l'impact collectif et le développement durable."
                 : "Social entrepreneur passionate about collective impact and sustainable development."}
@@ -154,13 +154,13 @@ export default function Footer({ lang, dict }: { lang: string; dict: any }) {
           </p>
           <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8">
             <Link
-              href="#"
+              href={`/${lang}/privacy-policy`}
               className="text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
             >
               Privacy Policy
             </Link>
             <Link
-              href="#"
+              href={`/${lang}/terms-of-service`}
               className="text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
             >
               Terms of Service
