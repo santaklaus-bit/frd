@@ -1,9 +1,8 @@
 import { notFound } from "next/navigation";
-import { ArrowLeft, Target, Users, Lightbulb, TrendingUp } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { getData } from "@/lib/content-manager";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import { HashScrollHandler } from "@/components/hash-scroll-handler";
@@ -13,13 +12,6 @@ export const dynamic = "force-dynamic";
 interface PageProps {
   params: Promise<{ slug: string; lang: string }>;
 }
-
-const ICON_MAP: Record<string, any> = {
-  Target,
-  Users,
-  Lightbulb,
-  TrendingUp,
-};
 
 export async function generateMetadata({
   params,
@@ -51,93 +43,93 @@ export default async function ExpertiseDetailPage({ params }: PageProps) {
   const title = initiative.title[lang as keyof typeof initiative.title] || initiative.title.fr;
   const description = initiative.description[lang as keyof typeof initiative.description] || initiative.description.fr;
   const category = initiative.category[lang as keyof typeof initiative.category] || initiative.category.fr;
-  const Icon = ICON_MAP[initiative.icon] || Target;
+  const content = initiative.content ? (initiative.content[lang as keyof typeof initiative.content] || initiative.content.fr) : "";
 
   return (
-    <div className="min-h-screen bg-background relative">
+    <div className="min-h-screen bg-background relative overflow-hidden">
       <HashScrollHandler />
 
-      {/* ── BANNER IMAGE ── */}
-      {initiative.image && (
-        <div className="relative w-full h-[40vh] md:h-[55vh] overflow-hidden">
-          <Image
-            src={initiative.image}
-            alt={title}
-            fill
-            className="object-cover"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-background" />
-        </div>
-      )}
+      {/* ── BACKGROUND ACCENT ── */}
+      <div className="absolute top-0 left-0 z-0 w-full h-[500px] pointer-events-none">
+        <FlickeringGrid
+          className="absolute top-0 left-0 size-full [mask-image:radial-gradient(ellipse_at_top,black_20%,transparent_80%)] opacity-30"
+          squareSize={4}
+          gridGap={6}
+          color="#6B7280"
+          maxOpacity={0.2}
+          flickerChance={0.05}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent" />
+      </div>
 
-      {!initiative.image && (
-        <div className="absolute top-0 left-0 z-0 w-full h-[200px] [mask-image:linear-gradient(to_top,transparent_25%,black_95%)]">
-          <FlickeringGrid
-            className="absolute top-0 left-0 size-full"
-            squareSize={4}
-            gridGap={6}
-            color="#6B7280"
-            maxOpacity={0.2}
-            flickerChance={0.05}
-          />
-        </div>
-      )}
-
-      <div className="border-b border-border relative z-10 bg-background/50 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6 py-12 md:py-20">
-          <div className="flex flex-col gap-8">
-            <Button variant="ghost" asChild className="w-fit -ml-4 hover:bg-muted/50">
-              <Link href={`/${lang}/expertise`} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors font-bold uppercase text-xs tracking-widest">
-                <ArrowLeft className="w-4 h-4" />
-                {lang === "fr" ? "Retour à l'expertise" : "Back to expertise"}
+      <div className="relative z-10">
+        {/* ── HEADER ── */}
+        <header className="pt-24 pb-16 md:pt-32 md:pb-24 border-b border-border/40">
+          <div className="max-w-5xl mx-auto px-6">
+            <Button variant="ghost" asChild className="mb-12 -ml-4 hover:bg-muted/50 rounded-full h-10 px-4 group">
+              <Link href={`/${lang}/expertise`} className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all font-bold uppercase text-[10px] tracking-[0.2em]">
+                <ArrowLeft className="w-3 h-3 transition-transform group-hover:-translate-x-1" />
+                {lang === "fr" ? "Expertise" : "Expertise"}
               </Link>
             </Button>
 
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted/50 border border-border/50 text-muted-foreground w-fit">
-                <Icon className="h-4 w-4" />
-                <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest leading-none pt-0.5">
+            <div className="space-y-8">
+              <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] leading-none pt-0.5">
                   {category}
                 </span>
               </div>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-semibold tracking-tighter text-balance leading-[0.9] uppercase">
+              <h1 className="text-5xl sm:text-6xl md:text-8xl font-serif font-extrabold tracking-tight text-balance leading-[0.85] uppercase animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
                 {title}
               </h1>
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl leading-relaxed font-medium animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300">
+                {description}
+              </p>
             </div>
           </div>
-        </div>
-      </div>
+        </header>
 
-      <div className="max-w-7xl mx-auto px-6 py-12 md:py-20 relative z-10">
-        <div className="grid lg:grid-cols-[1fr_250px] gap-12 lg:gap-20">
-          <main className="space-y-12">
-            <p className="text-foreground font-medium text-lg sm:text-xl leading-relaxed mb-6">
-              {description}
-            </p>
+        {/* ── CONTENT ── */}
+        <main className="py-20 md:py-32">
+          <div className="max-w-3xl mx-auto px-6">
+            <div className="prose prose-lg dark:prose-invert max-w-none 
+              prose-headings:font-serif prose-headings:font-bold prose-headings:tracking-tight prose-headings:uppercase
+              prose-p:text-muted-foreground prose-p:leading-[1.8] prose-p:mb-8
+              prose-li:text-muted-foreground prose-strong:text-foreground
+              animate-in fade-in duration-1000 delay-500">
+              
+              {content ? (
+                <div className="whitespace-pre-wrap leading-relaxed">
+                  {content}
+                </div>
+              ) : (
+                 <p className="italic text-muted-foreground/60">
+                   {lang === 'fr' ? 'Aucun contenu supplémentaire disponible.' : 'No additional content available.'}
+                 </p>
+              )}
 
-            {initiative.details && (
-              <div className="prose dark:prose-invert max-w-none prose-headings:font-serif prose-headings:font-semibold prose-headings:tracking-tighter prose-headings:uppercase prose-p:text-muted-foreground prose-p:leading-relaxed prose-lg whitespace-pre-wrap">
-                <p>{(initiative.details as any)[lang] || initiative.details.fr}</p>
-              </div>
-            )}
+              {initiative.details && (
+                <div className="mt-12 text-muted-foreground/80 font-medium border-l-2 border-primary/30 pl-8 py-2 italic text-xl leading-relaxed">
+                   {(initiative.details as any)[lang] || initiative.details.fr}
+                </div>
+              )}
+            </div>
 
             {initiative.link && (
-              <div className="pt-8">
-                <Button asChild size="lg" className="rounded-full px-8 py-6 font-bold uppercase tracking-widest transition-transform hover:scale-105">
+              <div className="mt-20 pt-12 border-t border-border/40">
+                <Button asChild size="lg" className="rounded-full px-10 h-14 font-bold uppercase tracking-widest transition-all hover:scale-105 shadow-xl shadow-primary/10">
                   <a href={initiative.link} target="_blank" rel="noopener noreferrer">
-                    {lang === "fr" ? "Voir la réalisation" : "View implementation"}
+                    {lang === "fr" ? "En savoir plus" : "Learn more"}
                   </a>
                 </Button>
               </div>
             )}
-          </main>
-
-          <aside className="hidden lg:block">
-            {/* Sidebar content if needed */}
-          </aside>
-        </div>
+          </div>
+        </main>
       </div>
+      
+      {/* ── FOOTER DECOR ── */}
+      <div className="h-64 bg-gradient-to-t from-muted/20 to-transparent pointer-events-none" />
     </div>
   );
 }

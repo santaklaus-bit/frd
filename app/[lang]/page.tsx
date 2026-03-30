@@ -10,15 +10,6 @@ import { getBlogPosts, getData } from "@/lib/content-manager";
 import { Newsletter } from "@/components/newsletter";
 import { Metadata } from "next";
 
-const ICON_MAP: Record<string, any> = {
-  Zap,
-  TrendingUp,
-  Users,
-  Target,
-  Lightbulb,
-  Video,
-};
-
 const formatDate = (date: Date, lang: string): string => {
   return date.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", {
     year: "numeric",
@@ -57,7 +48,6 @@ export default async function HomePage({
 
   const rawExpertise = await getData("expertise");
   const expertiseItems = rawExpertise.slice(0, 3).map((item: any) => ({
-    icon: ICON_MAP[item.icon] || Lightbulb,
     title: item.title?.[lang] || item.title?.fr || "",
     desc: item.description?.[lang] || item.description?.fr || "",
     href: `/${lang}/expertise/${item.slug}`,
@@ -136,10 +126,7 @@ export default async function HomePage({
                 href={item.href}
                 className="group p-6 md:p-8 border border-border rounded-2xl bg-background hover:shadow-xl hover:-translate-y-1 transition-all"
               >
-                <div className="mb-4 md:mb-6 p-2.5 md:p-3 rounded-xl bg-muted/30 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors w-fit">
-                  <item.icon className="h-6 w-6 md:h-7 md:w-7" />
-                </div>
-                <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3 uppercase tracking-tight">
+                <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3 uppercase tracking-tight group-hover:text-primary transition-colors">
                   {item.title}
                 </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed mb-4">

@@ -4,7 +4,6 @@ import sequelize from "../sequelize";
 export class Production extends Model {
   public declare id: number;
   public declare slug: string;
-  public declare icon: string;
   public declare titleFr: string;
   public declare titleEn: string;
   public declare descriptionFr: string;
@@ -24,7 +23,6 @@ Production.init(
   {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     slug: { type: DataTypes.STRING, allowNull: false, unique: true },
-    icon: { type: DataTypes.STRING, allowNull: false },
     titleFr: { type: DataTypes.STRING, allowNull: false },
     titleEn: { type: DataTypes.STRING, allowNull: false },
     descriptionFr: { type: DataTypes.TEXT, allowNull: false },

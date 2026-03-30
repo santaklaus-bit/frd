@@ -109,9 +109,9 @@ export async function getData(filename: string) {
       const data = i.toJSON();
       return {
         slug: data.slug,
-        icon: data.icon,
         title: { fr: data.titleFr, en: data.titleEn },
         description: { fr: data.descriptionFr, en: data.descriptionEn },
+        content: { fr: data.contentFr || "", en: data.contentEn || "" },
         details: { fr: data.detailsFr, en: data.detailsEn },
         category: { fr: data.categoryFr, en: data.categoryEn },
       };
@@ -125,7 +125,6 @@ export async function getData(filename: string) {
       const data = p.toJSON();
       return {
         slug: data.slug,
-        icon: data.icon,
         title: { fr: data.titleFr, en: data.titleEn },
         description: { fr: data.descriptionFr, en: data.descriptionEn },
         category: { fr: data.categoryFr, en: data.categoryEn },
@@ -147,11 +146,12 @@ export async function saveData(filename: string, data: any) {
     await Initiative.destroy({ truncate: true }); // Wipe table
     const records = data.map((i: any, index: number) => ({
       slug: i.slug,
-      icon: i.icon || "Target",
       titleFr: i.title?.fr || "",
       titleEn: i.title?.en || "",
       descriptionFr: i.description?.fr || "",
       descriptionEn: i.description?.en || "",
+      contentFr: i.content?.fr || "",
+      contentEn: i.content?.en || "",
       detailsFr: i.details?.fr || null,
       detailsEn: i.details?.en || null,
       categoryFr: i.category?.fr || "",
@@ -165,7 +165,6 @@ export async function saveData(filename: string, data: any) {
     await Production.destroy({ truncate: true }); // Wipe table
     const records = data.map((p: any, index: number) => ({
       slug: p.slug,
-      icon: p.icon || "Video",
       titleFr: p.title?.fr || "",
       titleEn: p.title?.en || "",
       descriptionFr: p.description?.fr || "",
