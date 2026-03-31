@@ -87,6 +87,15 @@ async function run() {
       console.log('sync-schema: Added Initiatives.detailsEn');
     }
 
+    if (!initCols.contentFr) {
+      await qi.addColumn('Initiatives', 'contentFr', { type: Sequelize.TEXT, allowNull: true });
+      console.log('sync-schema: Added Initiatives.contentFr');
+    }
+    if (!initCols.contentEn) {
+      await qi.addColumn('Initiatives', 'contentEn', { type: Sequelize.TEXT, allowNull: true });
+      console.log('sync-schema: Added Initiatives.contentEn');
+    }
+
     console.log('sync-schema: Schema sync complete.');
     process.exit(0);
   } catch (err) {
