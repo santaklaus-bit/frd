@@ -101,7 +101,28 @@ export async function saveDictionary(lang: "en" | "fr", data: any) {
 // DATA (Expertise, Projects)
 // ============================================================================
 
-export async function getData(filename: string) {
+export interface ExpertiseItem {
+  slug: string;
+  title: { fr: string; en: string };
+  description: { fr: string; en: string };
+  content: { fr: string; en: string };
+  details: { fr: string; en: string };
+  category: { fr: string; en: string };
+}
+
+export interface ProjectItem {
+  slug: string;
+  title: { fr: string; en: string };
+  description: { fr: string; en: string };
+  category: { fr: string; en: string };
+  details: { fr: string; en: string };
+  image: string | null;
+  href: string;
+}
+
+export async function getData(filename: "expertise" | "initiatives"): Promise<ExpertiseItem[]>;
+export async function getData(filename: "projects" | "production"): Promise<ProjectItem[]>;
+export async function getData(filename: string): Promise<any[]> {
   if (filename === "expertise" || filename === "initiatives") {
     const expertiseItems = await Initiative.findAll({ order: [["order", "ASC"]] });
     // Transform back to JSON structure expected by the frontend
@@ -138,7 +159,9 @@ export async function getData(filename: string) {
   return [];
 }
 
-export async function saveData(filename: string, data: any) {
+export async function saveData(filename: "expertise" | "initiatives", data: ExpertiseItem[]): Promise<void>;
+export async function saveData(filename: "projects" | "production", data: ProjectItem[]): Promise<void>;
+export async function saveData(filename: string, data: any[]): Promise<void> {
   // Since the legacy format sends the entire array to `saveData`,
   // we need to sync it to the DB (destroy all, then create all)
   

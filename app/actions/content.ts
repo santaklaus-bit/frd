@@ -9,12 +9,12 @@ export async function updateDictionary(lang: "en" | "fr", data: any) {
 }
 
 export async function updateData(filename: string, data: any) {
-  await saveData(filename, data);
+  await saveData(filename as any, data);
   revalidatePath("/", "layout");
 }
 
 export async function saveSingleItem(type: "expertise" | "projects", item: any, originalSlug?: string) {
-  const items = await getData(type);
+  const items = await getData(type as any);
   if (originalSlug) {
     const idx = items.findIndex((i: any) => i.slug === originalSlug);
     if (idx !== -1) items[idx] = item;
@@ -22,13 +22,13 @@ export async function saveSingleItem(type: "expertise" | "projects", item: any, 
   } else {
     items.unshift(item);
   }
-  await saveData(type, items);
+  await saveData(type as any, items as any);
   revalidatePath("/", "layout");
 }
 
 export async function deleteItem(type: "expertise" | "projects", slug: string) {
-  const items = await getData(type);
+  const items = await getData(type as any);
   const newItems = items.filter((i: any) => i.slug !== slug);
-  await saveData(type, newItems);
+  await saveData(type as any, newItems as any);
   revalidatePath("/", "layout");
 }
