@@ -44,8 +44,12 @@ async function run() {
 
     const qi = sequelize.getQueryInterface();
 
-    // ---- Productions table ----
     const prodCols = await qi.describeTable('Productions');
+
+    if (prodCols.icon) {
+      await qi.removeColumn('Productions', 'icon');
+      console.log('sync-schema: Dropped Productions.icon');
+    }
 
     if (!prodCols.categoryFr) {
       await qi.addColumn('Productions', 'categoryFr', {
@@ -75,8 +79,12 @@ async function run() {
       console.log('sync-schema: Upgraded Productions.detailsEn to TEXT');
     }
 
-    // ---- Initiatives table ----
     const initCols = await qi.describeTable('Initiatives');
+
+    if (initCols.icon) {
+      await qi.removeColumn('Initiatives', 'icon');
+      console.log('sync-schema: Dropped Initiatives.icon');
+    }
 
     if (!initCols.detailsFr) {
       await qi.addColumn('Initiatives', 'detailsFr', { type: Sequelize.TEXT, allowNull: true });
