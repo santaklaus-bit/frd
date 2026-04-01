@@ -14,16 +14,21 @@ export async function updateData(filename: string, data: any) {
 }
 
 export async function saveSingleItem(type: "expertise" | "projects", item: any, originalSlug?: string) {
-  const items = await getData(type as any);
-  if (originalSlug) {
-    const idx = items.findIndex((i: any) => i.slug === originalSlug);
-    if (idx !== -1) items[idx] = item;
-    else items.push(item);
-  } else {
-    items.unshift(item);
+  try {
+    const items = await getData(type as any);
+    if (originalSlug) {
+      const idx = items.findIndex((i: any) => i.slug === originalSlug);
+      if (idx !== -1) items[idx] = item;
+      else items.push(item);
+    } else {
+      items.unshift(item);
+    }
+    await saveData(type as any, items as any);
+    revalidatePath("/", "layout");
+  } catch (error) {
+    console.error("Error in saveSingleItem:", error);
+    throw error;
   }
-  await saveData(type as any, items as any);
-  revalidatePath("/", "layout");
 }
 
 export async function deleteItem(type: "expertise" | "projects", slug: string) {

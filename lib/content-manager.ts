@@ -135,6 +135,8 @@ export async function getData(filename: string): Promise<any[]> {
         content: { fr: data.contentFr || "", en: data.contentEn || "" },
         details: { fr: data.detailsFr, en: data.detailsEn },
         category: { fr: data.categoryFr, en: data.categoryEn },
+        image: data.image,
+        link: data.link,
       };
     });
   }
@@ -166,7 +168,7 @@ export async function saveData(filename: string, data: any[]): Promise<void> {
   // we need to sync it to the DB (destroy all, then create all)
   
   if (filename === "expertise" || filename === "initiatives") {
-    await Initiative.destroy({ truncate: true }); // Wipe table
+    await Initiative.destroy({ where: {}, truncate: false }); // Wiping more safely
     const records = data.map((i: any, index: number) => ({
       slug: i.slug,
       titleFr: i.title?.fr || "",
@@ -179,6 +181,8 @@ export async function saveData(filename: string, data: any[]): Promise<void> {
       detailsEn: i.details?.en || null,
       categoryFr: i.category?.fr || "",
       categoryEn: i.category?.en || "",
+      image: i.image || null,
+      link: i.link || null,
       order: index,
     }));
     await Initiative.bulkCreate(records);

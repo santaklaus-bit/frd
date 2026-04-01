@@ -14,6 +14,8 @@ export class Initiative extends Model {
   public declare detailsEn: string;
   public declare categoryFr: string;
   public declare categoryEn: string;
+  public declare image: string | null;
+  public declare link: string | null;
   public declare order: number;
   public declare readonly createdAt: Date;
   public declare readonly updatedAt: Date;
@@ -33,6 +35,8 @@ Initiative.init(
     detailsEn: { type: DataTypes.TEXT, allowNull: true },
     categoryFr: { type: DataTypes.STRING, allowNull: false },
     categoryEn: { type: DataTypes.STRING, allowNull: false },
+    image: { type: DataTypes.STRING, allowNull: true },
+    link: { type: DataTypes.STRING, allowNull: true },
     order: { type: DataTypes.INTEGER, defaultValue: 0 },
   },
   { sequelize, modelName: "Initiative" }
