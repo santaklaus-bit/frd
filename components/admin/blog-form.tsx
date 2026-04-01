@@ -22,6 +22,7 @@ interface BlogFormProps {
     authorName: string;
     authorPhoto: string;
     content: string;
+    readTime?: string;
   };
 }
 
@@ -130,10 +131,18 @@ export function BlogForm({ initialData }: BlogFormProps) {
 
             {/* Editor Block */}
             <div className="rounded-2xl border border-border/40 bg-card overflow-hidden">
-              <div className="px-6 py-4 border-b border-border/40 bg-muted/20">
+              <div className="px-6 py-4 border-b border-border/40 bg-muted/20 flex items-center justify-between">
                 <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/70">
                   Contenu de l'article
                 </p>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-primary/60">
+                    Temps de lecture estimé : 
+                  </span>
+                  <span className="text-[10px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-bold">
+                    {Math.max(1, Math.round((content?.replace(/<[^>]*>?/gm, '').trim().split(/\s+/).length || 0) / 200))} min
+                  </span>
+                </div>
               </div>
               <div className="p-0">
                 <WysiwygEditor
@@ -174,6 +183,15 @@ export function BlogForm({ initialData }: BlogFormProps) {
                       : new Date().toISOString().split("T")[0]
                   }
                   required
+                  className="rounded-xl border-border/40 bg-background"
+                />
+              </Field>
+              
+              <Field label="Temps de lecture" hint="ex: 5 min">
+                <Input
+                  name="readTime"
+                  defaultValue={initialData?.readTime}
+                  placeholder={`${Math.max(1, Math.round((content?.replace(/<[^>]*>?/gm, '').trim().split(/\s+/).length || 0) / 200))} min`}
                   className="rounded-xl border-border/40 bg-background"
                 />
               </Field>

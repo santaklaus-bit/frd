@@ -104,10 +104,20 @@ async function run() {
       console.log('sync-schema: Added Initiatives.contentEn');
     }
 
-    console.log('sync-schema: Schema sync complete.');
+    // ---- BlogPosts table ----
+    const blogCols = await qi.describeTable('BlogPosts');
+    if (!blogCols.readTime) {
+      await qi.addColumn('BlogPosts', 'readTime', {
+        type: Sequelize.STRING,
+        allowNull: true,
+      });
+      console.log('sync-schema: Added BlogPosts.readTime');
+    }
+
+    console.log('Schema sync completed successfully.');
     process.exit(0);
-  } catch (err) {
-    console.error('sync-schema: Error during schema sync:', err.message);
+  } catch (error) {
+    console.error('Schema sync failed:', error);
     process.exit(1);
   }
 }

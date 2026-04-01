@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -108,6 +108,15 @@ export default async function BlogPost({ params }: PageProps) {
                 <time className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
                   {formattedDate}
                 </time>
+                {page.readTime && (
+                  <>
+                    <span className="text-muted-foreground/40 hidden sm:inline">•</span>
+                    <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                      <Clock className="w-3.5 h-3.5" />
+                      {page.readTime}
+                    </span>
+                  </>
+                )}
               </div>
             </div>
           </div>

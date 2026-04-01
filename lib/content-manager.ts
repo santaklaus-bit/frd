@@ -6,9 +6,11 @@ import { BlogPost, Dictionary, Initiative, Production } from "./db/models";
 
 // ~200 words per minute reading speed
 function calcReadTime(content: string, lang: "en" | "fr" = "fr"): string {
-  const words = content?.trim().split(/\s+/).length ?? 0;
+  const text = content?.replace(/<[^>]*>?/gm, "") || "";
+  const words = text.trim().split(/\s+/).length ?? 0;
+  if (!text.trim()) return "1 min";
   const minutes = Math.max(1, Math.round(words / 200));
-  return lang === "fr" ? `${minutes} min` : `${minutes} min`;
+  return `${minutes} min`;
 }
 
 export async function getBlogPosts() {
@@ -17,7 +19,7 @@ export async function getBlogPosts() {
   });
   return posts.map((p) => {
     const json = p.toJSON() as any;
-    json.readTime = calcReadTime(json.content ?? "");
+    // Don't calculate anymore, use what's in DB
     return json;
   });
 }
@@ -26,14 +28,15 @@ export async function getBlogPost(slug: string) {
   const post = await BlogPost.findOne({ where: { slug } });
   if (!post) return null;
   const json = post.toJSON() as any;
-  json.readTime = calcReadTime(json.content ?? "");
+  // Don't calculate anymore, use what's in DB
   return json;
 }
 
 export async function saveBlogPost(
   slug: string,
   frontmatter: any,
-  content: string
+  content: string,
+  readTime?: string
 ) {
   const existing = await BlogPost.findOne({ where: { slug } });
 
@@ -46,6 +49,7 @@ export async function saveBlogPost(
       authorName: frontmatter.authorName,
       authorPhoto: frontmatter.authorPhoto,
       content,
+      readTime: readTime || frontmatter.readTime,
     });
   } else {
     await BlogPost.create({
@@ -57,6 +61,7 @@ export async function saveBlogPost(
       authorName: frontmatter.authorName,
       authorPhoto: frontmatter.authorPhoto,
       content,
+      readTime: readTime || frontmatter.readTime,
     });
   }
 }

@@ -11,6 +11,7 @@ export class BlogPost extends Model {
   public declare authorName: string;
   public declare authorPhoto: string;
   public declare content: string;
+  public declare readTime: string;
   public declare readonly createdAt: Date;
   public declare readonly updatedAt: Date;
 }
@@ -50,6 +51,10 @@ BlogPost.init(
     content: {
       type: DataTypes.TEXT('long'),
       allowNull: false,
+    },
+    readTime: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   {

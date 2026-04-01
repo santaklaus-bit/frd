@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "fumadocs-mdx && npm run build:config",
-    "db:setup": "npx sequelize-cli db:create || true && npx sequelize-cli db:migrate && node -e \"if(process.env.NODE_ENV==='production'){require('./scripts/sync-schema.js')}else{console.log('sync-schema: Skipped (non-production)')}\" && npx sequelize-cli db:seed:all || true"
+    "db:setup": "npx sequelize-cli db:create || true && npx sequelize-cli db:migrate && node scripts/sync-schema.js && npx sequelize-cli db:seed:all || true"
   },
   "dependencies": {
     "@google-analytics/data": "^5.2.1",

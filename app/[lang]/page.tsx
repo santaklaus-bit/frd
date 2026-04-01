@@ -155,7 +155,7 @@ export default async function HomePage({
       </section>
 
       {/* ── 3. FEATURED PROJECT ── */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-border">
+      {/* <section className="py-12 md:py-20 lg:py-28 border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 md:mb-12 lg:mb-16 tracking-tight uppercase text-center">
             {dict.featuredProject.title}
@@ -187,7 +187,7 @@ export default async function HomePage({
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ── 4. PROJECTS ── */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-border bg-muted/20">

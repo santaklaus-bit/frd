@@ -12,6 +12,7 @@ export async function createOrUpdateBlogPost(formData: FormData) {
   const date = formData.get("date") as string;
   const content = formData.get("content") as string;
   const authorName = formData.get("authorName") as string;
+  const readTime = formData.get("readTime") as string;
   
   const thumbnailData = formData.get("thumbnail");
   let thumbnailUrl = formData.get("currentThumbnail") as string || "";
@@ -54,7 +55,7 @@ export async function createOrUpdateBlogPost(formData: FormData) {
     authorPhoto: authorPhotoUrl || "",
   };
 
-  await saveBlogPost(slug, frontmatter, content);
+  await saveBlogPost(slug, frontmatter, content, readTime);
   revalidatePath("/admin/blog");
   revalidatePath("/[lang]/blog", "layout");
 }
