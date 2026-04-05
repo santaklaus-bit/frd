@@ -18,12 +18,19 @@ export async function generateMetadata({
   const page = await getBlogPost(slug);
 
   if (!page) notFound();
+  const caption = (page as any).imageCaption || "";
 
   return {
     title: page.title,
     description: page.description,
     openGraph: {
       type: "article",
+      title: page.title,
+      description: page.description || "",
+      images: page.thumbnail ? [{ url: page.thumbnail, alt: caption || page.title }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
       title: page.title,
       description: page.description || "",
       images: page.thumbnail ? [page.thumbnail] : [],
@@ -61,6 +68,7 @@ export default async function BlogPost({ params }: PageProps) {
 
   const date = new Date(page.date);
   const formattedDate = formatDate(date, lang);
+  const caption = (page as any).imageCaption || "";
   
   const author = {
     name: (page as any).authorName || "Farid DANKO", // fallback to site creator
@@ -127,14 +135,21 @@ export default async function BlogPost({ params }: PageProps) {
         <div className="grid lg:grid-cols-[1fr_250px] gap-12 lg:gap-20">
           <main className="space-y-12">
             {page.thumbnail && (
-              <div className="relative aspect-video rounded-3xl overflow-hidden border border-border/40 shadow-2xl group">
-                <Image
-                  src={page.thumbnail}
-                  alt={page.title}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  priority
-                />
+              <div className="space-y-4">
+                <div className="relative aspect-video rounded-3xl overflow-hidden border border-border/40 shadow-2xl group">
+                  <Image
+                    src={page.thumbnail}
+                    alt={page.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    priority
+                  />
+                </div>
+                {caption && (
+                  <p className="text-sm text-muted-foreground italic px-2 border-l-2 border-primary/30 py-1">
+                    {caption}
+                  </p>
+                )}
               </div>
             )}
             <div className="prose dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:tracking-tighter prose-headings:uppercase prose-p:text-muted-foreground prose-p:leading-relaxed prose-lg">

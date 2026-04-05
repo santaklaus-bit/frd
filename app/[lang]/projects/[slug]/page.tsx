@@ -30,12 +30,24 @@ export async function generateMetadata({
 
   if (!initiative) return {};
 
-  const title = initiative.title[lang as keyof typeof initiative.title] || initiative.title.fr;
-  const description = initiative.description[lang as keyof typeof initiative.description] || initiative.description.fr;
+  const title = (initiative.title as any)[lang] || initiative.title.fr;
+  const description = (initiative.description as any)[lang] || initiative.description.fr;
+  const caption = (initiative.imageCaption as any)[lang] || initiative.imageCaption?.fr || "";
 
   return {
     title,
     description,
+    openGraph: {
+      title,
+      description,
+      images: initiative.image ? [{ url: initiative.image, alt: caption || title }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: initiative.image ? [initiative.image] : [],
+    },
   };
 }
 
@@ -51,6 +63,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const title = initiative.title?.[lang as keyof typeof initiative.title] || initiative.title?.fr || "";
   const description = initiative.description?.[lang as keyof typeof initiative.description] || initiative.description?.fr || "";
   const category = initiative.category?.[lang as keyof typeof initiative.category] || initiative.category?.fr || "";
+  const caption = initiative.imageCaption?.[lang as keyof typeof initiative.imageCaption] || initiative.imageCaption?.fr || "";
   const Icon = ICON_MAP[initiative.icon] || Lightbulb;
   const isFr = lang === "fr";
 
@@ -105,14 +118,21 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <main className="space-y-12">
             {/* Banner Image - Now inside content like the blog */}
             {initiative.image && (
-                <div className="relative aspect-video rounded-3xl overflow-hidden border border-border/40 shadow-2xl group">
-                   <Image
-                      src={initiative.image}
-                      alt={title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      priority
-                    />
+                <div className="space-y-4">
+                  <div className="relative aspect-video rounded-3xl overflow-hidden border border-border/40 shadow-2xl group">
+                    <Image
+                        src={initiative.image}
+                        alt={title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        priority
+                      />
+                  </div>
+                  {caption && (
+                    <p className="text-sm text-muted-foreground italic px-2 border-l-2 border-primary/30 py-1">
+                      {caption}
+                    </p>
+                  )}
                 </div>
             )}
 
@@ -126,20 +146,27 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               </div>
             )}
 
-            {initiative.href && (
-              <div className="pt-8">
+            <div className="flex flex-wrap items-center gap-4 pt-8">
+              {initiative.pdfUrl && (
+                <Button asChild size="lg" variant="outline" className="rounded-full px-8 py-6 font-bold uppercase tracking-widest transition-transform hover:scale-105 border-primary/20 hover:border-primary/50">
+                  <a href={initiative.pdfUrl} download target="_blank" rel="noopener noreferrer">
+                    {isFr ? "Télécharger le PDF" : "Download PDF"}
+                  </a>
+                </Button>
+              )}
+              {initiative.href && (
                 <Button asChild size="lg" className="rounded-full px-8 py-6 font-bold uppercase tracking-widest transition-transform hover:scale-105 bg-foreground text-background">
                   <a href={initiative.href} target="_blank" rel="noopener noreferrer">
                     {isFr ? "Voir la réalisation" : "View achievement"}
                   </a>
                 </Button>
-              </div>
-            )}
+              )}
+            </div>
           </main>
 
           <aside className="hidden lg:block">
              <div className="sticky top-32 space-y-10">
-                {/* TOC placeholder or other project-specific metadata could go here */}
+                {/* Meta details could go here */}
              </div>
           </aside>
         </div>

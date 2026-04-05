@@ -79,6 +79,23 @@ async function run() {
       console.log('sync-schema: Upgraded Productions.detailsEn to TEXT');
     }
 
+    if (!prodCols.pdfUrl) {
+      await qi.addColumn('Productions', 'pdfUrl', { type: Sequelize.STRING, allowNull: true });
+      console.log('sync-schema: Added Productions.pdfUrl');
+    }
+    if (!prodCols.isFeatured) {
+      await qi.addColumn('Productions', 'isFeatured', { type: Sequelize.BOOLEAN, defaultValue: false });
+      console.log('sync-schema: Added Productions.isFeatured');
+    }
+    if (!prodCols.imageCaptionFr) {
+      await qi.addColumn('Productions', 'imageCaptionFr', { type: Sequelize.STRING, allowNull: true });
+      console.log('sync-schema: Added Productions.imageCaptionFr');
+    }
+    if (!prodCols.imageCaptionEn) {
+      await qi.addColumn('Productions', 'imageCaptionEn', { type: Sequelize.STRING, allowNull: true });
+      console.log('sync-schema: Added Productions.imageCaptionEn');
+    }
+
     const initCols = await qi.describeTable('Initiatives');
 
     if (initCols.icon) {
@@ -103,6 +120,14 @@ async function run() {
       await qi.addColumn('Initiatives', 'contentEn', { type: Sequelize.TEXT, allowNull: true });
       console.log('sync-schema: Added Initiatives.contentEn');
     }
+    if (!initCols.imageCaptionFr) {
+      await qi.addColumn('Initiatives', 'imageCaptionFr', { type: Sequelize.STRING, allowNull: true });
+      console.log('sync-schema: Added Initiatives.imageCaptionFr');
+    }
+    if (!initCols.imageCaptionEn) {
+      await qi.addColumn('Initiatives', 'imageCaptionEn', { type: Sequelize.STRING, allowNull: true });
+      console.log('sync-schema: Added Initiatives.imageCaptionEn');
+    }
 
     // ---- BlogPosts table ----
     const blogCols = await qi.describeTable('BlogPosts');
@@ -112,6 +137,13 @@ async function run() {
         allowNull: true,
       });
       console.log('sync-schema: Added BlogPosts.readTime');
+    }
+    if (!blogCols.imageCaption) {
+      await qi.addColumn('BlogPosts', 'imageCaption', {
+        type: Sequelize.STRING,
+        allowNull: true,
+      });
+      console.log('sync-schema: Added BlogPosts.imageCaption');
     }
 
     console.log('Schema sync completed successfully.');

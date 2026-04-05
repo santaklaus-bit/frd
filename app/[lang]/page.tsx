@@ -61,6 +61,15 @@ export default async function HomePage({
     href: `/${lang}/projects/${item.slug}`,
   }));
 
+  const featuredProject = rawProjects.find((p: any) => p.isFeatured === true);
+  const featuredProjectData = featuredProject ? {
+    title: featuredProject.title?.[lang as "en" | "fr"] || featuredProject.title?.fr || "",
+    desc: featuredProject.description?.[lang as "en" | "fr"] || featuredProject.description?.fr || "",
+    caption: featuredProject.imageCaption?.[lang as "en" | "fr"] || featuredProject.imageCaption?.fr || "",
+    image: featuredProject.image || "/farid-portrait.webp",
+    href: `/${lang}/projects/${featuredProject.slug}`,
+  } : null;
+
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-24">
       {/* ── 1. HERO ── */}
@@ -155,39 +164,45 @@ export default async function HomePage({
       </section>
 
       {/* ── 3. FEATURED PROJECT ── */}
-      {/* <section className="py-12 md:py-20 lg:py-28 border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 md:mb-12 lg:mb-16 tracking-tight uppercase text-center">
-            {dict.featuredProject.title}
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
-            <div className="relative aspect-[4/3] rounded-2xl md:rounded-3xl overflow-hidden bg-muted shadow-xl md:shadow-2xl group">
-              <Image
-                src="/projects/image2.png"
-                alt="Champ de piri piri – Coopérative de femmes productrices, Kenya"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              <p className="absolute bottom-3 md:bottom-4 left-3 md:left-4 right-3 md:right-4 text-white text-xs leading-snug">
-                <span className="font-bold block">{dict.featuredProject.caption}</span>
-                <span className="text-white/70 text-[11px] mt-0.5 block">{dict.featuredProject.description}</span>
-              </p>
-            </div>
-            <div className="flex flex-col gap-4 md:gap-6">
-              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground leading-relaxed">
-                {dict.featuredProject.description}
-              </p>
-              <Link href={dict.featuredProject.href} className="inline-block">
-                <Button className="gap-2 px-6 sm:px-8 py-5 sm:py-6 rounded-full font-bold uppercase bg-black text-white dark:bg-white dark:text-black hover:opacity-90 transition-all shadow-xl text-sm sm:text-base">
-                  {dict.featuredProject.cta}
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
+      {featuredProjectData && (
+        <section className="py-12 md:py-20 lg:py-28 border-b border-border">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 md:mb-12 lg:mb-16 tracking-tight uppercase text-center">
+              {dict.featuredProject?.title || (lang === "fr" ? "Projet mis en avant" : "Featured Project")}
+            </h2>
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
+              <div className="relative aspect-[4/3] rounded-2xl md:rounded-3xl overflow-hidden bg-muted shadow-xl md:shadow-2xl group">
+                <Image
+                  src={featuredProjectData.image}
+                  alt={featuredProjectData.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                {featuredProjectData.caption && (
+                  <p className="absolute bottom-3 md:bottom-4 left-3 md:left-4 right-3 md:right-4 text-white text-xs leading-snug">
+                    <span className="font-bold block">{featuredProjectData.caption}</span>
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col gap-4 md:gap-6">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold uppercase tracking-tight">
+                  {featuredProjectData.title}
+                </h3>
+                <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground leading-relaxed">
+                  {featuredProjectData.desc}
+                </p>
+                <Link href={featuredProjectData.href} className="inline-block">
+                  <Button className="gap-2 px-6 sm:px-8 py-5 sm:py-6 rounded-full font-bold uppercase bg-black text-white dark:bg-white dark:text-black hover:opacity-90 transition-all shadow-xl text-sm sm:text-base">
+                    {dict.featuredProject?.cta || (lang === "fr" ? "Découvrir le projet" : "Discover project")}
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </section> */}
+        </section>
+      )}
 
       {/* ── 4. PROJECTS ── */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-border bg-muted/20">

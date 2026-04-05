@@ -56,6 +56,10 @@ BlogPost.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    imageCaption: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     sequelize,

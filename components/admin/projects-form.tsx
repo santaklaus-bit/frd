@@ -33,7 +33,13 @@ export default function ProjectsForm({ initialData }: { initialData?: any }) {
       en: initialData?.details?.en || "",
     },
     image: initialData?.image || "",
+    imageCaption: {
+      fr: initialData?.imageCaption?.fr || "",
+      en: initialData?.imageCaption?.en || ""
+    },
     href: initialData?.href || "",
+    pdfUrl: initialData?.pdfUrl || "",
+    isFeatured: initialData?.isFeatured || false,
   });
 
   const onSave = async () => {
@@ -123,6 +129,16 @@ export default function ProjectsForm({ initialData }: { initialData?: any }) {
             </div>
 
             <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Légende de l'image (FR)</label>
+              <Input
+                value={formData.imageCaption.fr}
+                onChange={(e) => setFormData(prev => ({ ...prev, imageCaption: { ...prev.imageCaption, fr: e.target.value } })) }
+                className="rounded-xl border-border/40"
+                placeholder="Ex: Vue rapprochée de..."
+              />
+            </div>
+
+            <div className="space-y-1.5">
               <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Description (courte)</label>
               <Textarea
                 value={formData.description.fr}
@@ -168,6 +184,16 @@ export default function ProjectsForm({ initialData }: { initialData?: any }) {
             </div>
 
             <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Image Caption (EN)</label>
+              <Input
+                value={formData.imageCaption.en}
+                onChange={(e) => setFormData(prev => ({ ...prev, imageCaption: { ...prev.imageCaption, en: e.target.value } })) }
+                className="rounded-xl border-border/40"
+                placeholder="Ex: Close up view of..."
+              />
+            </div>
+
+            <div className="space-y-1.5">
               <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Short Description</label>
               <Textarea
                 value={formData.description.en}
@@ -195,20 +221,30 @@ export default function ProjectsForm({ initialData }: { initialData?: any }) {
           </h2>
           <div className="space-y-6">
             <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Lien (Href)</label>
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Image Principale</label>
+              <MediaUpload
+                value={formData.image}
+                onChange={(url) => setFormData({ ...formData, image: url })}
+                label="Image du projet"
+              />
+            </div>
+            <div className="space-y-1.5 pt-4 border-t border-border/40">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Format PDF (Document)</label>
+              <MediaUpload
+                value={formData.pdfUrl || ""}
+                onChange={(url) => setFormData({ ...formData, pdfUrl: url })}
+                onRemove={() => setFormData({ ...formData, pdfUrl: "" })}
+                accept="application/pdf"
+                label="Fiche technique / Brochure"
+              />
+            </div>
+            <div className="space-y-1.5 pt-4 border-t border-border/40">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Lien Externe (Href)</label>
               <Input
                 value={formData.href}
                 onChange={(e) => setFormData({ ...formData, href: e.target.value }) }
                 placeholder="https://..."
                 className="rounded-xl border-border/40"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Image</label>
-              <MediaUpload
-                value={formData.image}
-                onChange={(url) => setFormData({ ...formData, image: url })}
-                label="Image du projet"
               />
             </div>
           </div>
@@ -218,14 +254,29 @@ export default function ProjectsForm({ initialData }: { initialData?: any }) {
           <h2 className="text-[10px] font-bold uppercase tracking-widest text-primary border-b pb-2 mb-4">
             Slug & Paramètres
           </h2>
-          <div className="space-y-1.5">
-            <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Slug (URL)</label>
-            <Input
-              value={formData.slug}
-              onChange={(e) => setFormData({ ...formData, slug: e.target.value }) }
-              placeholder="slug-projet"
-              className="rounded-xl border-border/40 font-mono"
-            />
+          <div className="space-y-6">
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Slug (URL)</label>
+              <Input
+                value={formData.slug}
+                onChange={(e) => setFormData({ ...formData, slug: e.target.value }) }
+                placeholder="slug-projet"
+                className="rounded-xl border-border/40 font-mono"
+              />
+            </div>
+            
+            <div className="flex items-center justify-between p-4 rounded-2xl bg-muted/30 border border-border/40">
+               <div className="space-y-0.5">
+                  <p className="text-xs font-bold text-foreground">Mettre en avant</p>
+                  <p className="text-[10px] text-muted-foreground">Afficher ce projet sur la page d'accueil</p>
+               </div>
+               <input 
+                  type="checkbox" 
+                  className="h-5 w-5 rounded border-border/40 accent-primary"
+                  checked={formData.isFeatured}
+                  onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })}
+               />
+            </div>
           </div>
         </div>
       </div>

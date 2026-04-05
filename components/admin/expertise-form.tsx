@@ -34,6 +34,10 @@ export default function ExpertiseForm({ initialData }: { initialData?: any }) {
     details: {
       fr: initialData?.details?.fr || "",
       en: initialData?.details?.en || "",
+    },
+    imageCaption: {
+      fr: initialData?.imageCaption?.fr || "",
+      en: initialData?.imageCaption?.en || "",
     }
   });
 
@@ -124,6 +128,16 @@ export default function ExpertiseForm({ initialData }: { initialData?: any }) {
             </div>
 
             <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Légende de l'image (FR)</label>
+              <Input
+                value={formData.imageCaption.fr}
+                onChange={(e) => setFormData(prev => ({ ...prev, imageCaption: { ...prev.imageCaption, fr: e.target.value } })) }
+                className="rounded-xl border-border/40"
+                placeholder="Ex: Description de l'image..."
+              />
+            </div>
+
+            <div className="space-y-1.5">
               <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Description (courte)</label>
               <Textarea
                 value={formData.description.fr}
@@ -165,6 +179,16 @@ export default function ExpertiseForm({ initialData }: { initialData?: any }) {
                 value={formData.category.en}
                 onChange={(e) => setFormData(prev => ({ ...prev, category: { ...prev.category, en: e.target.value } })) }
                 className="rounded-xl border-border/40"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Image Caption (EN)</label>
+              <Input
+                value={formData.imageCaption.en}
+                onChange={(e) => setFormData(prev => ({ ...prev, imageCaption: { ...prev.imageCaption, en: e.target.value } })) }
+                className="rounded-xl border-border/40"
+                placeholder="Ex: Image description..."
               />
             </div>
 

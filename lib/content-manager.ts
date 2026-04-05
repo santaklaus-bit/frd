@@ -50,6 +50,7 @@ export async function saveBlogPost(
       authorPhoto: frontmatter.authorPhoto,
       content,
       readTime: readTime || frontmatter.readTime,
+      imageCaption: frontmatter.imageCaption,
     });
   } else {
     await BlogPost.create({
@@ -62,6 +63,7 @@ export async function saveBlogPost(
       authorPhoto: frontmatter.authorPhoto,
       content,
       readTime: readTime || frontmatter.readTime,
+      imageCaption: frontmatter.imageCaption,
     });
   }
 }
@@ -113,6 +115,7 @@ export interface ExpertiseItem {
   content: { fr: string; en: string };
   details: { fr: string; en: string };
   category: { fr: string; en: string };
+  imageCaption?: { fr: string; en: string };
 }
 
 export interface ProjectItem {
@@ -122,7 +125,10 @@ export interface ProjectItem {
   category: { fr: string; en: string };
   details: { fr: string; en: string };
   image: string | null;
+  imageCaption?: { fr: string; en: string };
   href: string;
+  pdfUrl?: string | null;
+  isFeatured?: boolean;
 }
 
 export async function getData(filename: "expertise" | "initiatives"): Promise<ExpertiseItem[]>;
@@ -141,6 +147,7 @@ export async function getData(filename: string): Promise<any[]> {
         details: { fr: data.detailsFr, en: data.detailsEn },
         category: { fr: data.categoryFr, en: data.categoryEn },
         image: data.image,
+        imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
         link: data.link,
       };
     });
@@ -158,7 +165,10 @@ export async function getData(filename: string): Promise<any[]> {
         category: { fr: data.categoryFr, en: data.categoryEn },
         details: { fr: data.detailsFr, en: data.detailsEn },
         image: data.image,
+        imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
         href: data.href,
+        pdfUrl: data.pdfUrl,
+        isFeatured: data.isFeatured,
       };
     });
   }
@@ -187,6 +197,8 @@ export async function saveData(filename: string, data: any[]): Promise<void> {
       categoryFr: i.category?.fr || "",
       categoryEn: i.category?.en || "",
       image: i.image || null,
+      imageCaptionFr: i.imageCaption?.fr || null,
+      imageCaptionEn: i.imageCaption?.en || null,
       link: i.link || null,
       order: index,
     }));
@@ -206,7 +218,11 @@ export async function saveData(filename: string, data: any[]): Promise<void> {
       detailsFr: p.details?.fr || "",
       detailsEn: p.details?.en || "",
       image: p.image || null,
+      imageCaptionFr: p.imageCaption?.fr || null,
+      imageCaptionEn: p.imageCaption?.en || null,
       href: p.href || "",
+      pdfUrl: p.pdfUrl || null,
+      isFeatured: p.isFeatured || false,
       order: index,
     }));
     await Production.bulkCreate(records);

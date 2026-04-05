@@ -24,10 +24,22 @@ export async function generateMetadata({
 
   const title = initiative.title[lang as keyof typeof initiative.title] || initiative.title.fr;
   const description = initiative.description[lang as keyof typeof initiative.description] || initiative.description.fr;
+  const caption = (initiative.imageCaption as any)?.[lang] || initiative.imageCaption?.fr || "";
 
   return {
     title,
     description,
+    openGraph: {
+      title,
+      description,
+      images: initiative.image ? [{ url: initiative.image, alt: caption || title }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: initiative.image ? [initiative.image] : [],
+    },
   };
 }
 
@@ -40,10 +52,11 @@ export default async function ExpertiseDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  const title = initiative.title[lang as keyof typeof initiative.title] || initiative.title.fr;
-  const description = initiative.description[lang as keyof typeof initiative.description] || initiative.description.fr;
-  const category = initiative.category[lang as keyof typeof initiative.category] || initiative.category.fr;
-  const content = initiative.content ? (initiative.content[lang as keyof typeof initiative.content] || initiative.content.fr) : "";
+  const title = (initiative.title as any)[lang] || initiative.title.fr;
+  const description = (initiative.description as any)[lang] || initiative.description.fr;
+  const category = (initiative.category as any)[lang] || initiative.category.fr;
+  const content = initiative.content ? ((initiative.content as any)[lang] || initiative.content.fr) : "";
+  const caption = (initiative.imageCaption as any)?.[lang] || initiative.imageCaption?.fr || "";
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -98,6 +111,23 @@ export default async function ExpertiseDetailPage({ params }: PageProps) {
               prose-li:text-muted-foreground prose-strong:text-foreground
               animate-in fade-in duration-1000 delay-500">
               
+              {initiative.image && (
+                <div className="mb-12 space-y-4">
+                  <div className="relative aspect-video rounded-3xl overflow-hidden border border-border/40 shadow-2xl">
+                    <img
+                        src={initiative.image}
+                        alt={title}
+                        className="w-full h-full object-cover"
+                      />
+                  </div>
+                  {caption && (
+                    <p className="text-sm text-muted-foreground italic px-2 border-l-2 border-primary/30 py-1 not-prose">
+                      {caption}
+                    </p>
+                  )}
+                </div>
+              )}
+
               {content ? (
                 <div className="whitespace-pre-wrap leading-relaxed">
                   {content}

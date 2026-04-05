@@ -196,6 +196,15 @@ export function BlogForm({ initialData }: BlogFormProps) {
                 />
               </Field>
 
+              <Field label="Légende de l'image" hint="S'affiche sous l'image">
+                <Input
+                  name="imageCaption"
+                  defaultValue={initialData ? (initialData as any).imageCaption : ""}
+                  placeholder="Vue d'ensemble de..."
+                  className="rounded-xl border-border/40 bg-background"
+                />
+              </Field>
+
               <div className="pt-4 border-t border-border/40">
                 <MediaUpload
                   label="Image à la une"

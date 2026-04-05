@@ -15,6 +15,8 @@ export class Initiative extends Model {
   public declare categoryFr: string;
   public declare categoryEn: string;
   public declare image: string | null;
+  public declare imageCaptionFr: string | null;
+  public declare imageCaptionEn: string | null;
   public declare link: string | null;
   public declare order: number;
   public declare readonly createdAt: Date;
@@ -36,6 +38,8 @@ Initiative.init(
     categoryFr: { type: DataTypes.STRING, allowNull: false },
     categoryEn: { type: DataTypes.STRING, allowNull: false },
     image: { type: DataTypes.STRING, allowNull: true },
+    imageCaptionFr: { type: DataTypes.STRING, allowNull: true },
+    imageCaptionEn: { type: DataTypes.STRING, allowNull: true },
     link: { type: DataTypes.STRING, allowNull: true },
     order: { type: DataTypes.INTEGER, defaultValue: 0 },
   },
