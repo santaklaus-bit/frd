@@ -41,6 +41,9 @@ export async function generateMetadata({
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import { HashScrollHandler } from "@/components/hash-scroll-handler";
 
+// @ts-ignore
+import edjsParser from "editorjs-html";
+
 interface PageProps {
   params: Promise<{ slug: string; lang: string }>;
 }
@@ -75,6 +78,24 @@ export default async function BlogPost({ params }: PageProps) {
     position: lang === "fr" ? "Auteur" : "Author",
     avatar: (page as any).authorPhoto || "/farid-portrait.webp", // fallback photo
   };
+
+  // Editor.js Check & Parse
+  let isEditorJs = false;
+  let renderedHtml = "";
+  
+  if (page.content && (page.content.startsWith("{") || page.content.startsWith('{"'))) {
+    try {
+      const parsed = JSON.parse(page.content);
+      if (parsed && parsed.blocks && Array.isArray(parsed.blocks)) {
+        isEditorJs = true;
+        const parser = edjsParser();
+        const htmlBlocks = parser.parse(parsed);
+        renderedHtml = Array.isArray(htmlBlocks) ? htmlBlocks.join("") : (htmlBlocks as string);
+      }
+    } catch (e) {
+      console.warn("Content looks like JSON but failed to parse as EditorJS:", e);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -153,7 +174,11 @@ export default async function BlogPost({ params }: PageProps) {
               </div>
             )}
             <div className="prose dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:tracking-tighter prose-headings:uppercase prose-p:text-muted-foreground prose-p:leading-relaxed prose-lg">
-              <MDXRemote source={page.content} components={getMDXComponents()} />
+              {isEditorJs ? (
+                <div dangerouslySetInnerHTML={{ __html: renderedHtml }} />
+              ) : (
+                <MDXRemote source={page.content} components={getMDXComponents()} />
+              )}
             </div>
           </main>
 

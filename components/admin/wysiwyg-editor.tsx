@@ -1,25 +1,26 @@
 "use client";
 
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import Link from "@tiptap/extension-link";
-import Image from "@tiptap/extension-image";
-import { useState, useRef } from "react";
-import {
-  Bold,
-  Italic,
-  Underline as UnderlineIcon,
-  Strikethrough,
-  Heading1,
-  Heading2,
-  List,
-  ListOrdered,
-  Link as LinkIcon,
-  ImageIcon,
-  Loader2,
-} from "lucide-react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
+import EditorJS, { OutputData } from "@editorjs/editorjs";
+import Header from "@editorjs/header";
+import List from "@editorjs/list";
+import ImageTool from "@editorjs/image";
+import Quote from "@editorjs/quote";
+// @ts-ignore
+import Marker from "@editorjs/marker";
+// @ts-ignore
+import Delimiter from "@editorjs/delimiter";
+// @ts-ignore
+import InlineCode from "@editorjs/inline-code";
+// @ts-ignore
+import LinkTool from "@editorjs/link";
+// @ts-ignore
+import Embed from "@editorjs/embed";
+// @ts-ignore
+import Paragraph from "@editorjs/paragraph";
+
 import { toast } from "sonner";
+import "./editorjs.css"; // Custom tweaks for dark mode
 
 interface WysiwygEditorProps {
   value: string;
@@ -28,209 +29,149 @@ interface WysiwygEditorProps {
   className?: string;
 }
 
-const MenuBar = ({ editor }: { editor: any }) => {
-  const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  if (!editor) {
-    return null;
-  }
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) throw new Error("Upload failed");
-
-      const data = await res.json();
-      editor.chain().focus().setImage({ src: data.url }).run();
-      toast.success("Image insérée !");
-    } catch (err) {
-      console.error(err);
-      toast.error("Erreur lors de l'envoi de l'image.");
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    }
-  };
-
-  const addImage = () => {
-    fileInputRef.current?.click();
-  };
-
-  const setLink = () => {
-    const previousUrl = editor.getAttributes("link").href;
-    const url = window.prompt("URL du lien", previousUrl);
-    
-    // cancelled
-    if (url === null) {
-      return;
-    }
-
-    // empty
-    if (url === "") {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run();
-      return;
-    }
-
-    // update link
-    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
-  };
-
-  return (
-    <div className="flex flex-wrap gap-1 p-2 border-b border-border bg-muted/20">
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        disabled={!editor.can().chain().focus().toggleBold().run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("bold") ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Gras"
-      >
-        <Bold className="w-4 h-4" />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        disabled={!editor.can().chain().focus().toggleItalic().run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("italic") ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Italique"
-      >
-        <Italic className="w-4 h-4" />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleUnderline().run()}
-        disabled={!editor.can().chain().focus().toggleUnderline().run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("underline") ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Souligné"
-      >
-        <UnderlineIcon className="w-4 h-4" />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleStrike().run()}
-        disabled={!editor.can().chain().focus().toggleStrike().run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("strike") ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Barré"
-      >
-        <Strikethrough className="w-4 h-4" />
-      </button>
-
-      <div className="w-px h-6 bg-border mx-1 self-center" />
-
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("heading", { level: 2 }) ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Titre 1"
-      >
-        <Heading1 className="w-4 h-4" />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("heading", { level: 3 }) ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Titre 2"
-      >
-        <Heading2 className="w-4 h-4" />
-      </button>
-
-      <div className="w-px h-6 bg-border mx-1 self-center" />
-
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("bulletList") ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Liste à puces"
-      >
-        <List className="w-4 h-4" />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("orderedList") ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Liste numérotée"
-      >
-        <ListOrdered className="w-4 h-4" />
-      </button>
-
-      <div className="w-px h-6 bg-border mx-1 self-center" />
-
-      <button
-        type="button"
-        onClick={setLink}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("link") ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Insérer un lien"
-      >
-        <LinkIcon className="w-4 h-4" />
-      </button>
-      <button
-        type="button"
-        onClick={addImage}
-        disabled={uploading}
-        className="p-2 rounded-md hover:bg-muted text-muted-foreground disabled:opacity-50"
-        title="Insérer une image"
-      >
-        {uploading ? (
-          <Loader2 className="w-4 h-4 animate-spin" />
-        ) : (
-          <ImageIcon className="w-4 h-4" />
-        )}
-      </button>
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileUpload}
-        accept="image/*"
-        className="hidden"
-      />
-    </div>
-  );
-};
-
 export function WysiwygEditor({
   value,
   onChange,
+  placeholder,
   className,
 }: WysiwygEditorProps) {
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      Image,
-      Link.configure({
-        openOnClick: false,
-      }),
-    ],
-    content: value,
-    immediatelyRender: false,
-    onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
-    },
-    editorProps: {
-      attributes: {
-        class: "prose dark:prose-invert max-w-none focus:outline-none p-4 min-h-[400px]",
-      },
-    },
-  });
+  const ejInstance = useRef<EditorJS | null>(null);
+
+  // Safe initial data parsing
+  const getInitialData = useCallback(() => {
+    if (!value) return undefined;
+    try {
+      const parsed = JSON.parse(value);
+      if (parsed.blocks) {
+        return parsed;
+      }
+    } catch (e) {
+      // Not JSON
+    }
+    // Fallback: raw text as a paragraph
+    return {
+      time: new Date().getTime(),
+      blocks: [
+        {
+          type: "paragraph",
+          data: {
+            text: value,
+          },
+        },
+      ],
+      version: "2.30.0",
+    };
+  }, []);
+
+  const isReady = useRef(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !isReady.current) {
+      const initEditor = async () => {
+        try {
+          const editor = new EditorJS({
+            holder: "editorjs-container",
+            placeholder: placeholder || "Commencez à rédiger...",
+            initialBlock: "paragraph",
+            data: getInitialData(),
+            tools: {
+              header: {
+                class: Header as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+                config: {
+                  levels: [1, 2, 3, 4],
+                  defaultLevel: 2,
+                },
+                inlineToolbar: true,
+              },
+              paragraph: {
+                class: Paragraph as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+                inlineToolbar: true,
+              },
+              list: {
+                class: List,
+                inlineToolbar: true,
+              },
+              image: {
+                class: ImageTool,
+                config: {
+                  uploader: {
+                    async uploadByFile(file: File) {
+                      const formData = new FormData();
+                      formData.append("file", file);
+                      try {
+                        // Using the same API endpoint used in previous code
+                        const res = await fetch("/api/upload", {
+                          method: "POST",
+                          body: formData,
+                        });
+                        if (!res.ok) throw new Error("Upload failed");
+                        const data = await res.json();
+                        return {
+                          success: 1,
+                          file: {
+                            url: data.url,
+                          },
+                        };
+                      } catch (err) {
+                        toast.error("Erreur lors de l'upload de l'image");
+                        return { success: 0 };
+                      }
+                    },
+                  },
+                },
+              },
+              quote: {
+                class: Quote,
+                inlineToolbar: true,
+              },
+              marker: Marker,
+              delimiter: Delimiter,
+              inlineCode: InlineCode,
+              linkTool: LinkTool,
+              embed: {
+                class: Embed,
+                inlineToolbar: true,
+                config: {
+                  services: {
+                    youtube: true,
+                    twitter: true,
+                    instagram: true,
+                  },
+                },
+              },
+            },
+            onChange: async (api) => {
+              const data = await api.saver.save();
+              onChange(JSON.stringify(data));
+            },
+            autofocus: false,
+          });
+
+          ejInstance.current = editor;
+          isReady.current = true;
+        } catch (err) {
+          console.error("Failed to initialize Editor.js", err);
+        }
+      };
+
+      initEditor();
+    }
+
+    return () => {
+      if (ejInstance.current && typeof ejInstance.current.destroy === "function") {
+          // In dev mode with strict mode, we might want to keep it if holder is stable
+          // but usually we should destroy. However, EditorJS destroy on unmount can be buggy in NextJS dev.
+          // For now, let's keep it simple to avoid blank screens on fast refresh.
+      }
+    };
+  }, []); // Only once on mount
 
   return (
-    <div className={`border border-border rounded-xl overflow-hidden bg-background flex flex-col ${className || ""}`}>
-      <MenuBar editor={editor} />
-      <div className="flex-1 overflow-y-auto cursor-text" onClick={() => editor?.commands.focus()}>
-        <EditorContent editor={editor} />
+    <div
+      className={`border border-border rounded-xl bg-card flex flex-col ${className || ""}`}
+    >
+      <div className="flex-1 overflow-y-auto cursor-text p-6">
+        <div id="editorjs-container" className="w-full prose dark:prose-invert max-w-none focus:outline-none" />
       </div>
     </div>
   );

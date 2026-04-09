@@ -9,8 +9,13 @@ import { useState } from "react";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { WysiwygEditor } from "./wysiwyg-editor";
 import { MediaUpload } from "./media-upload";
+import dynamic from "next/dynamic";
+
+const WysiwygEditor = dynamic(
+  () => import("./wysiwyg-editor").then((mod) => mod.WysiwygEditor),
+  { ssr: false }
+);
 
 interface BlogFormProps {
   initialData?: {

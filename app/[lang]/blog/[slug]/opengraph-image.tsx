@@ -1,7 +1,8 @@
 import { ImageResponse } from "next/og";
-import { docs, meta } from "@/.source";
-import { loader } from "fumadocs-core/source";
-import { createMDXSource } from "fumadocs-mdx";
+// Temporarily disabled to debug build crash
+// import { docs, meta } from "@/.source";
+// import { loader } from "fumadocs-core/source";
+// import { createMDXSource } from "fumadocs-mdx";
 import { getAuthor, isValidAuthor, type AuthorKey } from "@/lib/authors";
 
 export const runtime = "nodejs";
@@ -12,10 +13,12 @@ export const size = {
 };
 export const contentType = "image/png";
 
+/*
 const blogSource = loader({
   baseUrl: "/blog",
   source: createMDXSource(docs, meta),
 });
+*/
 
 const getAssetData = async (authorAvatar?: string) => {
   try {
@@ -164,115 +167,14 @@ const styles = {
   },
 } as const;
 
-export default async function Image({ params }: { params: { slug: string } }) {
-  try {
-    const page = await blogSource.getPage([params.slug]);
-
-    if (!page) {
-      return new Response("Blog post not found", { status: 404 });
-    }
-
-    const authorKey = page.data.author as string;
-    const authorDetails =
-      authorKey && isValidAuthor(authorKey)
-        ? getAuthor(authorKey as AuthorKey)
-        : null;
-
-    const assetData = await getAssetData(authorDetails?.avatar);
-
-    const formatDate = (dateString: string) => {
-      const date = new Date(dateString);
-      return date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-    };
-
-    return new ImageResponse(
-      (
-        <div
-          style={{
-            ...styles.wrapper,
-            fontFamily: assetData ? "Clash Display" : "system-ui",
-          }}
-        >
-          <div style={styles.container}>
-            <div style={styles.titleContainer}>
-              <img
-                src={
-                  assetData?.logoBase64 ||
-                  `${process.env.NEXT_PUBLIC_SITE_URL}/magicui-logo.png`
-                }
-                alt="MagicUI Logo"
-                width={80}
-                height={80}
-                style={styles.logo}
-              />
-              <h1 style={styles.title}>{page.data.title}</h1>
-              {page.data.description && (
-                <p style={styles.summary}>{page.data.description}</p>
-              )}
-            </div>
-            <div style={styles.metaContainer}>
-              {authorDetails && (
-                <div style={{ ...styles.metaBase, ...styles.authorMeta }}>
-                  {(assetData?.authorAvatarBase64 || authorDetails.avatar) && (
-                    <img
-                      src={
-                        assetData?.authorAvatarBase64 ||
-                        `${process.env.NEXT_PUBLIC_SITE_URL}${authorDetails.avatar}`
-                      }
-                      alt={authorDetails.name}
-                      width={32}
-                      height={32}
-                      style={styles.authorAvatar}
-                    />
-                  )}
-                  <span>{authorDetails.name}</span>
-                </div>
-              )}
-              {authorDetails && page.data.date && (
-                <span style={styles.dotSeparator}>•</span>
-              )}
-              {page.data.date && (
-                <p style={{ ...styles.metaBase, ...styles.dateMeta }}>
-                  {formatDate(page.data.date)}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      ),
-      {
-        width: size.width,
-        height: size.height,
-        fonts: assetData
-          ? [
-              {
-                name: "Clash Display",
-                data: assetData.clashDisplay,
-                weight: 500,
-                style: "normal",
-              },
-              {
-                name: "Cabinet Grotesk",
-                data: assetData.cabinetGrotesk,
-                weight: 500,
-                style: "normal",
-              },
-            ]
-          : undefined,
-      }
-    );
-  } catch (error) {
-    return new Response(
-      `Failed to generate image: ${
-        error instanceof Error ? error.message : "Unknown error"
-      }`,
-      {
-        status: 500,
-      }
-    );
-  }
+export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  return new ImageResponse(
+    (
+      <div style={{ fontSize: 40, color: 'black', background: 'white', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        Blog Post: {slug}
+      </div>
+    ),
+    { width: 1200, height: 630 }
+  );
 }
