@@ -125,6 +125,7 @@ export interface ProjectItem {
   category: { fr: string; en: string };
   details: { fr: string; en: string };
   image: string | null;
+  imageEn?: string | null;
   imageCaption?: { fr: string; en: string };
   href: string;
   pdfUrl?: string | null;
@@ -165,6 +166,7 @@ export async function getData(filename: string): Promise<any[]> {
         category: { fr: data.categoryFr, en: data.categoryEn },
         details: { fr: data.detailsFr, en: data.detailsEn },
         image: data.image,
+        imageEn: data.imageEn,
         imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
         href: data.href,
         pdfUrl: data.pdfUrl,
@@ -218,6 +220,7 @@ export async function saveData(filename: string, data: any[]): Promise<void> {
       detailsFr: p.details?.fr || "",
       detailsEn: p.details?.en || "",
       image: p.image || null,
+      imageEn: p.imageEn || null,
       imageCaptionFr: p.imageCaption?.fr || null,
       imageCaptionEn: p.imageCaption?.en || null,
       href: p.href || "",

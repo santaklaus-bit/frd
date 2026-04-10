@@ -33,6 +33,7 @@ export default function ProjectsForm({ initialData }: { initialData?: any }) {
       en: initialData?.details?.en || "",
     },
     image: initialData?.image || "",
+    imageEn: initialData?.imageEn || "",
     imageCaption: {
       fr: initialData?.imageCaption?.fr || "",
       en: initialData?.imageCaption?.en || ""
@@ -221,11 +222,23 @@ export default function ProjectsForm({ initialData }: { initialData?: any }) {
           </h2>
           <div className="space-y-6">
             <div className="space-y-1.5">
-              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Image Principale</label>
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Image Principale (FR)</label>
               <MediaUpload
                 value={formData.image}
                 onChange={(url) => setFormData({ ...formData, image: url })}
-                label="Image du projet"
+                onRemove={() => setFormData({ ...formData, image: "" })}
+                label="Image (FR)"
+                aspect={16 / 9}
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Image Principale (EN)</label>
+              <MediaUpload
+                value={formData.imageEn}
+                onChange={(url) => setFormData({ ...formData, imageEn: url })}
+                onRemove={() => setFormData({ ...formData, imageEn: "" })}
+                label="Image (EN)"
+                aspect={16 / 9}
               />
             </div>
             <div className="space-y-1.5 pt-4 border-t border-border/40">

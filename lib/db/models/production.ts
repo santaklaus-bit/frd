@@ -13,6 +13,7 @@ export class Production extends Model {
   public declare detailsFr: string;
   public declare detailsEn: string;
   public declare image: string;
+  public declare imageEn: string | null;
   public declare imageCaptionFr: string | null;
   public declare imageCaptionEn: string | null;
   public declare href: string;
@@ -36,6 +37,7 @@ Production.init(
     detailsFr: { type: DataTypes.TEXT, allowNull: false },
     detailsEn: { type: DataTypes.TEXT, allowNull: false },
     image: { type: DataTypes.STRING, allowNull: true },
+    imageEn: { type: DataTypes.STRING, allowNull: true },
     imageCaptionFr: { type: DataTypes.STRING, allowNull: true },
     imageCaptionEn: { type: DataTypes.STRING, allowNull: true },
     href: { type: DataTypes.STRING, allowNull: false },

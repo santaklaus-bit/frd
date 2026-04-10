@@ -96,6 +96,11 @@ async function run() {
       console.log('sync-schema: Added Productions.imageCaptionEn');
     }
 
+    if (!prodCols.imageEn) {
+      await qi.addColumn('Productions', 'imageEn', { type: Sequelize.STRING, allowNull: true });
+      console.log('sync-schema: Added Productions.imageEn');
+    }
+
     const initCols = await qi.describeTable('Initiatives');
 
     if (initCols.icon) {
