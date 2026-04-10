@@ -113,11 +113,24 @@ function getMockAnalyticsData(): AnalyticsData {
 async function fetchFromGoogleAnalytics(): Promise<AnalyticsData | null> {
     const propertyId = process.env.GA_PROPERTY_ID;
     const clientEmail = process.env.GA_CLIENT_EMAIL;
-    const privateKey = process.env.GA_PRIVATE_KEY?.replace(/\\n/g, '\n');
+    let privateKey = process.env.GA_PRIVATE_KEY;
+
+    // Verbose debug only for configuration check
+    console.log("Analytics: Starting fetch...");
+    if (!propertyId) console.warn("Analytics: GA_PROPERTY_ID is missing.");
+    if (!clientEmail) console.warn("Analytics: GA_CLIENT_EMAIL is missing.");
+    if (!privateKey) console.warn("Analytics: GA_PRIVATE_KEY is missing.");
 
     if (!propertyId || !clientEmail || !privateKey) {
         return null;
     }
+
+    // Sanitize private key: remove quotes, fix newlines, trim
+    privateKey = privateKey.trim();
+    if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+        privateKey = privateKey.substring(1, privateKey.length - 1);
+    }
+    privateKey = privateKey.replace(/\\n/g, '\n');
 
     try {
         const client = new BetaAnalyticsDataClient({
