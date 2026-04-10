@@ -1,18 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { saveSingleItem } from "@/app/actions/content";
+import { saveSingleItem, getExpertiseList } from "@/app/actions/content";
 import { toast } from "sonner";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Check } from "lucide-react";
 import { MediaUpload } from "./media-upload";
 
 export default function ProjectsForm({ initialData }: { initialData?: any }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [expertiseList, setExpertiseList] = useState<{ slug: string; title: { fr: string; en: string } }[]>([]);
   
   const [formData, setFormData] = useState({
     slug: initialData?.slug || "",
@@ -41,7 +42,22 @@ export default function ProjectsForm({ initialData }: { initialData?: any }) {
     href: initialData?.href || "",
     pdfUrl: initialData?.pdfUrl || "",
     isFeatured: initialData?.isFeatured || false,
+    expertiseSlugs: (initialData?.expertiseSlugs as string[]) || [],
   });
+
+  useEffect(() => {
+    getExpertiseList().then(setExpertiseList).catch(() => {});
+  }, []);
+
+  const toggleExpertise = (slug: string) => {
+    setFormData((prev) => {
+      const current = prev.expertiseSlugs || [];
+      const updated = current.includes(slug)
+        ? current.filter((s) => s !== slug)
+        : [...current, slug];
+      return { ...prev, expertiseSlugs: updated };
+    });
+  };
 
   const onSave = async () => {
     if (!formData.title.fr || !formData.slug) {
@@ -292,6 +308,42 @@ export default function ProjectsForm({ initialData }: { initialData?: any }) {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Expertise Linking Section */}
+      <div className="space-y-6 bg-card p-6 rounded-3xl border border-border/40 shadow-sm">
+        <div>
+          <h2 className="text-[10px] font-bold uppercase tracking-widest text-primary border-b pb-2 mb-1">
+            Expertises Liées
+          </h2>
+          <p className="text-[10px] text-muted-foreground mt-2 mb-4">
+            Sélectionnez les expertises associées à ce projet.
+          </p>
+        </div>
+        {expertiseList.length === 0 ? (
+          <p className="text-xs text-muted-foreground italic">Aucune expertise disponible.</p>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {expertiseList.map((exp) => {
+              const isSelected = formData.expertiseSlugs?.includes(exp.slug);
+              return (
+                <button
+                  key={exp.slug}
+                  type="button"
+                  onClick={() => toggleExpertise(exp.slug)}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-all ${
+                    isSelected
+                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                      : "bg-muted/40 text-muted-foreground border-border/40 hover:border-primary/50 hover:text-foreground"
+                  }`}
+                >
+                  {isSelected && <Check className="h-3 w-3" />}
+                  {exp.title.fr}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

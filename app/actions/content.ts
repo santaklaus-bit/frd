@@ -37,3 +37,8 @@ export async function deleteItem(type: "expertise" | "projects", slug: string) {
   await saveData(type as any, newItems as any);
   revalidatePath("/", "layout");
 }
+
+export async function getExpertiseList(): Promise<{ slug: string; title: { fr: string; en: string } }[]> {
+  const items = await getData("expertise");
+  return items.map((i: any) => ({ slug: i.slug, title: i.title }));
+}

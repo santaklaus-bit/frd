@@ -19,6 +19,7 @@ export class Production extends Model {
   public declare href: string;
   public declare pdfUrl: string | null;
   public declare isFeatured: boolean;
+  public declare expertiseSlugs: string | null;
   public declare order: number;
   public declare readonly createdAt: Date;
   public declare readonly updatedAt: Date;
@@ -43,6 +44,7 @@ Production.init(
     href: { type: DataTypes.STRING, allowNull: false },
     pdfUrl: { type: DataTypes.STRING, allowNull: true },
     isFeatured: { type: DataTypes.BOOLEAN, defaultValue: false },
+    expertiseSlugs: { type: DataTypes.TEXT, allowNull: true },
     order: { type: DataTypes.INTEGER, defaultValue: 0 },
   },
   { sequelize, modelName: "Production" }

@@ -100,6 +100,10 @@ async function run() {
       await qi.addColumn('Productions', 'imageEn', { type: Sequelize.STRING, allowNull: true });
       console.log('sync-schema: Added Productions.imageEn');
     }
+    if (!prodCols.expertiseSlugs) {
+      await qi.addColumn('Productions', 'expertiseSlugs', { type: Sequelize.TEXT, allowNull: true });
+      console.log('sync-schema: Added Productions.expertiseSlugs');
+    }
 
     const initCols = await qi.describeTable('Initiatives');
 

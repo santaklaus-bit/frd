@@ -130,6 +130,7 @@ export interface ProjectItem {
   href: string;
   pdfUrl?: string | null;
   isFeatured?: boolean;
+  expertiseSlugs?: string[];
 }
 
 export async function getData(filename: "expertise" | "initiatives"): Promise<ExpertiseItem[]>;
@@ -171,6 +172,7 @@ export async function getData(filename: string): Promise<any[]> {
         href: data.href,
         pdfUrl: data.pdfUrl,
         isFeatured: data.isFeatured,
+        expertiseSlugs: data.expertiseSlugs ? JSON.parse(data.expertiseSlugs) : [],
       };
     });
   }
@@ -226,6 +228,7 @@ export async function saveData(filename: string, data: any[]): Promise<void> {
       href: p.href || "",
       pdfUrl: p.pdfUrl || null,
       isFeatured: p.isFeatured || false,
+      expertiseSlugs: p.expertiseSlugs ? JSON.stringify(p.expertiseSlugs) : "[]",
       order: index,
     }));
     await Production.bulkCreate(records);
