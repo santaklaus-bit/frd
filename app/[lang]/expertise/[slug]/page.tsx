@@ -9,6 +9,9 @@ import { HashScrollHandler } from "@/components/hash-scroll-handler";
 
 export const dynamic = "force-dynamic";
 
+// @ts-ignore
+import edjsParser from "editorjs-html";
+
 interface PageProps {
   params: Promise<{ slug: string; lang: string }>;
 }
@@ -100,6 +103,24 @@ export default async function ExpertiseDetailPage({ params }: PageProps) {
   const content = initiative.content ? ((initiative.content as any)[lang] || initiative.content.fr) : "";
   const caption = (initiative.imageCaption as any)?.[lang] || initiative.imageCaption?.fr || "";
 
+  // Editor.js Check & Parse
+  let isEditorJs = false;
+  let renderedHtml = "";
+
+  if (content && (content.startsWith("{") || content.startsWith('{"'))) {
+    try {
+      const parsed = JSON.parse(content);
+      if (parsed && parsed.blocks && Array.isArray(parsed.blocks)) {
+        isEditorJs = true;
+        const parser = edjsParser();
+        const htmlBlocks = parser.parse(parsed);
+        renderedHtml = Array.isArray(htmlBlocks) ? htmlBlocks.join("") : (htmlBlocks as string);
+      }
+    } catch (e) {
+      // Not JSON or Not EditorJS format, fallback to raw text
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       <HashScrollHandler />
@@ -170,7 +191,9 @@ export default async function ExpertiseDetailPage({ params }: PageProps) {
                 </div>
               )}
 
-              {content ? (
+              {isEditorJs ? (
+                <div dangerouslySetInnerHTML={{ __html: renderedHtml }} className="leading-relaxed" />
+              ) : content ? (
                 <div className="whitespace-pre-wrap leading-relaxed">
                   {content}
                 </div>
@@ -181,7 +204,7 @@ export default async function ExpertiseDetailPage({ params }: PageProps) {
               )}
 
               {initiative.details && (
-                <div className="mt-12 text-muted-foreground/80 font-medium border-l-2 border-primary/30 pl-8 py-2 italic text-xl leading-relaxed">
+                <div className="mt-8 text-muted-foreground/80 font-medium h-full border-primary/30 pl-8 py-2 italic text-xl leading-relaxed">
                    {(initiative.details as any)[lang] || initiative.details.fr}
                 </div>
               )}

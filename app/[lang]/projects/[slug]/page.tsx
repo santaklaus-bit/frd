@@ -10,6 +10,9 @@ import { HashScrollHandler } from "@/components/hash-scroll-handler";
 
 export const dynamic = "force-dynamic";
 
+// @ts-ignore
+import edjsParser from "editorjs-html";
+
 interface PageProps {
   params: Promise<{ slug: string; lang: string }>;
 }
@@ -66,6 +69,26 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const caption = initiative.imageCaption?.[lang as keyof typeof initiative.imageCaption] || initiative.imageCaption?.fr || "";
   const Icon = ICON_MAP[initiative.icon] || Lightbulb;
   const isFr = lang === "fr";
+
+  const detailsRaw = initiative.details?.[lang as keyof typeof initiative.details] || initiative.details?.fr || "";
+  
+  // Editor.js Check & Parse
+  let isEditorJs = false;
+  let renderedHtml = "";
+
+  if (detailsRaw && (detailsRaw.startsWith("{") || detailsRaw.startsWith('{"'))) {
+    try {
+      const parsed = JSON.parse(detailsRaw);
+      if (parsed && parsed.blocks && Array.isArray(parsed.blocks)) {
+        isEditorJs = true;
+        const parser = edjsParser();
+        const htmlBlocks = parser.parse(parsed);
+        renderedHtml = Array.isArray(htmlBlocks) ? htmlBlocks.join("") : (htmlBlocks as string);
+      }
+    } catch (e) {
+      // Not JSON or Not EditorJS format, fallback to raw text
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -140,9 +163,13 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               {description}
             </p>
 
-            {initiative.details && (
-              <div className="prose dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tighter prose-headings:uppercase prose-p:text-muted-foreground prose-p:leading-relaxed prose-lg whitespace-pre-wrap">
-                <p>{(initiative.details as any)[lang] || initiative.details.fr}</p>
+            {(isEditorJs || detailsRaw) && (
+              <div className="prose dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tighter prose-headings:uppercase prose-p:text-muted-foreground prose-p:leading-relaxed prose-lg">
+                {isEditorJs ? (
+                  <div dangerouslySetInnerHTML={{ __html: renderedHtml }} />
+                ) : (
+                  <div className="whitespace-pre-wrap">{detailsRaw}</div>
+                )}
               </div>
             )}
 

@@ -9,6 +9,12 @@ import { saveSingleItem } from "@/app/actions/content";
 import { toast } from "sonner";
 import { ArrowLeft, Save } from "lucide-react";
 import { MediaUpload } from "./media-upload";
+import dynamic from "next/dynamic";
+
+const WysiwygEditor = dynamic(
+  () => import("./wysiwyg-editor").then((mod) => mod.WysiwygEditor),
+  { ssr: false }
+);
 
 export default function ProjectsForm({ initialData }: { initialData?: any }) {
   const router = useRouter();
@@ -150,10 +156,11 @@ export default function ProjectsForm({ initialData }: { initialData?: any }) {
 
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Détails</label>
-              <Textarea
+              <WysiwygEditor
                 value={formData.details.fr}
-                onChange={(e) => setFormData(prev => ({ ...prev, details: { ...prev.details, fr: e.target.value } })) }
-                className="rounded-2xl border-border/40 min-h-[150px]"
+                onChange={(val) => setFormData(prev => ({ ...prev, details: { ...prev.details, fr: val } }))}
+                holder="editor-details-fr"
+                className="min-h-[300px]"
               />
             </div>
           </div>
@@ -205,10 +212,11 @@ export default function ProjectsForm({ initialData }: { initialData?: any }) {
 
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Details</label>
-              <Textarea
+              <WysiwygEditor
                 value={formData.details.en}
-                onChange={(e) => setFormData(prev => ({ ...prev, details: { ...prev.details, en: e.target.value } })) }
-                className="rounded-2xl border-border/40 min-h-[150px]"
+                onChange={(val) => setFormData(prev => ({ ...prev, details: { ...prev.details, en: val } }))}
+                holder="editor-details-en"
+                className="min-h-[300px]"
               />
             </div>
           </div>

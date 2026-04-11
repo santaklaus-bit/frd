@@ -8,6 +8,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { saveSingleItem, getProjectList } from "@/app/actions/content";
 import { toast } from "sonner";
 import { ArrowLeft, Save, Check } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const WysiwygEditor = dynamic(
+  () => import("./wysiwyg-editor").then((mod) => mod.WysiwygEditor),
+  { ssr: false }
+);
 
 export default function ExpertiseForm({ initialData }: { initialData?: any }) {
   const router = useRouter();
@@ -164,10 +170,11 @@ export default function ExpertiseForm({ initialData }: { initialData?: any }) {
 
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Contenu (Complet)</label>
-              <Textarea
+              <WysiwygEditor
                 value={formData.content.fr}
-                onChange={(e) => setFormData(prev => ({ ...prev, content: { ...prev.content, fr: e.target.value } })) }
-                className="rounded-2xl border-border/40 min-h-[300px]"
+                onChange={(val) => setFormData(prev => ({ ...prev, content: { ...prev.content, fr: val } }))}
+                holder="editor-content-fr"
+                className="min-h-[400px]"
               />
             </div>
           </div>
@@ -219,10 +226,11 @@ export default function ExpertiseForm({ initialData }: { initialData?: any }) {
 
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Full Content</label>
-              <Textarea
+              <WysiwygEditor
                 value={formData.content.en}
-                onChange={(e) => setFormData(prev => ({ ...prev, content: { ...prev.content, en: e.target.value } })) }
-                className="rounded-2xl border-border/40 min-h-[300px]"
+                onChange={(val) => setFormData(prev => ({ ...prev, content: { ...prev.content, en: val } }))}
+                holder="editor-content-en"
+                className="min-h-[400px]"
               />
             </div>
           </div>

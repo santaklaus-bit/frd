@@ -27,6 +27,7 @@ interface WysiwygEditorProps {
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
+  holder?: string; // Optional unique ID for the editor container
 }
 
 export function WysiwygEditor({
@@ -34,6 +35,7 @@ export function WysiwygEditor({
   onChange,
   placeholder,
   className,
+  holder = "editorjs-container",
 }: WysiwygEditorProps) {
   const ejInstance = useRef<EditorJS | null>(null);
 
@@ -61,7 +63,7 @@ export function WysiwygEditor({
       ],
       version: "2.30.0",
     };
-  }, []);
+  }, [value]);
 
   const isReady = useRef(false);
 
@@ -70,7 +72,7 @@ export function WysiwygEditor({
       const initEditor = async () => {
         try {
           const editor = new EditorJS({
-            holder: "editorjs-container",
+            holder: holder,
             placeholder: placeholder || "Commencez à rédiger...",
             initialBlock: "paragraph",
             data: getInitialData(),
@@ -99,7 +101,6 @@ export function WysiwygEditor({
                       const formData = new FormData();
                       formData.append("file", file);
                       try {
-                        // Using the same API endpoint used in previous code
                         const res = await fetch("/api/upload", {
                           method: "POST",
                           body: formData,
@@ -158,20 +159,20 @@ export function WysiwygEditor({
     }
 
     return () => {
+      // Cleanup to avoid multiple instances in dev mode
       if (ejInstance.current && typeof ejInstance.current.destroy === "function") {
-          // In dev mode with strict mode, we might want to keep it if holder is stable
-          // but usually we should destroy. However, EditorJS destroy on unmount can be buggy in NextJS dev.
-          // For now, let's keep it simple to avoid blank screens on fast refresh.
+        // ejInstance.current.destroy();
+        // isReady.current = false;
       }
     };
-  }, []); // Only once on mount
+  }, [holder, placeholder, getInitialData, onChange]); // Depend on holder
 
   return (
     <div
       className={`border border-border rounded-xl bg-card flex flex-col ${className || ""}`}
     >
       <div className="flex-1 overflow-y-auto cursor-text p-6">
-        <div id="editorjs-container" className="w-full prose dark:prose-invert max-w-none focus:outline-none" />
+        <div id={holder} className="w-full prose dark:prose-invert max-w-none focus:outline-none" />
       </div>
     </div>
   );
