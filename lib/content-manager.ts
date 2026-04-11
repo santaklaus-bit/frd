@@ -116,6 +116,7 @@ export interface ExpertiseItem {
   details: { fr: string; en: string };
   category: { fr: string; en: string };
   imageCaption?: { fr: string; en: string };
+  projectSlugs?: string[];
 }
 
 export interface ProjectItem {
@@ -130,7 +131,6 @@ export interface ProjectItem {
   href: string;
   pdfUrl?: string | null;
   isFeatured?: boolean;
-  expertiseSlugs?: string[];
 }
 
 export async function getData(filename: "expertise" | "initiatives"): Promise<ExpertiseItem[]>;
@@ -151,6 +151,7 @@ export async function getData(filename: string): Promise<any[]> {
         image: data.image,
         imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
         link: data.link,
+        projectSlugs: data.projectSlugs ? JSON.parse(data.projectSlugs) : [],
       };
     });
   }
@@ -172,7 +173,6 @@ export async function getData(filename: string): Promise<any[]> {
         href: data.href,
         pdfUrl: data.pdfUrl,
         isFeatured: data.isFeatured,
-        expertiseSlugs: data.expertiseSlugs ? JSON.parse(data.expertiseSlugs) : [],
       };
     });
   }
@@ -204,6 +204,7 @@ export async function saveData(filename: string, data: any[]): Promise<void> {
       imageCaptionFr: i.imageCaption?.fr || null,
       imageCaptionEn: i.imageCaption?.en || null,
       link: i.link || null,
+      projectSlugs: i.projectSlugs ? JSON.stringify(i.projectSlugs) : "[]",
       order: index,
     }));
     await Initiative.bulkCreate(records);
@@ -228,7 +229,6 @@ export async function saveData(filename: string, data: any[]): Promise<void> {
       href: p.href || "",
       pdfUrl: p.pdfUrl || null,
       isFeatured: p.isFeatured || false,
-      expertiseSlugs: p.expertiseSlugs ? JSON.stringify(p.expertiseSlugs) : "[]",
       order: index,
     }));
     await Production.bulkCreate(records);

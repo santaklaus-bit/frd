@@ -18,6 +18,7 @@ export class Initiative extends Model {
   public declare imageCaptionFr: string | null;
   public declare imageCaptionEn: string | null;
   public declare link: string | null;
+  public declare projectSlugs: string | null;
   public declare order: number;
   public declare readonly createdAt: Date;
   public declare readonly updatedAt: Date;
@@ -41,6 +42,7 @@ Initiative.init(
     imageCaptionFr: { type: DataTypes.STRING, allowNull: true },
     imageCaptionEn: { type: DataTypes.STRING, allowNull: true },
     link: { type: DataTypes.STRING, allowNull: true },
+    projectSlugs: { type: DataTypes.TEXT, allowNull: true },
     order: { type: DataTypes.INTEGER, defaultValue: 0 },
   },
   { sequelize, modelName: "Initiative" }

@@ -1,18 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { saveSingleItem } from "@/app/actions/content";
+import { saveSingleItem, getProjectList } from "@/app/actions/content";
 import { toast } from "sonner";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Check } from "lucide-react";
 
 export default function ExpertiseForm({ initialData }: { initialData?: any }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  
+  const [projectList, setProjectList] = useState<{ slug: string; title: { fr: string; en: string } }[]>([]);
+
   const [formData, setFormData] = useState({
     slug: initialData?.slug || "",
     title: {
@@ -38,8 +39,23 @@ export default function ExpertiseForm({ initialData }: { initialData?: any }) {
     imageCaption: {
       fr: initialData?.imageCaption?.fr || "",
       en: initialData?.imageCaption?.en || "",
-    }
+    },
+    projectSlugs: (initialData?.projectSlugs as string[]) || [],
   });
+
+  useEffect(() => {
+    getProjectList().then(setProjectList).catch(() => {});
+  }, []);
+
+  const toggleProject = (slug: string) => {
+    setFormData((prev) => {
+      const current = prev.projectSlugs || [];
+      const updated = current.includes(slug)
+        ? current.filter((s) => s !== slug)
+        : [...current, slug];
+      return { ...prev, projectSlugs: updated };
+    });
+  };
 
   const onSave = async () => {
     if (!formData.title.fr || !formData.slug) {
@@ -226,6 +242,42 @@ export default function ExpertiseForm({ initialData }: { initialData?: any }) {
             className="rounded-xl border-border/40 font-mono"
           />
         </div>
+      </div>
+
+      {/* Project Linking Section */}
+      <div className="space-y-4 bg-card p-6 rounded-3xl border border-border/40 shadow-sm">
+        <div>
+          <h2 className="text-[10px] font-bold uppercase tracking-widest text-primary border-b pb-2 mb-1">
+            Projets Liés
+          </h2>
+          <p className="text-[10px] text-muted-foreground mt-2 mb-4">
+            Sélectionnez les projets qui utilisent cette expertise.
+          </p>
+        </div>
+        {projectList.length === 0 ? (
+          <p className="text-xs text-muted-foreground italic">Aucun projet disponible.</p>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {projectList.map((proj) => {
+              const isSelected = formData.projectSlugs?.includes(proj.slug);
+              return (
+                <button
+                  key={proj.slug}
+                  type="button"
+                  onClick={() => toggleProject(proj.slug)}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold border transition-all ${
+                    isSelected
+                      ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                      : "bg-muted/40 text-muted-foreground border-border/40 hover:border-primary/50 hover:text-foreground"
+                  }`}
+                >
+                  {isSelected && <Check className="h-3 w-3" />}
+                  {proj.title.fr}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -100,10 +100,6 @@ async function run() {
       await qi.addColumn('Productions', 'imageEn', { type: Sequelize.STRING, allowNull: true });
       console.log('sync-schema: Added Productions.imageEn');
     }
-    if (!prodCols.expertiseSlugs) {
-      await qi.addColumn('Productions', 'expertiseSlugs', { type: Sequelize.TEXT, allowNull: true });
-      console.log('sync-schema: Added Productions.expertiseSlugs');
-    }
 
     const initCols = await qi.describeTable('Initiatives');
 
@@ -136,6 +132,10 @@ async function run() {
     if (!initCols.imageCaptionEn) {
       await qi.addColumn('Initiatives', 'imageCaptionEn', { type: Sequelize.STRING, allowNull: true });
       console.log('sync-schema: Added Initiatives.imageCaptionEn');
+    }
+    if (!initCols.projectSlugs) {
+      await qi.addColumn('Initiatives', 'projectSlugs', { type: Sequelize.TEXT, allowNull: true });
+      console.log('sync-schema: Added Initiatives.projectSlugs');
     }
 
     // ---- BlogPosts table ----
