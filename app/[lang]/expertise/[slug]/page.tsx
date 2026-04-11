@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -11,6 +11,48 @@ export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ slug: string; lang: string }>;
+}
+
+async function LinkedProjects({ slugs, lang }: { slugs: string[]; lang: string }) {
+  const allProjects = await getData("projects");
+  const linked = allProjects.filter((p: any) => slugs.includes(p.slug));
+
+  if (linked.length === 0) return null;
+
+  return (
+    <div className="mt-20 pt-12 border-t border-border/40 not-prose">
+      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-6">
+        {lang === "fr" ? "Projets liés" : "Related projects"}
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {linked.map((project: any) => {
+          const title = (project.title as any)[lang] || project.title.fr;
+          const description = (project.description as any)[lang] || project.description.fr;
+          const image = project.image;
+          return (
+            <Link
+              key={project.slug}
+              href={`/${lang}/projects/${project.slug}`}
+              className="group flex flex-col gap-3 p-4 rounded-2xl border border-border/40 bg-card hover:border-primary/40 hover:shadow-lg transition-all duration-300"
+            >
+              {image && (
+                <div className="relative aspect-video rounded-xl overflow-hidden">
+                  <img src={image} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+              )}
+              <div className="flex items-start justify-between gap-2">
+                <div className="space-y-1">
+                  <p className="text-sm font-bold text-foreground leading-tight">{title}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">{description}</p>
+                </div>
+                <ArrowUpRight className="w-4 h-4 shrink-0 text-muted-foreground group-hover:text-primary transition-colors mt-0.5" />
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 export async function generateMetadata({
@@ -153,6 +195,14 @@ export default async function ExpertiseDetailPage({ params }: PageProps) {
                   </a>
                 </Button>
               </div>
+            )}
+
+            {/* ── LINKED PROJECTS ── */}
+            {initiative.projectSlugs && initiative.projectSlugs.length > 0 && (
+              <LinkedProjects
+                slugs={initiative.projectSlugs}
+                lang={lang}
+              />
             )}
           </div>
         </main>
