@@ -40,6 +40,9 @@ export async function saveBlogPost(
 ) {
   const existing = await BlogPost.findOne({ where: { slug } });
 
+  // Simple word count calculation if not provided
+  const wordCount = frontmatter.wordCount || content?.replace(/<[^>]*>?/gm, "").split(/\s+/).length || 0;
+
   if (existing) {
     await existing.update({
       title: frontmatter.title,
@@ -50,6 +53,9 @@ export async function saveBlogPost(
       authorPhoto: frontmatter.authorPhoto,
       content,
       readTime: readTime || frontmatter.readTime,
+      wordCount: wordCount,
+      pdfUrl: frontmatter.pdfUrl,
+      audioUrl: frontmatter.audioUrl,
       imageCaption: frontmatter.imageCaption,
     });
   } else {
@@ -63,6 +69,9 @@ export async function saveBlogPost(
       authorPhoto: frontmatter.authorPhoto,
       content,
       readTime: readTime || frontmatter.readTime,
+      wordCount: wordCount,
+      pdfUrl: frontmatter.pdfUrl,
+      audioUrl: frontmatter.audioUrl,
       imageCaption: frontmatter.imageCaption,
     });
   }

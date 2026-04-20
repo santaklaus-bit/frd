@@ -1,3 +1,4 @@
+import "dotenv/config";
 import sequelize from "./lib/db/sequelize";
 import { BlogPost, Initiative, Production, ContactMessage, Subscriber, Dictionary } from "./lib/db/models";
 

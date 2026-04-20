@@ -12,6 +12,10 @@ export class BlogPost extends Model {
   public declare authorPhoto: string;
   public declare content: string;
   public declare readTime: string;
+  public declare wordCount: number;
+  public declare pdfUrl: string;
+  public declare audioUrl: string;
+  public declare imageCaption: string;
   public declare readonly createdAt: Date;
   public declare readonly updatedAt: Date;
 }
@@ -53,6 +57,18 @@ BlogPost.init(
       allowNull: false,
     },
     readTime: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    wordCount: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    pdfUrl: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    audioUrl: {
       type: DataTypes.STRING,
       allowNull: true,
     },

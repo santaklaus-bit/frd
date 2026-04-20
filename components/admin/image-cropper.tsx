@@ -10,10 +10,11 @@ interface ImageCropperProps {
   open: boolean;
   onClose: () => void;
   onCropComplete: (croppedImage: Blob) => void;
+  onSkip?: () => void;
   aspect?: number;
 }
 
-export function ImageCropper({ image, open, onClose, onCropComplete, aspect = 1 }: ImageCropperProps) {
+export function ImageCropper({ image, open, onClose, onCropComplete, onSkip, aspect = 1 }: ImageCropperProps) {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
@@ -112,9 +113,14 @@ export function ImageCropper({ image, open, onClose, onCropComplete, aspect = 1 
             className="w-full h-1 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
           />
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose} className="rounded-full">Annuler</Button>
-          <Button onClick={handleSave} className="rounded-full bg-foreground text-background font-semibold uppercase tracking-widest text-[10px] px-8">Valider</Button>
+        <DialogFooter className="gap-2 sm:gap-0">
+          <div className="flex gap-2 w-full sm:w-auto">
+            <Button variant="outline" onClick={onClose} className="rounded-full flex-1 sm:flex-none">Annuler</Button>
+            {onSkip && (
+              <Button variant="secondary" onClick={onSkip} className="rounded-full flex-1 sm:flex-none text-[10px] font-bold uppercase tracking-widest">Utiliser l'original</Button>
+            )}
+          </div>
+          <Button onClick={handleSave} className="rounded-full bg-foreground text-background font-semibold uppercase tracking-widest text-[10px] px-8 w-full sm:w-auto">Valider le recadrage</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

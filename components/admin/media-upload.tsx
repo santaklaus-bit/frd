@@ -47,6 +47,16 @@ export function MediaUpload({
     }
   };
 
+  const skipCrop = async () => {
+    const fileInput = document.getElementById(`upload-${label}`) as HTMLInputElement;
+    const file = fileInput?.files?.[0];
+    if (file) {
+      setCropperOpen(false);
+      setOriginalImage(null);
+      await performUpload(file);
+    }
+  };
+
   const performUpload = async (file: File | Blob) => {
     setUploading(true);
     const formData = new FormData();
@@ -200,6 +210,7 @@ export function MediaUpload({
             setOriginalImage(null);
           }}
           onCropComplete={handleCropComplete}
+          onSkip={skipCrop}
         />
       )}
     </div>

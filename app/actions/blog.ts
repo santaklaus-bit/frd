@@ -14,6 +14,8 @@ export async function createOrUpdateBlogPost(formData: FormData) {
   const authorName = formData.get("authorName") as string;
   const readTime = formData.get("readTime") as string;
   const imageCaption = formData.get("imageCaption") as string || "";
+  const pdfUrl = formData.get("pdfUrl") as string || "";
+  const audioUrl = formData.get("audioUrl") as string || "";
   
   const thumbnailData = formData.get("thumbnail");
   let thumbnailUrl = formData.get("currentThumbnail") as string || "";
@@ -55,6 +57,8 @@ export async function createOrUpdateBlogPost(formData: FormData) {
     authorName: authorName || "",
     authorPhoto: authorPhotoUrl || "",
     imageCaption,
+    pdfUrl,
+    audioUrl,
   };
 
   await saveBlogPost(slug, frontmatter, content, readTime);

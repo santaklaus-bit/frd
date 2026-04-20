@@ -142,13 +142,11 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             {/* Banner Image - Now inside content like the blog */}
             {initiative.image && (
                 <div className="space-y-4">
-                  <div className="relative aspect-video rounded-3xl overflow-hidden border border-border/40 shadow-2xl group">
-                    <Image
+                  <div className="relative rounded-3xl overflow-hidden border border-border/40 shadow-2xl group bg-muted/30">
+                    <img
                         src={initiative.image}
                         alt={title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        priority
+                        className="w-full h-auto max-h-[700px] object-contain transition-transform duration-700 group-hover:scale-105"
                       />
                   </div>
                   {caption && (

@@ -28,6 +28,8 @@ interface BlogFormProps {
     authorPhoto: string;
     content: string;
     readTime?: string;
+    pdfUrl?: string;
+    audioUrl?: string;
   };
 }
 
@@ -63,6 +65,8 @@ export function BlogForm({ initialData }: BlogFormProps) {
   const [authorPhotoUrl, setAuthorPhotoUrl] = useState(
     initialData?.authorPhoto || ""
   );
+  const [pdfUrl, setPdfUrl] = useState(initialData?.pdfUrl || "");
+  const [audioUrl, setAudioUrl] = useState(initialData?.audioUrl || "");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -74,6 +78,8 @@ export function BlogForm({ initialData }: BlogFormProps) {
       // Media URLs are in state and hidden inputs, but we ensure they are set
       formData.set("thumbnail", thumbnailUrl);
       formData.set("authorPhoto", authorPhotoUrl);
+      formData.set("pdfUrl", pdfUrl);
+      formData.set("audioUrl", audioUrl);
 
       await createOrUpdateBlogPost(formData);
       toast.success("Article enregistré avec succès !");
@@ -209,8 +215,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                   className="rounded-xl border-border/40 bg-background"
                 />
               </Field>
-
-              <div className="pt-4 border-t border-border/40">
+              <div className="pt-4 border-t border-border/40 space-y-6">
                 <MediaUpload
                   label="Image à la une"
                   value={thumbnailUrl}
@@ -218,6 +223,26 @@ export function BlogForm({ initialData }: BlogFormProps) {
                   onRemove={() => setThumbnailUrl("")}
                 />
                 <input type="hidden" name="thumbnail" value={thumbnailUrl} />
+
+                <div className="space-y-4 pt-4 border-t border-border/40">
+                  <MediaUpload
+                    label="Version PDF"
+                    value={pdfUrl}
+                    onChange={setPdfUrl}
+                    onRemove={() => setPdfUrl("")}
+                    accept="application/pdf"
+                  />
+                  <input type="hidden" name="pdfUrl" value={pdfUrl} />
+
+                  <MediaUpload
+                    label="Version Audio"
+                    value={audioUrl}
+                    onChange={setAudioUrl}
+                    onRemove={() => setAudioUrl("")}
+                    accept="audio/*"
+                  />
+                  <input type="hidden" name="audioUrl" value={audioUrl} />
+                </div>
               </div>
             </div>
 
