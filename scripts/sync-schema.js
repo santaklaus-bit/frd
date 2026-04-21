@@ -147,6 +147,27 @@ async function run() {
       });
       console.log('sync-schema: Added BlogPosts.readTime');
     }
+    if (!blogCols.wordCount) {
+      await qi.addColumn('BlogPosts', 'wordCount', {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      });
+      console.log('sync-schema: Added BlogPosts.wordCount');
+    }
+    if (!blogCols.pdfUrl) {
+      await qi.addColumn('BlogPosts', 'pdfUrl', {
+        type: Sequelize.STRING,
+        allowNull: true,
+      });
+      console.log('sync-schema: Added BlogPosts.pdfUrl');
+    }
+    if (!blogCols.audioUrl) {
+      await qi.addColumn('BlogPosts', 'audioUrl', {
+        type: Sequelize.STRING,
+        allowNull: true,
+      });
+      console.log('sync-schema: Added BlogPosts.audioUrl');
+    }
     if (!blogCols.imageCaption) {
       await qi.addColumn('BlogPosts', 'imageCaption', {
         type: Sequelize.STRING,

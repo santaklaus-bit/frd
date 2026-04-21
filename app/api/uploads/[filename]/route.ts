@@ -14,7 +14,12 @@ export async function GET(
     const filePath = path.join(process.cwd(), "public", "uploads", sanitized);
 
     if (!fs.existsSync(filePath)) {
-      return new NextResponse("File not found", { status: 404 });
+      // Return a transparent 1x1 pixel image instead of a text error to prevent Next.js Image component from crashing
+      const transparentPixel = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuPnAAAAAElFTkSuQmCC", "base64");
+      return new NextResponse(transparentPixel, { 
+        status: 404,
+        headers: { "Content-Type": "image/png", "Cache-Control": "no-cache, no-store" }
+      });
     }
 
     const buffer = fs.readFileSync(filePath);
