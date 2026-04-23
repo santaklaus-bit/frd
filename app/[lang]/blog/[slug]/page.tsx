@@ -43,6 +43,7 @@ import { HashScrollHandler } from "@/components/hash-scroll-handler";
 
 // @ts-ignore
 import edjsParser from "editorjs-html";
+import { customParsers } from "@/lib/editor-parsers";
 
 interface PageProps {
   params: Promise<{ slug: string; lang: string }>;
@@ -88,7 +89,7 @@ export default async function BlogPost({ params }: PageProps) {
       const parsed = JSON.parse(page.content);
       if (parsed && parsed.blocks && Array.isArray(parsed.blocks)) {
         isEditorJs = true;
-        const parser = edjsParser();
+        const parser = edjsParser(customParsers);
         const htmlBlocks = parser.parse(parsed);
         renderedHtml = Array.isArray(htmlBlocks) ? htmlBlocks.join("") : (htmlBlocks as string);
       }

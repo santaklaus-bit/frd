@@ -76,9 +76,32 @@ export default async function AnalyticsPage() {
           <h1 className="text-4xl font-semibold tracking-tight">Analytics</h1>
         </div>
         <p className="text-xs text-muted-foreground/60 tabular-nums">
-          30 derniers jours{data.isDemo && <span className="ml-2 px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 text-[10px] font-semibold">Démo</span>}
+          30 derniers jours
+          {data.isDemo && (
+            <span className="ml-2 px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 text-[10px] font-semibold">
+              Démo
+            </span>
+          )}
         </p>
       </div>
+
+      {data.isDemo && (
+        <div className="p-4 rounded-xl border border-amber-200 bg-amber-50/50 dark:border-amber-900/50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-200 text-sm flex items-start gap-3">
+          <div className="mt-0.5 p-1 rounded-md bg-amber-100 dark:bg-amber-900/50">
+            <TrendingUp className="h-4 w-4" />
+          </div>
+          <div className="space-y-1">
+            <p className="font-semibold">Mode Démonstration Actif</p>
+            <p className="text-xs opacity-80 leading-relaxed">
+              Les données affichées ci-dessous sont des données de démonstration car la connexion à Google Analytics 4 n'est pas configurée. 
+              Vérifiez que les variables <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">GA_PROPERTY_ID</code>, 
+              <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">GA_CLIENT_EMAIL</code>, 
+              <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">GA_PRIVATE_KEY</code> et 
+              <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">NEXT_PUBLIC_GA_MEASUREMENT_ID</code> sont correctement définies dans votre fichier <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">.env</code>.
+            </p>
+          </div>
+        </div>
+      )}
 
             {/* KPI cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
