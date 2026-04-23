@@ -1,5 +1,6 @@
 import { Mail, Clock, MessageSquare, Circle, CheckCircle2 } from "lucide-react";
 import { getContactMessages } from "@/lib/content-manager";
+import { MessageActions } from "./message-actions";
 
 export const dynamic = "force-dynamic";
 
@@ -108,6 +109,9 @@ export default async function AdminContactPage() {
                     {msg.message}
                   </p>
                 </div>
+                
+                {/* Actions */}
+                <MessageActions id={msg.id} isRead={msg.isRead} />
               </div>
             );
           })}

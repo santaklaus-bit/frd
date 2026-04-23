@@ -140,11 +140,11 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         <div className="grid lg:grid-cols-[1fr_250px] gap-12 lg:gap-20">
           <main className="space-y-12">
             {/* Banner Image - Now inside content like the blog */}
-            {initiative.image && (
+            {(lang === "en" ? initiative.imageEn || initiative.image : initiative.image) && (
                 <div className="space-y-4">
                   <div className="relative rounded-3xl overflow-hidden border border-border/40 shadow-2xl group bg-muted/30">
                     <img
-                        src={initiative.image}
+                        src={lang === "en" ? initiative.imageEn || initiative.image : initiative.image}
                         alt={title}
                         className="w-full h-auto max-h-[700px] object-contain transition-transform duration-700 group-hover:scale-105"
                       />
