@@ -182,7 +182,7 @@
 
 /* Premium Article Styling */
 .article-content-premium {
-  font-family: var(--font-serif) !important;
+  font-family: var(--font-sans) !important;
 }
 
 .article-content-premium p {
@@ -201,7 +201,7 @@
   margin-right: 0.75rem;
   margin-top: 0.25rem;
   color: var(--primary);
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
 }
 
 /* Custom Audio Player Styling */
