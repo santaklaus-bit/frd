@@ -80,54 +80,59 @@ export default async function BlogPage({
 
 
         {/* ── FEATURED ARTICLE ── */}
-        {featured && (
-          <section className="py-16 md:py-24 border-b border-border/40">
-            <article className="group grid md:grid-cols-2 gap-10 md:gap-16 items-start">
-              {/* Image */}
-              {featured.thumbnail ? (
-                <div className="relative aspect-[3/2] overflow-hidden bg-muted">
-                  <Image
-                    src={featured.thumbnail}
-                    alt={featured.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    priority
-                  />
-                </div>
-              ) : (
-                <div className="relative aspect-[3/2] bg-muted/60" />
-              )}
-
-              {/* Content */}
-              <div className="flex flex-col justify-center gap-6">
-                <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground/60">
-                  {isFr ? "Article à la une" : "Featured article"}
-                </p>
-                <Link href={`/${lang}/blog/${featured.slug}`} className="w-fit">
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-tight hover:underline">
-                    {featured.title}
-                  </h2>
-                </Link>
-                {featured.description && (
-                  <p className="text-muted-foreground leading-relaxed line-clamp-3">
-                    {featured.description}
-                  </p>
+        {featured && (() => {
+          const featuredTitle = featured.title[lang as 'fr'|'en'] || featured.title.fr || featured.title.en || '';
+          const featuredDesc = featured.description[lang as 'fr'|'en'] || featured.description.fr || featured.description.en || '';
+          const featuredReadTime = featured.readTime[lang as 'fr'|'en'] || featured.readTime.fr || featured.readTime.en || '';
+          return (
+            <section className="py-16 md:py-24 border-b border-border/40">
+              <article className="group grid md:grid-cols-2 gap-10 md:gap-16 items-start">
+                {/* Image */}
+                {featured.thumbnail ? (
+                  <div className="relative aspect-[3/2] overflow-hidden bg-muted">
+                    <Image
+                      src={featured.thumbnail}
+                      alt={featuredTitle}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      priority
+                    />
+                  </div>
+                ) : (
+                  <div className="relative aspect-[3/2] bg-muted/60" />
                 )}
-                <div className="flex items-center gap-4 text-xs text-muted-foreground/70 font-medium uppercase tracking-widest">
-                  {featured.date && (
-                    <time>{formatDate(new Date(featured.date), lang)}</time>
+
+                {/* Content */}
+                <div className="flex flex-col justify-center gap-6">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-muted-foreground/60">
+                    {isFr ? "Article à la une" : "Featured article"}
+                  </p>
+                  <Link href={`/${lang}/blog/${featured.slug}`} className="w-fit">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-tight hover:underline">
+                      {featuredTitle}
+                    </h2>
+                  </Link>
+                  {featuredDesc && (
+                    <p className="text-muted-foreground leading-relaxed line-clamp-3">
+                      {featuredDesc}
+                    </p>
                   )}
-                  {featured.readTime && (
-                    <span className="flex items-center gap-1.5">
-                      <Clock className="h-3 w-3" />
-                      {featured.readTime}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground/70 font-medium uppercase tracking-widest">
+                    {featured.date && (
+                      <time>{formatDate(new Date(featured.date), lang)}</time>
+                    )}
+                    {featuredReadTime && (
+                      <span className="flex items-center gap-1.5">
+                        <Clock className="h-3 w-3" />
+                        {featuredReadTime}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </article>
-          </section>
-        )}
+              </article>
+            </section>
+          );
+        })()}
 
         {/* ── ARTICLE GRID ── */}
         {rest.length > 0 && (
@@ -135,6 +140,9 @@ export default async function BlogPage({
             <div className="grid md:grid-cols-2 gap-x-12 lg:gap-x-20 gap-y-16 md:gap-y-24">
               {rest.map((post: any, idx: number) => {
                 const date = post.date ? new Date(post.date) : null;
+                const postTitle = post.title[lang as 'fr'|'en'] || post.title.fr || post.title.en || '';
+                const postDesc = post.description[lang as 'fr'|'en'] || post.description.fr || post.description.en || '';
+                const postReadTime = post.readTime[lang as 'fr'|'en'] || post.readTime.fr || post.readTime.en || '';
 
                 return (
                   <article key={post.slug} className="group flex flex-col gap-6">
@@ -143,7 +151,7 @@ export default async function BlogPage({
                       {post.thumbnail ? (
                         <Image
                           src={post.thumbnail}
-                          alt={post.title}
+                          alt={postTitle}
                           fill
                           className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
@@ -156,21 +164,21 @@ export default async function BlogPage({
                     <div className="flex flex-col gap-3">
                       <Link href={`/${lang}/blog/${post.slug}`} className="w-fit">
                         <h2 className="text-2xl md:text-3xl font-bold tracking-tight leading-snug hover:underline">
-                          {post.title}
+                          {postTitle}
                         </h2>
                       </Link>
                       <div className="flex items-center gap-4 text-xs text-muted-foreground/60 font-medium uppercase tracking-widest">
                         {date && <time>{formatDate(date, lang)}</time>}
-                        {post.readTime && (
+                        {postReadTime && (
                           <span className="flex items-center gap-1.5">
                             <Clock className="h-3 w-3" />
-                            {post.readTime}
+                            {postReadTime}
                           </span>
                         )}
                       </div>
-                      {post.description && (
+                      {postDesc && (
                         <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
-                          {post.description}
+                          {postDesc}
                         </p>
                       )}
                     </div>

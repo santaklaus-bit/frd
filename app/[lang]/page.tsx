@@ -293,6 +293,8 @@ export default async function HomePage({
           <div className="grid sm:grid-cols-2 gap-6 md:gap-8 lg:gap-10">
             {posts.map((post: any) => {
               const date = post.date ? new Date(post.date) : null;
+              const postTitle = post.title[lang as 'fr'|'en'] || post.title.fr || post.title.en || '';
+              const postDesc = post.description[lang as 'fr'|'en'] || post.description.fr || post.description.en || '';
               return (
                 <Link
                   key={post.slug}
@@ -303,7 +305,7 @@ export default async function HomePage({
                     <div className="relative h-44 sm:h-48 md:h-52 w-full overflow-hidden">
                       <Image
                         src={post.thumbnail}
-                        alt={post.title}
+                        alt={postTitle}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
                       />
@@ -311,11 +313,11 @@ export default async function HomePage({
                   )}
                   <div className="flex flex-1 flex-col p-5 sm:p-6 md:p-8">
                     <h3 className="text-lg md:text-xl font-bold tracking-tight mb-2 md:mb-3 group-hover:text-primary transition-colors leading-tight">
-                      {post.title}
+                      {postTitle}
                     </h3>
-                    {post.description && (
+                    {postDesc && (
                       <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed flex-1">
-                        {post.description}
+                        {postDesc}
                       </p>
                     )}
                     <div className="mt-4 md:mt-5 flex items-center justify-between text-xs font-bold text-muted-foreground uppercase tracking-widest">

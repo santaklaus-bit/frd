@@ -18,61 +18,98 @@ export async function getBlogPosts() {
     order: [["date", "DESC"]],
   });
   return posts.map((p) => {
-    const json = p.toJSON() as any;
-    // Don't calculate anymore, use what's in DB
-    return json;
+    const data = p.toJSON() as any;
+    return {
+      slug: data.slug,
+      title: { fr: data.titleFr, en: data.titleEn },
+      description: { fr: data.descriptionFr, en: data.descriptionEn },
+      date: data.date,
+      thumbnail: data.thumbnail,
+      authorName: data.authorName,
+      authorPhoto: data.authorPhoto,
+      content: { fr: data.contentFr || "", en: data.contentEn || "" },
+      readTime: { fr: data.readTimeFr || "", en: data.readTimeEn || "" },
+      wordCount: { fr: data.wordCountFr || 0, en: data.wordCountEn || 0 },
+      pdfUrl: { fr: data.pdfUrlFr || "", en: data.pdfUrlEn || "" },
+      audioUrl: { fr: data.audioUrlFr || "", en: data.audioUrlEn || "" },
+      imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
+    };
   });
 }
 
 export async function getBlogPost(slug: string) {
   const post = await BlogPost.findOne({ where: { slug } });
   if (!post) return null;
-  const json = post.toJSON() as any;
-  // Don't calculate anymore, use what's in DB
-  return json;
+  const data = post.toJSON() as any;
+  return {
+    slug: data.slug,
+    title: { fr: data.titleFr, en: data.titleEn },
+    description: { fr: data.descriptionFr, en: data.descriptionEn },
+    date: data.date,
+    thumbnail: data.thumbnail,
+    authorName: data.authorName,
+    authorPhoto: data.authorPhoto,
+    content: { fr: data.contentFr || "", en: data.contentEn || "" },
+    readTime: { fr: data.readTimeFr || "", en: data.readTimeEn || "" },
+    wordCount: { fr: data.wordCountFr || 0, en: data.wordCountEn || 0 },
+    pdfUrl: { fr: data.pdfUrlFr || "", en: data.pdfUrlEn || "" },
+    audioUrl: { fr: data.audioUrlFr || "", en: data.audioUrlEn || "" },
+    imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
+  };
 }
 
 export async function saveBlogPost(
   slug: string,
-  frontmatter: any,
-  content: string,
-  readTime?: string
+  frontmatter: {
+    title: { fr: string; en: string };
+    description: { fr: string; en: string };
+    date: string;
+    thumbnail: string;
+    authorName: string;
+    authorPhoto: string;
+    imageCaption?: { fr: string; en: string };
+    pdfUrl?: { fr: string; en: string };
+    audioUrl?: { fr: string; en: string };
+    readTime?: { fr: string; en: string };
+  },
+  content: { fr: string; en: string },
+  readTime?: { fr: string; en: string }
 ) {
   const existing = await BlogPost.findOne({ where: { slug } });
 
-  // Simple word count calculation if not provided
-  const wordCount = frontmatter.wordCount || content?.replace(/<[^>]*>?/gm, "").split(/\s+/).length || 0;
+  // Word count calculation
+  const wordCountFr = content.fr?.replace(/<[^>]*>?/gm, "").trim().split(/\s+/).filter(Boolean).length || 0;
+  const wordCountEn = content.en?.replace(/<[^>]*>?/gm, "").trim().split(/\s+/).filter(Boolean).length || 0;
+
+  const dataToSave = {
+    titleFr: frontmatter.title?.fr || "",
+    titleEn: frontmatter.title?.en || "",
+    descriptionFr: frontmatter.description?.fr || "",
+    descriptionEn: frontmatter.description?.en || "",
+    date: frontmatter.date,
+    thumbnail: frontmatter.thumbnail,
+    authorName: frontmatter.authorName,
+    authorPhoto: frontmatter.authorPhoto,
+    contentFr: content.fr || "",
+    contentEn: content.en || "",
+    readTimeFr: readTime?.fr || frontmatter.readTime?.fr || calcReadTime(content.fr, "fr"),
+    readTimeEn: readTime?.en || frontmatter.readTime?.en || calcReadTime(content.en, "en"),
+    wordCountFr,
+    wordCountEn,
+    pdfUrlFr: frontmatter.pdfUrl?.fr || "",
+    pdfUrlEn: frontmatter.pdfUrl?.en || "",
+    audioUrlFr: frontmatter.audioUrl?.fr || "",
+    audioUrlEn: frontmatter.audioUrl?.en || "",
+    imageCaptionFr: frontmatter.imageCaption?.fr || "",
+    imageCaptionEn: frontmatter.imageCaption?.en || "",
+  };
 
   if (existing) {
-    await existing.update({
-      title: frontmatter.title,
-      description: frontmatter.description,
-      date: frontmatter.date,
-      thumbnail: frontmatter.thumbnail,
-      authorName: frontmatter.authorName,
-      authorPhoto: frontmatter.authorPhoto,
-      content,
-      readTime: readTime || frontmatter.readTime,
-      wordCount: wordCount,
-      pdfUrl: frontmatter.pdfUrl,
-      audioUrl: frontmatter.audioUrl,
-      imageCaption: frontmatter.imageCaption,
-    });
+    await existing.update(dataToSave);
   } else {
     await BlogPost.create({
       slug,
-      title: frontmatter.title,
-      description: frontmatter.description,
-      date: frontmatter.date,
-      thumbnail: frontmatter.thumbnail,
-      authorName: frontmatter.authorName,
-      authorPhoto: frontmatter.authorPhoto,
-      content,
-      readTime: readTime || frontmatter.readTime,
-      wordCount: wordCount,
-      pdfUrl: frontmatter.pdfUrl,
-      audioUrl: frontmatter.audioUrl,
-      imageCaption: frontmatter.imageCaption,
+      ...dataToSave,
     });
   }
 }

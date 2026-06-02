@@ -14,25 +14,28 @@ import { TableOfContents } from "@/components/table-of-contents";
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, lang } = await params;
   const page = await getBlogPost(slug);
 
   if (!page) notFound();
-  const caption = (page as any).imageCaption || "";
+  
+  const title = page.title[lang as 'fr'|'en'] || page.title.fr || page.title.en || "";
+  const description = page.description[lang as 'fr'|'en'] || page.description.fr || page.description.en || "";
+  const caption = page.imageCaption[lang as 'fr'|'en'] || page.imageCaption.fr || page.imageCaption.en || "";
 
   return {
-    title: page.title,
-    description: page.description,
+    title,
+    description,
     openGraph: {
       type: "article",
-      title: page.title,
-      description: page.description || "",
-      images: page.thumbnail ? [{ url: page.thumbnail, alt: caption || page.title }] : [],
+      title,
+      description: description || "",
+      images: page.thumbnail ? [{ url: page.thumbnail, alt: caption || title }] : [],
     },
     twitter: {
       card: "summary_large_image",
-      title: page.title,
-      description: page.description || "",
+      title,
+      description: description || "",
       images: page.thumbnail ? [page.thumbnail] : [],
     },
   };
@@ -72,8 +75,16 @@ export default async function BlogPost({ params }: PageProps) {
 
   const date = new Date(page.date);
   const formattedDate = formatDate(date, lang);
-  const caption = (page as any).imageCaption || "";
   
+  const title = page.title[lang as 'fr'|'en'] || page.title.fr || page.title.en || "";
+  const description = page.description[lang as 'fr'|'en'] || page.description.fr || page.description.en || "";
+  const caption = page.imageCaption[lang as 'fr'|'en'] || page.imageCaption.fr || page.imageCaption.en || "";
+  const readTime = page.readTime[lang as 'fr'|'en'] || page.readTime.fr || page.readTime.en || "";
+  const wordCount = page.wordCount[lang as 'fr'|'en'] || page.wordCount.fr || page.wordCount.en || 0;
+  const pdfUrl = page.pdfUrl[lang as 'fr'|'en'] || page.pdfUrl.fr || page.pdfUrl.en || "";
+  const audioUrl = page.audioUrl[lang as 'fr'|'en'] || page.audioUrl.fr || page.audioUrl.en || "";
+  const content = page.content[lang as 'fr'|'en'] || page.content.fr || page.content.en || "";
+
   const author = {
     name: (page as any).authorName || "Farid DANKO", // fallback to site creator
     position: lang === "fr" ? "Auteur" : "Author",
@@ -84,9 +95,9 @@ export default async function BlogPost({ params }: PageProps) {
   let isEditorJs = false;
   let renderedHtml = "";
   
-  if (page.content && (page.content.startsWith("{") || page.content.startsWith('{"'))) {
+  if (content && (content.startsWith("{") || content.startsWith('{"'))) {
     try {
-      const parsed = JSON.parse(page.content);
+      const parsed = JSON.parse(content);
       if (parsed && parsed.blocks && Array.isArray(parsed.blocks)) {
         isEditorJs = true;
         const parser = edjsParser(customParsers);
@@ -124,7 +135,7 @@ export default async function BlogPost({ params }: PageProps) {
 
             <div className="space-y-6">
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tighter text-balance leading-[0.9] uppercase">
-                {page.title}
+                {title}
               </h1>
 
               <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-4 border-t border-border/40">
@@ -138,21 +149,21 @@ export default async function BlogPost({ params }: PageProps) {
                 <time className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
                   {formattedDate}
                 </time>
-                {page.readTime && (
+                {readTime && (
                   <>
                     <span className="text-muted-foreground/40 hidden sm:inline">•</span>
                     <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
                       <Clock className="w-3.5 h-3.5" />
-                      {page.readTime}
+                      {readTime}
                     </span>
                   </>
                 )}
-                {page.wordCount && (
+                {wordCount && (
                   <>
                     <span className="text-muted-foreground/40 hidden sm:inline">•</span>
                     <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
                       <FileText className="w-3.5 h-3.5" />
-                      {page.wordCount} {lang === "fr" ? "mots" : "words"}
+                      {wordCount} {lang === "fr" ? "mots" : "words"}
                     </span>
                   </>
                 )}
@@ -166,7 +177,7 @@ export default async function BlogPost({ params }: PageProps) {
         <div className="grid lg:grid-cols-[1fr_300px] gap-12 lg:gap-20">
           <main className="space-y-12">
             {/* Audio Player Section */}
-            {page.audioUrl && (
+            {audioUrl && (
               <div className="bg-card/50 backdrop-blur-md border border-border/40 rounded-3xl p-6 flex flex-col sm:flex-row items-center gap-6 shadow-xl">
                 <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <Headphones className="w-6 h-6 text-primary" />
@@ -180,7 +191,7 @@ export default async function BlogPost({ params }: PageProps) {
                   </p>
                 </div>
                 <audio controls className="w-full sm:w-64 h-10 custom-audio-player">
-                  <source src={page.audioUrl} type="audio/mpeg" />
+                  <source src={audioUrl} type="audio/mpeg" />
                   Your browser does not support the audio element.
                 </audio>
               </div>
@@ -191,7 +202,7 @@ export default async function BlogPost({ params }: PageProps) {
                 <div className="relative rounded-3xl overflow-hidden border border-border/40 shadow-2xl group bg-muted/30">
                   <img
                     src={page.thumbnail}
-                    alt={page.title}
+                    alt={title}
                     className="w-full h-auto max-h-[700px] object-contain transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
@@ -211,7 +222,7 @@ export default async function BlogPost({ params }: PageProps) {
               {isEditorJs ? (
                 <div dangerouslySetInnerHTML={{ __html: renderedHtml }} />
               ) : (
-                <MDXRemote source={page.content} components={getMDXComponents()} />
+                <MDXRemote source={content} components={getMDXComponents()} />
               )}
             </div>
 
@@ -221,7 +232,7 @@ export default async function BlogPost({ params }: PageProps) {
           <aside className="hidden lg:block">
             <div className="sticky top-32 space-y-10">
               {/* PDF Download Button */}
-              {page.pdfUrl && (
+              {pdfUrl && (
                 <div className="p-6 rounded-3xl border border-border/40 bg-card shadow-lg space-y-4">
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded-xl bg-red-500/10 text-red-500">
@@ -235,7 +246,7 @@ export default async function BlogPost({ params }: PageProps) {
                       : "Download the full version of this article in PDF format for offline reading."}
                   </p>
                   <Button asChild className="w-full rounded-2xl h-12 bg-foreground text-background font-bold uppercase tracking-widest text-[10px] shadow-lg hover:opacity-90">
-                    <a href={page.pdfUrl} download target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
+                    <a href={pdfUrl} download target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
                       <Download className="w-4 h-4" />
                       {lang === "fr" ? "Télécharger le PDF" : "Download PDF"}
                     </a>

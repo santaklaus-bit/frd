@@ -60,7 +60,7 @@ export default async function AdminBlogPage() {
               {/* Title + slug */}
               <div className="min-w-0">
                 <p className="text-sm font-semibold tracking-tight truncate group-hover:text-foreground transition-colors">
-                  {post.title}
+                  {post.title.fr || post.title.en}
                 </p>
                 <div className="flex items-center gap-1 mt-0.5">
                   <Hash className="h-2.5 w-2.5 text-muted-foreground/50" />

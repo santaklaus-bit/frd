@@ -20,12 +20,16 @@ export default async function EditBlogPage({
     const initialData = {
       slug: post.slug,
       title: post.title,
-      description: post.description || "",
+      description: post.description,
       date: post.date,
       thumbnail: post.thumbnail || "",
       authorName: post.authorName || "Farid DANKO",
       authorPhoto: post.authorPhoto || "/farid-portrait.webp",
       content: post.content,
+      readTime: post.readTime,
+      pdfUrl: post.pdfUrl,
+      audioUrl: post.audioUrl,
+      imageCaption: post.imageCaption,
     };
 
     return <BlogForm initialData={initialData} />;

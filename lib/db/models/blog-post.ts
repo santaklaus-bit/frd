@@ -4,18 +4,26 @@ import sequelize from "../sequelize";
 export class BlogPost extends Model {
   public declare id: number;
   public declare slug: string;
-  public declare title: string;
-  public declare description: string;
+  public declare titleFr: string;
+  public declare titleEn: string;
+  public declare descriptionFr: string;
+  public declare descriptionEn: string;
   public declare date: string;
   public declare thumbnail: string;
   public declare authorName: string;
   public declare authorPhoto: string;
-  public declare content: string;
-  public declare readTime: string;
-  public declare wordCount: number;
-  public declare pdfUrl: string;
-  public declare audioUrl: string;
-  public declare imageCaption: string;
+  public declare contentFr: string;
+  public declare contentEn: string;
+  public declare readTimeFr: string;
+  public declare readTimeEn: string;
+  public declare wordCountFr: number;
+  public declare wordCountEn: number;
+  public declare pdfUrlFr: string;
+  public declare pdfUrlEn: string;
+  public declare audioUrlFr: string;
+  public declare audioUrlEn: string;
+  public declare imageCaptionFr: string;
+  public declare imageCaptionEn: string;
   public declare readonly createdAt: Date;
   public declare readonly updatedAt: Date;
 }
@@ -32,12 +40,21 @@ BlogPost.init(
       allowNull: false,
       unique: true,
     },
-    title: {
+    titleFr: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    description: {
+    titleEn: {
       type: DataTypes.STRING,
+      allowNull: false,
+    },
+    descriptionFr: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    descriptionEn: {
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
     date: {
       type: DataTypes.DATEONLY,
@@ -52,27 +69,51 @@ BlogPost.init(
     authorPhoto: {
       type: DataTypes.STRING,
     },
-    content: {
+    contentFr: {
       type: DataTypes.TEXT('long'),
-      allowNull: false,
+      allowNull: true,
     },
-    readTime: {
+    contentEn: {
+      type: DataTypes.TEXT('long'),
+      allowNull: true,
+    },
+    readTimeFr: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    wordCount: {
+    readTimeEn: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    wordCountFr: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    pdfUrl: {
+    wordCountEn: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    pdfUrlFr: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    audioUrl: {
+    pdfUrlEn: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-    imageCaption: {
+    audioUrlFr: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    audioUrlEn: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    imageCaptionFr: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    imageCaptionEn: {
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -82,3 +123,4 @@ BlogPost.init(
     modelName: "BlogPost",
   }
 );
+

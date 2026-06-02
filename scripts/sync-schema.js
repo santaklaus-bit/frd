@@ -176,6 +176,37 @@ async function run() {
       console.log('sync-schema: Added BlogPosts.imageCaption');
     }
 
+    // New bilingual columns for BlogPosts
+    const newBilingualCols = [
+      { name: 'titleFr', type: Sequelize.STRING, allowNull: false, defaultValue: '' },
+      { name: 'titleEn', type: Sequelize.STRING, allowNull: false, defaultValue: '' },
+      { name: 'descriptionFr', type: Sequelize.TEXT, allowNull: true },
+      { name: 'descriptionEn', type: Sequelize.TEXT, allowNull: true },
+      { name: 'contentFr', type: Sequelize.TEXT('long'), allowNull: true },
+      { name: 'contentEn', type: Sequelize.TEXT('long'), allowNull: true },
+      { name: 'pdfUrlFr', type: Sequelize.STRING, allowNull: true },
+      { name: 'pdfUrlEn', type: Sequelize.STRING, allowNull: true },
+      { name: 'audioUrlFr', type: Sequelize.STRING, allowNull: true },
+      { name: 'audioUrlEn', type: Sequelize.STRING, allowNull: true },
+      { name: 'imageCaptionFr', type: Sequelize.STRING, allowNull: true },
+      { name: 'imageCaptionEn', type: Sequelize.STRING, allowNull: true },
+      { name: 'readTimeFr', type: Sequelize.STRING, allowNull: true },
+      { name: 'readTimeEn', type: Sequelize.STRING, allowNull: true },
+      { name: 'wordCountFr', type: Sequelize.INTEGER, allowNull: true },
+      { name: 'wordCountEn', type: Sequelize.INTEGER, allowNull: true },
+    ];
+
+    for (const col of newBilingualCols) {
+      if (!blogCols[col.name]) {
+        await qi.addColumn('BlogPosts', col.name, {
+          type: col.type,
+          allowNull: col.allowNull,
+          defaultValue: col.defaultValue
+        });
+        console.log(`sync-schema: Added BlogPosts.${col.name}`);
+      }
+    }
+
     console.log('Schema sync completed successfully.');
     process.exit(0);
   } catch (error) {
