@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* source.config.ts ./
-RUN corepack enable pnpm && pnpm i
+RUN npm install
 
 # Copy everything else
 COPY . .
