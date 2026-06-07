@@ -7,6 +7,7 @@ import path from "path";
 
 export async function createOrUpdateBlogPost(formData: FormData) {
   const slug = formData.get("slug") as string;
+  const slugEn = (formData.get("slugEn") as string) || slug;
   const titleFr = formData.get("titleFr") as string;
   const titleEn = formData.get("titleEn") as string;
   const descriptionFr = formData.get("descriptionFr") as string;
@@ -71,7 +72,7 @@ export async function createOrUpdateBlogPost(formData: FormData) {
   const content = { fr: contentFr, en: contentEn };
   const readTime = { fr: readTimeFr, en: readTimeEn };
 
-  await saveBlogPost(slug, frontmatter, content, readTime);
+  await saveBlogPost(slug, slugEn, frontmatter, content, readTime);
   revalidatePath("/admin/blog");
   revalidatePath("/[lang]/blog", "layout");
 }

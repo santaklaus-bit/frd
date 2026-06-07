@@ -4,6 +4,7 @@ import sequelize from "../sequelize";
 export class BlogPost extends Model {
   public declare id: number;
   public declare slug: string;
+  public declare slugEn: string;
   public declare titleFr: string;
   public declare titleEn: string;
   public declare descriptionFr: string;
@@ -38,6 +39,11 @@ BlogPost.init(
     slug: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
+    },
+    slugEn: {
+      type: DataTypes.STRING,
+      allowNull: true,
       unique: true,
     },
     titleFr: {

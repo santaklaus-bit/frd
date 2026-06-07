@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
       authorPhoto: "/farid-portrait.webp",
     };
 
-    await saveBlogPost(slug, frontmatter, normalize(content));
+    await saveBlogPost(slug, undefined, frontmatter, normalize(content));
 
     return NextResponse.json(
       { success: true, slug },

@@ -12,6 +12,8 @@
     "db:setup": "npx sequelize-cli db:create || true && npx sequelize-cli db:migrate && node scripts/sync-schema.js && npx sequelize-cli db:seed:all || true"
   },
   "dependencies": {
+    "@editorjs/checklist": "^1.6.0",
+    "@editorjs/code": "^2.9.4",
     "@editorjs/delimiter": "^1.4.2",
     "@editorjs/editorjs": "^2.31.6",
     "@editorjs/embed": "^2.8.0",
@@ -23,6 +25,8 @@
     "@editorjs/marker": "^1.4.0",
     "@editorjs/paragraph": "^2.11.7",
     "@editorjs/quote": "^2.7.6",
+    "@editorjs/table": "^2.4.5",
+    "@editorjs/warning": "^1.4.1",
     "@google-analytics/data": "^5.2.1",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",

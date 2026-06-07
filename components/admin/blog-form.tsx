@@ -72,6 +72,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
   const [audioUrlFr, setAudioUrlFr] = useState(initialData?.audioUrl?.fr || "");
   const [audioUrlEn, setAudioUrlEn] = useState(initialData?.audioUrl?.en || "");
   const [slug, setSlug] = useState(initialData?.slug || "");
+  const [slugEn, setSlugEn] = useState((initialData as any)?.slugEn || "");
 
   const generateSlug = (text: string) => {
     return text
@@ -99,6 +100,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
       formData.set("audioUrlFr", audioUrlFr);
       formData.set("audioUrlEn", audioUrlEn);
       formData.set("slug", slug);
+      formData.set("slugEn", slugEn || slug);
 
       await createOrUpdateBlogPost(formData);
       toast.success("Article enregistré avec succès !");
@@ -239,6 +241,11 @@ export function BlogForm({ initialData }: BlogFormProps) {
                   defaultValue={initialData?.title?.en}
                   placeholder="The future of social entrepreneurship..."
                   required
+                  onChange={(e) => {
+                    if (!initialData && !slugEn) {
+                      setSlugEn(generateSlug(e.target.value));
+                    }
+                  }}
                   className="rounded-xl border-border/40 bg-background text-md font-medium h-11"
                 />
               </Field>
@@ -322,7 +329,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
               </h2>
 
               <Field
-                label="Slug (URL)"
+                label="Slug FR (URL)"
                 hint={initialData ? "Lecture seule" : "Unique"}
               >
                 <Input
@@ -332,6 +339,19 @@ export function BlogForm({ initialData }: BlogFormProps) {
                   placeholder="mon-article-seo"
                   required
                   readOnly={!!initialData}
+                  className="rounded-xl border-border/40 bg-background font-mono text-xs"
+                />
+              </Field>
+
+              <Field
+                label="Slug EN (URL anglais)"
+                hint={initialData ? "Modifiable" : "Auto"}
+              >
+                <Input
+                  name="slugEn"
+                  value={slugEn}
+                  onChange={(e) => setSlugEn(generateSlug(e.target.value))}
+                  placeholder="my-seo-article"
                   className="rounded-xl border-border/40 bg-background font-mono text-xs"
                 />
               </Field>

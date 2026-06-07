@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { getBlogPost } from "@/lib/content-manager";
+import { getBlogPostByAnySlug } from "@/lib/content-manager";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getMDXComponents } from "@/mdx-components";
 import { TableOfContents } from "@/components/table-of-contents";
@@ -15,7 +15,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug, lang } = await params;
-  const page = await getBlogPost(slug);
+  const page = await getBlogPostByAnySlug(slug);
 
   if (!page) notFound();
   
@@ -67,7 +67,7 @@ export default async function BlogPost({ params }: PageProps) {
     notFound();
   }
 
-  const page = await getBlogPost(slug);
+  const page = await getBlogPostByAnySlug(slug);
 
   if (!page) {
     notFound();

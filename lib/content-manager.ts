@@ -21,6 +21,7 @@ export async function getBlogPosts() {
     const data = p.toJSON() as any;
     return {
       slug: data.slug,
+      slugEn: data.slugEn || data.slug,
       title: { fr: data.titleFr, en: data.titleEn },
       description: { fr: data.descriptionFr, en: data.descriptionEn },
       date: data.date,
@@ -43,6 +44,7 @@ export async function getBlogPost(slug: string) {
   const data = post.toJSON() as any;
   return {
     slug: data.slug,
+    slugEn: data.slugEn || data.slug,
     title: { fr: data.titleFr, en: data.titleEn },
     description: { fr: data.descriptionFr, en: data.descriptionEn },
     date: data.date,
@@ -60,6 +62,7 @@ export async function getBlogPost(slug: string) {
 
 export async function saveBlogPost(
   slug: string,
+  slugEn: string | null | undefined,
   frontmatter: {
     title: { fr: string; en: string };
     description: { fr: string; en: string };
@@ -82,6 +85,7 @@ export async function saveBlogPost(
   const wordCountEn = content.en?.replace(/<[^>]*>?/gm, "").trim().split(/\s+/).filter(Boolean).length || 0;
 
   const dataToSave = {
+    slugEn: slugEn || null,
     titleFr: frontmatter.title?.fr || "",
     titleEn: frontmatter.title?.en || "",
     descriptionFr: frontmatter.description?.fr || "",
@@ -112,6 +116,38 @@ export async function saveBlogPost(
       ...dataToSave,
     });
   }
+}
+
+/**
+ * Look up a post by either its FR slug or EN slug.
+ * Used by the [lang]/blog/[slug] page to support bilingual URLs.
+ */
+export async function getBlogPostByAnySlug(slug: string) {
+  // Try FR slug first
+  let post = await BlogPost.findOne({ where: { slug } });
+  // Then try EN slug
+  if (!post) {
+    const { Op } = await import("sequelize");
+    post = await BlogPost.findOne({ where: { slugEn: slug } });
+  }
+  if (!post) return null;
+  const data = post.toJSON() as any;
+  return {
+    slug: data.slug,
+    slugEn: data.slugEn || data.slug,
+    title: { fr: data.titleFr, en: data.titleEn },
+    description: { fr: data.descriptionFr, en: data.descriptionEn },
+    date: data.date,
+    thumbnail: data.thumbnail,
+    authorName: data.authorName,
+    authorPhoto: data.authorPhoto,
+    content: { fr: data.contentFr || "", en: data.contentEn || "" },
+    readTime: { fr: data.readTimeFr || "", en: data.readTimeEn || "" },
+    wordCount: { fr: data.wordCountFr || 0, en: data.wordCountEn || 0 },
+    pdfUrl: { fr: data.pdfUrlFr || "", en: data.pdfUrlEn || "" },
+    audioUrl: { fr: data.audioUrlFr || "", en: data.audioUrlEn || "" },
+    imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
+  };
 }
 
 export async function deleteBlogPost(slug: string) {

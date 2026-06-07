@@ -105,7 +105,7 @@ export default async function AdminContactPage() {
                     <MessageSquare className="h-3 w-3" />
                     Message
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 whitespace-pre-wrap">
+                  <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
                     {msg.message}
                   </p>
                 </div>

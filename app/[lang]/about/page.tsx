@@ -37,7 +37,7 @@ export default async function AboutPage({
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tighter uppercase leading-[0.9] text-balance">
                 {dict.about.title}
               </h1>
-              <div className="space-y-4 md:space-y-6 lg:space-y-8 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed font-normal text-muted-foreground">
+              <div className="mt-10 md:mt-14 space-y-4 md:space-y-6 lg:space-y-8 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed font-normal text-muted-foreground">
                 <p className="text-foreground">{dict.about.content1}</p>
                 <p>{dict.about.content2}</p>
                 <p>{dict.about.content3}</p>
