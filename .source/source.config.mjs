@@ -3,7 +3,7 @@ import {
   defineConfig,
   defineDocs,
   frontmatterSchema
-} from "fumadocs-mdx/config";
+} from "fumadocs-mdx/config/zod-3";
 import { z } from "zod";
 var source_config_default = defineConfig({
   lastModifiedTime: "git",
