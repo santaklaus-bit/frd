@@ -178,6 +178,7 @@ async function run() {
 
     // New bilingual columns for BlogPosts
     const newBilingualCols = [
+      { name: 'slugEn', type: Sequelize.STRING, allowNull: true },
       { name: 'titleFr', type: Sequelize.STRING, allowNull: false, defaultValue: '' },
       { name: 'titleEn', type: Sequelize.STRING, allowNull: false, defaultValue: '' },
       { name: 'descriptionFr', type: Sequelize.TEXT, allowNull: true },
