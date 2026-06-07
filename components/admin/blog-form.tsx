@@ -182,6 +182,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                 </div>
                 <div className="p-0">
                   <WysiwygEditor
+                    holder="editor-fr"
                     value={contentFr}
                     onChange={setContentFr}
                     placeholder="Rédigez en français..."
@@ -271,6 +272,7 @@ export function BlogForm({ initialData }: BlogFormProps) {
                 </div>
                 <div className="p-0">
                   <WysiwygEditor
+                    holder="editor-en"
                     value={contentEn}
                     onChange={setContentEn}
                     placeholder="Write in English..."
