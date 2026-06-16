@@ -7,6 +7,11 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   transpilePackages: ["geist"],
   serverExternalPackages: ["sequelize", "mysql2", "sqlite3"],
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "50mb",
+    },
+  },
   async headers() {
     return [
       {
