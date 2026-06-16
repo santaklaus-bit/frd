@@ -88,6 +88,11 @@
     "success": "Thank you for subscribing!",
     "error": "An error occurred. Please try again."
   },
+  "footer": {
+    "tagline": "Developing people, strengthening organizations, mobilizing sustainable impact.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
   "seo": {
     "home": {
       "title": "Farid DANKO - Social Entrepreneur & Development Advisor",

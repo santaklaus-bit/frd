@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -29,28 +28,20 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
 
   return (
     <section
-      className="relative h-[90vh] flex items-center justify-center overflow-hidden border-b border-border/40"
+      className="relative h-[90vh] flex items-center justify-center overflow-hidden border-b border-border/40 bg-gradient-to-br from-white via-gray-50 to-gray-100 dark:from-black dark:via-gray-900 dark:to-gray-800"
       aria-label="Introduction"
     >
       <div className="absolute inset-0 z-0">
-        <Image
-          src="/hero-bg.webp"
-          alt="Hero Background"
-          fill
-          className="object-cover scale-y-[-1]"
-          priority
-        />
-        <div className="absolute inset-0 bg-black/60" />
         <FlickeringGrid
-          className="w-full h-full opacity-30"
+          className="w-full h-full opacity-20"
           squareSize={4}
           gridGap={6}
           color="#60A5FA"
-          maxOpacity={0.2}
-          flickerChance={0.03}
+          maxOpacity={0.15}
+          flickerChance={0.02}
         />
         {/* Radial Gradient Glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(96,165,250,0.05),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(96,165,250,0.03),transparent_50%)]" />
 
         {/* Large Decorative Text */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none overflow-hidden w-full text-center">
@@ -128,10 +119,10 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           <Link href={`/${lang}${dict.home.cta_href ?? '/about'}`}>
             <Button
               size="lg"
-              className="px-8 py-6 sm:px-12 sm:py-8 md:px-16 md:py-10 h-auto rounded-full text-sm sm:text-lg md:text-xl font-bold uppercase tracking-widest sm:tracking-widest hover:scale-105 hover:bg-white/90 hover:text-black transition-all shadow-xl sm:shadow-2xl bg-white text-black border-none group cursor-pointer"
+              className="px-6 py-4 sm:px-10 sm:py-5 md:px-12 md:py-6 h-auto rounded-full text-xs sm:text-sm md:text-base font-bold uppercase tracking-widest hover:scale-105 hover:bg-black/90 hover:text-white dark:hover:bg-white/90 dark:hover:text-black transition-all shadow-lg bg-black text-white dark:bg-white dark:text-black border-none group cursor-pointer"
             >
               <span className="truncate">{dict.home.cta}</span>
-              <ArrowRight className="ml-3 sm:ml-4 h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 group-hover:translate-x-1 sm:group-hover:translate-x-2 transition-transform shrink-0" />
+              <ArrowRight className="ml-2 sm:ml-3 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform shrink-0" />
             </Button>
           </Link>
         </motion.div>
