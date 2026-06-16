@@ -9,16 +9,19 @@ const staticDictionaries = {
 export const getDictionary = async (locale: string) => {
   const safeLocale = (locale === "en" || locale === "fr") ? locale : "fr";
 
+  // Always start with static dictionary as base
+  const staticDict = await staticDictionaries[safeLocale as keyof typeof staticDictionaries]();
+
   try {
-    // Try to get from database first
+    // Try to merge database values if they exist
     const dbDict = await getDbDictionary(safeLocale);
     if (dbDict && Object.keys(dbDict).length > 0) {
-      return dbDict;
+      return { ...staticDict, ...dbDict };
     }
   } catch (error) {
-    console.warn(`Failed to get dictionary from database for ${safeLocale}, falling back to static file:`, error);
+    console.warn(`Failed to get dictionary from database for ${safeLocale}, using static file:`, error);
   }
 
-  // Fallback to static JSON files
-  return staticDictionaries[safeLocale as keyof typeof staticDictionaries]();
+  // Return static dictionary
+  return staticDict;
 };
