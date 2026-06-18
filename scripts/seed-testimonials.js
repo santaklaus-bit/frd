@@ -1,5 +1,33 @@
-import { Testimonial } from "../lib/db/models/testimonial.ts";
-import sequelize from "../lib/db/sequelize.ts";
+'use strict';
+
+const { Sequelize } = require('sequelize');
+const configFile = require('../lib/db/config.json');
+const path = require('path');
+
+const env = process.env.NODE_ENV || 'development';
+const config = configFile[env];
+
+const dialect = (process.env.DB_DIALECT || config.dialect || 'mysql').toLowerCase();
+
+let sequelize;
+
+if (dialect === 'sqlite') {
+  const storage = process.env.DB_STORAGE || path.join(process.cwd(), 'lib/db/dev.sqlite');
+  sequelize = new Sequelize({ dialect: 'sqlite', storage, logging: false });
+} else {
+  const host = process.env.DB_HOST || config.host || '127.0.0.1';
+  const port = parseInt(process.env.DB_PORT || String(config.port) || '3306', 10);
+  const username = process.env.DB_USER || config.username || 'root';
+  const password = process.env.DB_PASSWORD ?? config.password ?? '';
+  const database = process.env.DB_NAME || config.database || 'farid_db';
+
+  sequelize = new Sequelize(database, username, password, {
+    host,
+    port,
+    dialect: 'mysql',
+    logging: false,
+  });
+}
 
 const testimonials = [
   {
@@ -81,6 +109,28 @@ async function seedTestimonials() {
     await sequelize.authenticate();
     console.log("✓ Database connection established");
 
+    // Define the Testimonial model
+    const Testimonial = sequelize.define('Testimonial', {
+      id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      nameFr: { type: Sequelize.STRING, allowNull: false },
+      nameEn: { type: Sequelize.STRING, allowNull: false },
+      roleFr: { type: Sequelize.STRING, allowNull: false },
+      roleEn: { type: Sequelize.STRING, allowNull: false },
+      contentFr: { type: Sequelize.TEXT, allowNull: false },
+      contentEn: { type: Sequelize.TEXT, allowNull: false },
+      image: { type: Sequelize.STRING, allowNull: true },
+      certified: { type: Sequelize.BOOLEAN, defaultValue: false },
+      rating: { type: Sequelize.INTEGER, defaultValue: 5 },
+      order: { type: Sequelize.INTEGER, defaultValue: 0 },
+    }, {
+      tableName: 'Testimonials',
+      timestamps: true,
+    });
+
     // Clear existing testimonials
     await Testimonial.destroy({ where: {} });
     console.log("✓ Cleared existing testimonials");
@@ -90,8 +140,9 @@ async function seedTestimonials() {
     console.log(`✓ Created ${testimonials.length} testimonials`);
 
     console.log("\n✅ Seeding complete!");
+    process.exit(0);
   } catch (error) {
-    console.error("❌ Error seeding testimonials:", error);
+    console.error("❌ Error seeding testimonials:", error.message);
     process.exit(1);
   } finally {
     await sequelize.close();
