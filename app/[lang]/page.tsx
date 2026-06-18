@@ -62,7 +62,7 @@ export default async function HomePage({
     href: `/${lang}/projects/${item.slug}`,
   }));
 
-  let testimonials = [];
+  let testimonials: any[] = [];
   try {
     testimonials = await getTestimonials();
   } catch (error) {
