@@ -6,8 +6,9 @@ import { ArrowRight, Zap, TrendingUp, Users, BookOpen, FileText, Target, Lightbu
 import { Button } from "@/components/ui/button";
 import { HeroSection } from "@/components/hero-section";
 import { getDictionary } from "@/lib/get-dictionary";
-import { getBlogPosts, getData } from "@/lib/content-manager";
+import { getBlogPosts, getData, getTestimonials } from "@/lib/content-manager";
 import { Newsletter } from "@/components/newsletter";
+import { TestimonialsSection } from "@/components/testimonials-section";
 import { Metadata } from "next";
 
 const formatDate = (date: Date, lang: string): string => {
@@ -60,6 +61,8 @@ export default async function HomePage({
     image: item.image || "/farid-portrait.webp",
     href: `/${lang}/projects/${item.slug}`,
   }));
+
+  const testimonials = await getTestimonials();
 
   const featuredProject = rawProjects.find((p: any) => p.isFeatured === true);
   const featuredProjectData = featuredProject ? {
@@ -333,6 +336,9 @@ export default async function HomePage({
       </section>
 
 
+
+      {/* ── 6. TESTIMONIALS ── */}
+      <TestimonialsSection testimonials={testimonials} lang={lang} />
 
       {/* Newsletter */}
       <Newsletter lang={lang} dict={dict} />

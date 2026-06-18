@@ -1,4 +1,4 @@
-import { BlogPost, Dictionary, Initiative, Production } from "./db/models";
+import { BlogPost, Dictionary, Initiative, Production, Testimonial } from "./db/models";
 
 // ============================================================================
 // BLOG POSTS
@@ -343,4 +343,71 @@ export async function getContactMessagesCount() {
 
 export async function getSubscribersCount() {
   return await Subscriber.count();
+}
+
+// ============================================================================
+// TESTIMONIALS
+// ============================================================================
+
+export async function getTestimonials() {
+  const testimonials = await Testimonial.findAll({
+    order: [["order", "ASC"]],
+  });
+  return testimonials.map((t) => {
+    const data = t.toJSON() as any;
+    return {
+      id: data.id,
+      name: { fr: data.nameFr, en: data.nameEn },
+      role: { fr: data.roleFr, en: data.roleEn },
+      content: { fr: data.contentFr, en: data.contentEn },
+      image: data.image,
+      certified: data.certified,
+      rating: data.rating,
+      order: data.order,
+    };
+  });
+}
+
+export async function saveTestimonial(
+  id: number | undefined,
+  data: {
+    name: { fr: string; en: string };
+    role: { fr: string; en: string };
+    content: { fr: string; en: string };
+    image?: string;
+    certified?: boolean;
+    rating?: number;
+    order?: number;
+  }
+) {
+  const testimonialData = {
+    nameFr: data.name.fr,
+    nameEn: data.name.en,
+    roleFr: data.role.fr,
+    roleEn: data.role.en,
+    contentFr: data.content.fr,
+    contentEn: data.content.en,
+    image: data.image || null,
+    certified: data.certified ?? false,
+    rating: data.rating ?? 5,
+    order: data.order ?? 0,
+  };
+
+  if (id) {
+    const testimonial = await Testimonial.findByPk(id);
+    if (testimonial) {
+      return await testimonial.update(testimonialData);
+    }
+  }
+
+  return await Testimonial.create(testimonialData);
+}
+
+export async function deleteTestimonial(id: number) {
+  const testimonial = await Testimonial.findByPk(id);
+  if (testimonial) {
+    await testimonial.destroy();
+    return true;
+  }
+  return false;
 }

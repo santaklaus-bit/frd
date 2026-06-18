@@ -12,6 +12,7 @@ import {
   BarChart3,
   Mail,
   Users,
+  MessageSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import "@/app/globals.css";
@@ -25,6 +26,7 @@ const sidebarItems = [
   { href: "/admin/blog", label: "Articles", icon: FileText },
   { href: "/admin/contacts", label: "Messages", icon: Mail },
   { href: "/admin/newsletter", label: "Newsletter", icon: Users },
+  { href: "/admin/testimonials", label: "Testimonials", icon: MessageSquare },
   { href: "/admin/content", label: "Contenu i18n", icon: Globe },
   { href: "/admin/expertise", label: "Expertise", icon: Target },
   { href: "/admin/initiatives", label: "Initiatives", icon: Target },
@@ -39,11 +41,11 @@ const sidebarGroups = [
   },
   {
     label: "Contenu",
-    items: sidebarItems.slice(2, 5),
+    items: sidebarItems.slice(2, 6),
   },
   {
     label: "Site",
-    items: sidebarItems.slice(5),
+    items: sidebarItems.slice(6),
   },
 ];
 
