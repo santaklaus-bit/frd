@@ -218,48 +218,53 @@ export interface ProjectItem {
 export async function getData(filename: "expertise" | "initiatives"): Promise<ExpertiseItem[]>;
 export async function getData(filename: "projects" | "production"): Promise<ProjectItem[]>;
 export async function getData(filename: string): Promise<any[]> {
-  if (filename === "expertise" || filename === "initiatives") {
-    const expertiseItems = await Initiative.findAll({ order: [["order", "ASC"]] });
-    // Transform back to JSON structure expected by the frontend
-    return expertiseItems.map((i) => {
-      const data = i.toJSON();
-      return {
-        slug: data.slug,
-        title: { fr: data.titleFr, en: data.titleEn },
-        description: { fr: data.descriptionFr, en: data.descriptionEn },
-        content: { fr: data.contentFr || "", en: data.contentEn || "" },
-        details: { fr: data.detailsFr, en: data.detailsEn },
-        category: { fr: data.categoryFr, en: data.categoryEn },
-        image: data.image,
-        imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
-        link: data.link,
-        projectSlugs: data.projectSlugs ? JSON.parse(data.projectSlugs) : [],
-      };
-    });
-  }
+  try {
+    if (filename === "expertise" || filename === "initiatives") {
+      const expertiseItems = await Initiative.findAll({ order: [["order", "ASC"]] });
+      // Transform back to JSON structure expected by the frontend
+      return expertiseItems.map((i) => {
+        const data = i.toJSON();
+        return {
+          slug: data.slug,
+          title: { fr: data.titleFr, en: data.titleEn },
+          description: { fr: data.descriptionFr, en: data.descriptionEn },
+          content: { fr: data.contentFr || "", en: data.contentEn || "" },
+          details: { fr: data.detailsFr, en: data.detailsEn },
+          category: { fr: data.categoryFr, en: data.categoryEn },
+          image: data.image,
+          imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
+          link: data.link,
+          projectSlugs: data.projectSlugs ? JSON.parse(data.projectSlugs) : [],
+        };
+      });
+    }
 
-  if (filename === "projects" || filename === "production") {
-    const projects = await Production.findAll({ order: [["order", "ASC"]] });
-    // Transform back to JSON
-    return projects.map((p) => {
-      const data = p.toJSON();
-      return {
-        slug: data.slug,
-        title: { fr: data.titleFr, en: data.titleEn },
-        description: { fr: data.descriptionFr, en: data.descriptionEn },
-        category: { fr: data.categoryFr, en: data.categoryEn },
-        details: { fr: data.detailsFr, en: data.detailsEn },
-        image: data.image,
-        imageEn: data.imageEn,
-        imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
-        href: data.href,
-        pdfUrl: data.pdfUrl,
-        isFeatured: data.isFeatured,
-      };
-    });
-  }
+    if (filename === "projects" || filename === "production") {
+      const projects = await Production.findAll({ order: [["order", "ASC"]] });
+      // Transform back to JSON
+      return projects.map((p) => {
+        const data = p.toJSON();
+        return {
+          slug: data.slug,
+          title: { fr: data.titleFr, en: data.titleEn },
+          description: { fr: data.descriptionFr, en: data.descriptionEn },
+          category: { fr: data.categoryFr, en: data.categoryEn },
+          details: { fr: data.detailsFr, en: data.detailsEn },
+          image: data.image,
+          imageEn: data.imageEn,
+          imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
+          href: data.href,
+          pdfUrl: data.pdfUrl,
+          isFeatured: data.isFeatured,
+        };
+      });
+    }
 
-  return [];
+    return [];
+  } catch (error) {
+    console.warn("Could not load data:", (error as any).message);
+    return [];
+  }
 }
 
 export async function saveData(filename: "expertise" | "initiatives", data: ExpertiseItem[]): Promise<void>;
