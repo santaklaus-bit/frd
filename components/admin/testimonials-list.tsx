@@ -31,7 +31,7 @@ export default function TestimonialsList({ initialData }: { initialData: Testimo
   };
 
   const handleSave = async () => {
-    if (!editData) return;
+    if (!editData || editingId === null) return;
 
     setLoading(true);
     try {
