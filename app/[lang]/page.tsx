@@ -62,7 +62,12 @@ export default async function HomePage({
     href: `/${lang}/projects/${item.slug}`,
   }));
 
-  const testimonials = await getTestimonials();
+  let testimonials = [];
+  try {
+    testimonials = await getTestimonials();
+  } catch (error) {
+    console.warn("Testimonials unavailable:", (error as any).message);
+  }
 
   const featuredProject = rawProjects.find((p: any) => p.isFeatured === true);
   const featuredProjectData = featuredProject ? {
