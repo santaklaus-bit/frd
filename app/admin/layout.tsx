@@ -27,7 +27,9 @@ const sidebarItems = [
   { href: "/admin/newsletter", label: "Newsletter", icon: Users },
   { href: "/admin/content", label: "Contenu i18n", icon: Globe },
   { href: "/admin/expertise", label: "Expertise", icon: Target },
+  { href: "/admin/initiatives", label: "Initiatives", icon: Target },
   { href: "/admin/projects", label: "Projets", icon: Video },
+  { href: "/admin/production", label: "Production", icon: Video },
 ];
 
 const sidebarGroups = [
