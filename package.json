@@ -5,11 +5,13 @@
   "scripts": {
     "build:config": "esbuild source.config.ts --bundle --format=esm --outfile=.source/source.config.mjs --platform=node --external:fumadocs-mdx/config --external:zod",
     "dev": "fumadocs-mdx && npm run build:config && next dev --turbopack",
-    "build": "fumadocs-mdx && npm run build:config && next build",
-    "start": "next start",
+    "build": "fumadocs-mdx && npm run build:config && next build && npm run db:init:all",
+    "start": "npm run db:init:all && next start",
     "lint": "next lint",
     "postinstall": "fumadocs-mdx && npm run build:config",
-    "db:setup": "npx sequelize-cli db:create || true && npx sequelize-cli db:migrate && node scripts/sync-schema.js && npx sequelize-cli db:seed:all || true"
+    "db:setup": "npx sequelize-cli db:create || true && npx sequelize-cli db:migrate && node scripts/sync-schema.js && npx sequelize-cli db:seed:all || true",
+    "db:init:testimonials": "node scripts/create-testimonials-table.js || true",
+    "db:init:all": "npm run db:setup && npm run db:init:testimonials"
   },
   "dependencies": {
     "@editorjs/checklist": "^1.6.0",
