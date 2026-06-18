@@ -14,9 +14,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const dict = await getDictionary(lang as "en" | "fr");
+  const defaultTitle = lang === "fr" ? "Expertise - Farid DANKO" : "Expertise - Farid DANKO";
+  const defaultDesc = lang === "fr"
+    ? "Découvrez l'expertise de Farid Danko"
+    : "Discover Farid Danko's expertise";
+
   return {
-    title: dict.seo.expertise.title,
-    description: dict.seo.expertise.description,
+    title: (dict as any)?.seo?.expertise?.title || defaultTitle,
+    description: (dict as any)?.seo?.expertise?.description || defaultDesc,
     alternates: { canonical: `/${lang}/expertise` },
   };
 }

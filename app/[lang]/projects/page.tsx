@@ -15,10 +15,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const dict = await getDictionary(lang as "en" | "fr");
+  const defaultTitle = lang === "fr" ? "Projets - Farid DANKO" : "Projects - Farid DANKO";
+  const defaultDesc = lang === "fr"
+    ? "Découvrez les projets de Farid Danko"
+    : "Discover Farid Danko's projects";
 
   return {
-    title: dict.seo.projects.title,
-    description: dict.seo.projects.description,
+    title: (dict as any)?.seo?.projects?.title || defaultTitle,
+    description: (dict as any)?.seo?.projects?.description || defaultDesc,
     alternates: {
       canonical: `/${lang}/projects`,
     },
