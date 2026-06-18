@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { updateDictionary } from "@/app/actions/content";
-import { Save, Search, ChevronDown, ChevronRight, Globe, CheckCircle2, Loader2 } from "lucide-react";
+import { Save, Search, ChevronDown, ChevronRight, Globe, CheckCircle2, Loader2, Menu, X } from "lucide-react";
 import { toast } from "sonner";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -34,7 +34,7 @@ function groupBySection(fields: FieldPath[]): Record<string, FieldPath[]> {
 
 const SECTION_LABELS: Record<string, string> = {
   nav: "🧭 Navigation",
-  hero: "🏠 Page d'accueil",
+  home: "🏠 Accueil",
   about: "👤 À propos",
   expertise: "💡 Expertise",
   projects: "🗂 Projets",
@@ -159,6 +159,9 @@ export default function DictionaryEditor({
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const currentData = lang === "fr" ? frData : enData;
 
@@ -199,6 +202,11 @@ export default function DictionaryEditor({
     }
   };
 
+  const scrollToSection = (section: string) => {
+    setActiveSection(section);
+    sectionRefs.current[section]?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const fields = flattenObject(currentData);
   const grouped = groupBySection(fields);
   const searchResultCount = search
@@ -210,82 +218,140 @@ export default function DictionaryEditor({
       ).length
     : null;
 
+  const sections = Object.keys(grouped).sort();
+
   return (
-    <div className="space-y-8 pb-24">
-      {/* Header */}
-      <div className="flex items-end justify-between pb-6 border-b border-border/50">
-        <div className="space-y-1">
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-            Contenu du site
-          </p>
-          <h1 className="text-4xl font-semibold tracking-tight">Textes & Traductions</h1>
-          <p className="text-sm text-muted-foreground pt-1">
-            Modifiez les textes affichés sur le site pour chaque langue.
-          </p>
-        </div>
-
-        {/* Lang switcher */}
-        <div className="flex items-center gap-1 p-1 bg-muted rounded-2xl">
-          <button
-            onClick={() => { setLang("fr"); setSaved(false); }}
-            className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold transition-all ${
-              lang === "fr"
-                ? "bg-foreground text-background shadow"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            🇫🇷 Français
-          </button>
-          <button
-            onClick={() => { setLang("en"); setSaved(false); }}
-            className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold transition-all ${
-              lang === "en"
-                ? "bg-foreground text-background shadow"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            🇬🇧 English
-          </button>
-        </div>
-      </div>
-
-      {/* Explainer banner */}
-      <div className="flex items-start gap-4 p-4 rounded-2xl border border-border/40 bg-muted/20">
-        <Globe className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
-        <div className="text-sm text-muted-foreground leading-relaxed">
-          Vous modifiez la version <strong className="text-foreground">{lang === "fr" ? "française 🇫🇷" : "anglaise 🇬🇧"}</strong> du site.
-          Les sections ci-dessous correspondent aux différentes pages. Cliquez sur une section pour la dérouler,
-          modifiez le texte, puis cliquez sur <strong className="text-foreground">Enregistrer</strong>.
-        </div>
-      </div>
-
-      {/* Search */}
-      <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Rechercher un texte ou une section..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="pl-11 h-12 rounded-2xl border-border/40"
-        />
-        {searchResultCount !== null && (
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
-            {searchResultCount} résultat{searchResultCount !== 1 ? "s" : ""}
-          </span>
-        )}
-      </div>
-
-      {/* Sections */}
-      <div className="space-y-3">
-        {Object.entries(grouped).map(([section, sectionFields]) => (
-          <SectionBlock
-            key={`${lang}-${section}`}
-            title={SECTION_LABELS[section] || `📁 ${section}`}
-            fields={sectionFields}
-            search={search}
-            onUpdate={handleUpdate}
+    <div className="flex h-screen bg-background overflow-hidden">
+      {/* Sidebar */}
+      <div
+        className={`${
+          sidebarOpen ? "w-64" : "w-0"
+        } border-r border-border/40 bg-muted/30 overflow-y-auto transition-all duration-300 flex-shrink-0`}
+      >
+        <div className="sticky top-0 z-10 bg-muted/50 backdrop-blur-xl border-b border-border/40 p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Sections</h3>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="p-1 hover:bg-muted rounded-lg transition-colors"
+            >
+              <X className="h-4 w-4 text-muted-foreground" />
+            </button>
+          </div>
+          <Input
+            placeholder="Filtrer..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="h-9 text-xs rounded-lg border-border/40"
           />
-        ))}
+        </div>
+        <nav className="p-2 space-y-1">
+          {sections.map((section) => {
+            const label = SECTION_LABELS[section] || `📁 ${section}`;
+            const visible = !search || label.toLowerCase().includes(search.toLowerCase()) ||
+              grouped[section]?.some(f =>
+                f.path.toLowerCase().includes(search.toLowerCase()) ||
+                f.value.toLowerCase().includes(search.toLowerCase())
+              );
+
+            if (!visible) return null;
+
+            return (
+              <button
+                key={section}
+                onClick={() => scrollToSection(section)}
+                className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-all truncate ${
+                  activeSection === section
+                    ? "bg-foreground text-background shadow-sm"
+                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                }`}
+                title={label}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between gap-4 px-6 py-4 border-b border-border/50 bg-background/95 backdrop-blur-xl sticky top-0 z-20">
+          <div className="flex items-center gap-4 flex-1">
+            {!sidebarOpen && (
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="p-2 hover:bg-muted rounded-lg transition-colors"
+              >
+                <Menu className="h-5 w-5 text-muted-foreground" />
+              </button>
+            )}
+            <div className="space-y-0.5">
+              <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                Contenu du site
+              </p>
+              <h1 className="text-2xl font-semibold">Textes & Traductions</h1>
+            </div>
+          </div>
+
+          {/* Lang switcher */}
+          <div className="flex items-center gap-1 p-1 bg-muted rounded-2xl">
+            <button
+              onClick={() => { setLang("fr"); setSaved(false); setActiveSection(null); }}
+              className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold transition-all ${
+                lang === "fr"
+                  ? "bg-foreground text-background shadow"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              🇫🇷 FR
+            </button>
+            <button
+              onClick={() => { setLang("en"); setSaved(false); setActiveSection(null); }}
+              className={`flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-bold transition-all ${
+                lang === "en"
+                  ? "bg-foreground text-background shadow"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              🇬🇧 EN
+            </button>
+          </div>
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="max-w-4xl mx-auto px-6 py-8 space-y-4">
+            {/* Explainer */}
+            <div className="flex items-start gap-3 p-4 rounded-xl border border-border/40 bg-muted/20 mb-6">
+              <Globe className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+              <div className="text-sm text-muted-foreground">
+                Vous modifiez la version <strong className="text-foreground">{lang === "fr" ? "française" : "anglaise"}</strong>.
+                Utilisez la barre latérale pour naviguer entre les sections.
+              </div>
+            </div>
+
+            {/* Sections */}
+            {sections.map((section) => (
+              <div
+                key={`${lang}-${section}`}
+                ref={(el) => {
+                  if (el) sectionRefs.current[section] = el;
+                }}
+              >
+                <SectionBlock
+                  title={SECTION_LABELS[section] || `📁 ${section}`}
+                  fields={grouped[section]}
+                  search={search}
+                  onUpdate={handleUpdate}
+                />
+              </div>
+            ))}
+
+            <div className="h-24" />
+          </div>
+        </div>
       </div>
 
       {/* Sticky save bar */}
@@ -312,7 +378,7 @@ export default function DictionaryEditor({
           ) : (
             <>
               <Save className="mr-2 h-4 w-4" />
-              Enregistrer les modifications
+              Enregistrer
             </>
           )}
         </Button>

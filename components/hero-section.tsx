@@ -43,18 +43,6 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
         {/* Radial Gradient Glow */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,0,0,0.02),transparent_50%)]" />
 
-        {/* Large Decorative Text */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none overflow-hidden w-full text-center">
-          <motion.h2
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.08 }}
-            transition={{ duration: 2 }}
-            className="text-[25vw] font-serif font-bold uppercase tracking-tighter whitespace-nowrap leading-none text-black"
-          >
-            FARID DANKO
-          </motion.h2>
-        </div>
-
         {/* Floating Decorative Elements */}
         {isClient && (
           <div className="absolute inset-0 overflow-hidden pointer-events-none">

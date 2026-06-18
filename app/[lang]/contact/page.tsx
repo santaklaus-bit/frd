@@ -10,13 +10,6 @@ const XIconLogo = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// ResearchGate Icon
-const ResearchGateIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
-    <path d="M19.586 0H4.414A4.414 4.414 0 0 0 0 4.414v15.172A4.414 4.414 0 0 0 4.414 24h15.172A4.414 4.414 0 0 0 24 19.586V4.414A4.414 4.414 0 0 0 19.586 0zm-4.172 17.016h-1.93v-3.57h-1.969v3.57H9.586V7.008h1.929v4.5h1.969v-4.5h1.93v10.008zm1.43-5.016a2.883 2.883 0 1 1 0-5.766 2.883 2.883 0 0 1 0 5.766zm0-4.383a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
-  </svg>
-);
-
 // Medium Icon
 const MediumIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -62,11 +55,6 @@ export default async function ContactPage({
       href: "https://www.linkedin.com/in/monsieurdanko/",
       icon: Linkedin,
       label: "LinkedIn",
-    },
-    {
-      href: "https://www.researchgate.net/profile/Farid-Danko",
-      icon: ResearchGateIcon,
-      label: "ResearchGate",
     },
     {
       href: "https://medium.com/@monsieurdanko",

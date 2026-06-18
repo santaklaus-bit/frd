@@ -18,13 +18,6 @@ const MediumIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-// Custom ResearchGate Icon
-const ResearchGateIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
-    <path d="M19.586 0c-.818 0-1.508.19-2.073.565-.563.377-.97.936-1.213 1.68a12.148 12.148 0 0 0-.198 3.284l.012.23c-2.603.005-4.806.567-6.512 1.677C7.547 8.547 6.5 10.177 6.5 12.5c0 2.322 1.047 3.953 3.102 5.064 1.706 1.11 3.909 1.672 6.512 1.677l-.012.23a12.148 12.148 0 0 0 .198 3.284c.243.744.65 1.303 1.213 1.68.565.375 1.255.565 2.073.565.818 0 1.508-.19 2.073-.565.563-.377.97-.936 1.213-1.68a12.148 12.148 0 0 0 .198-3.284l-.012-.23H24V12.5h-1.94l.012-.23a12.148 12.148 0 0 0-.198-3.284c-.243-.744-.65-1.303-1.213-1.68C20.097.19 19.407 0 18.586 0Zm.003 2.003c.454 0 .788.115 1.006.345.217.23.38.6.48 1.11.099.51.135 1.163.109 1.96l-.028.582H17.03l-.028-.582c-.026-.797.01-1.45.11-1.96.099-.51.262-.88.48-1.11.217-.23.55-.345 1.006-.345ZM12 12.5c0-1.51.7-2.67 2.11-3.49 1.268-.736 2.964-1.128 5.046-1.14v5.269H24v.722H19.156v5.269c-2.082-.012-3.778-.404-5.046-1.14C12.7 17.17 12 16.01 12 14.5Zm6.586 9.497c-.454 0-.788-.115-1.006-.345-.217-.23-.38-.6-.48-1.11-.099-.51-.135-1.163-.109-1.96l.028-.582h3.134l.028.582c.026.797-.01 1.45-.11 1.96-.099.51-.262.88-.48 1.11-.217.23-.55.345-1.006.345Z" />
-  </svg>
-);
-
 // Custom TikTok Icon Component
 const TikTokIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -48,11 +41,6 @@ export function SiteNav({ lang }: { lang: "en" | "fr" }) {
       href: "https://www.linkedin.com/in/monsieurdanko/",
       icon: Linkedin,
       label: "LinkedIn",
-    },
-    {
-      href: "https://www.researchgate.net/profile/Farid-Danko",
-      icon: ResearchGateIcon,
-      label: "ResearchGate",
     },
     {
       href: "https://medium.com/@monsieurdanko",
