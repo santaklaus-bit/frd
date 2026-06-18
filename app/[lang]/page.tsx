@@ -338,7 +338,7 @@ export default async function HomePage({
 
 
       {/* ── 6. TESTIMONIALS ── */}
-      <TestimonialsSection testimonials={testimonials} lang={lang} />
+      <TestimonialsSection testimonials={testimonials} lang={lang as "en" | "fr"} />
 
       {/* Newsletter */}
       <Newsletter lang={lang} dict={dict} />
