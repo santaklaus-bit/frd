@@ -350,22 +350,28 @@ export async function getSubscribersCount() {
 // ============================================================================
 
 export async function getTestimonials() {
-  const testimonials = await Testimonial.findAll({
-    order: [["order", "ASC"]],
-  });
-  return testimonials.map((t) => {
-    const data = t.toJSON() as any;
-    return {
-      id: data.id,
-      name: { fr: data.nameFr, en: data.nameEn },
-      role: { fr: data.roleFr, en: data.roleEn },
-      content: { fr: data.contentFr, en: data.contentEn },
-      image: data.image,
-      certified: data.certified,
-      rating: data.rating,
-      order: data.order,
-    };
-  });
+  try {
+    const testimonials = await Testimonial.findAll({
+      order: [["order", "ASC"]],
+    });
+    return testimonials.map((t) => {
+      const data = t.toJSON() as any;
+      return {
+        id: data.id,
+        name: { fr: data.nameFr, en: data.nameEn },
+        role: { fr: data.roleFr, en: data.roleEn },
+        content: { fr: data.contentFr, en: data.contentEn },
+        image: data.image,
+        certified: data.certified,
+        rating: data.rating,
+        order: data.order,
+      };
+    });
+  } catch (error) {
+    // Testimonials table doesn't exist yet or other database error
+    console.warn("Could not load testimonials:", (error as any).message);
+    return [];
+  }
 }
 
 export async function saveTestimonial(
