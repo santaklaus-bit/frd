@@ -1,13 +1,13 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Home, Search } from 'lucide-react';
 import Link from 'next/link';
-
-export const metadata = {
-  title: 'Page Not Found - Farid DANKO',
-  description: 'The page you are looking for does not exist.',
-};
+import { useRouter } from 'next/navigation';
 
 export default function NotFound() {
+  const router = useRouter();
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-black p-6">
       <div className="max-w-md w-full space-y-8 text-center">
@@ -57,7 +57,7 @@ export default function NotFound() {
           <Button
             variant="outline"
             className="flex-1 gap-2 rounded-full"
-            onClick={() => window.history.back()}
+            onClick={() => router.back()}
           >
             <ArrowLeft className="w-4 h-4" />
             Go Back

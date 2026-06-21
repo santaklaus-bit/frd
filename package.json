@@ -5,7 +5,7 @@
   "scripts": {
     "build:config": "esbuild source.config.ts --bundle --format=esm --outfile=.source/source.config.mjs --platform=node --external:fumadocs-mdx/config --external:zod",
     "dev": "fumadocs-mdx && npm run build:config && next dev --turbopack",
-    "build": "fumadocs-mdx && npm run build:config && next build && npm run db:init:all",
+    "build": "rm -rf .next && fumadocs-mdx && npm run build:config && next build && npm run db:init:all",
     "start": "npm run db:init:all && next start",
     "lint": "next lint",
     "postinstall": "fumadocs-mdx && npm run build:config",
