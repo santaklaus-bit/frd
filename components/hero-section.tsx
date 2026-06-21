@@ -28,12 +28,12 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
 
   return (
     <section
-      className="relative h-[90vh] flex items-center justify-center overflow-hidden border-b border-border/40 bg-white dark:bg-white"
+      className="relative h-[90vh] flex items-center justify-center overflow-hidden border-b border-border/40 bg-white dark:bg-black"
       aria-label="Introduction"
     >
       <div className="absolute inset-0 z-0">
         <FlickeringGrid
-          className="w-full h-full opacity-10"
+          className="w-full h-full opacity-10 dark:opacity-5"
           squareSize={4}
           gridGap={6}
           color="#000000"
@@ -41,7 +41,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           flickerChance={0.01}
         />
         {/* Radial Gradient Glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,0,0,0.02),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,0,0,0.02),transparent_50%)] dark:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.02),transparent_50%)]" />
 
         {/* Floating Decorative Elements */}
         {isClient && (
@@ -49,7 +49,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
             {decorations.map((dec, i) => (
               <motion.div
                 key={i}
-                className="absolute rounded-full bg-blue-500/15 blur-2xl"
+                className="absolute rounded-full bg-blue-500/15 dark:bg-blue-400/10 blur-2xl"
                 style={{
                   width: dec.width,
                   height: dec.height,
@@ -81,10 +81,10 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           className="flex flex-col items-center mx-auto"
           style={{ width: "fit-content", maxWidth: "100%" }}
         >
-          <h1 className="text-[12vw] sm:text-[10vw] md:text-[8vw] lg:text-[8rem] font-serif font-semibold tracking-tighter uppercase leading-[0.8] mb-4 sm:mb-6 whitespace-nowrap text-black">
+          <h1 className="text-[12vw] sm:text-[10vw] md:text-[8vw] lg:text-[8rem] font-serif font-semibold tracking-tighter uppercase leading-[0.8] mb-4 sm:mb-6 whitespace-nowrap text-black dark:text-white">
             {dict.home.title}
           </h1>
-          <p className="w-full text-center text-[1.8vw] sm:text-[1.4vw] md:text-[1vw] lg:text-[1rem] font-bold uppercase tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.2em] lg:tracking-[0.25em] text-black/70 leading-tight whitespace-nowrap">
+          <p className="w-full text-center text-[1.8vw] sm:text-[1.4vw] md:text-[1vw] lg:text-[1rem] font-bold uppercase tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.2em] lg:tracking-[0.25em] text-black/70 dark:text-white/70 leading-tight whitespace-nowrap">
             {dict.home.subtitle}
           </p>
         </motion.div>
@@ -93,7 +93,7 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-          className="text-[4vw] sm:text-xl md:text-2xl font-normal leading-tight text-black/70 max-w-4xl mx-auto tracking-tight px-4"
+          className="text-[4vw] sm:text-xl md:text-2xl font-normal leading-tight text-black/70 dark:text-white/70 max-w-4xl mx-auto tracking-tight px-4"
         >
           {dict.home.description}
         </motion.div>
@@ -123,10 +123,10 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
         transition={{ delay: 1.5, duration: 1 }}
         className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
-        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-black/40">
+        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-black/40 dark:text-white/40">
           Scroll
         </span>
-        <div className="w-[22px] h-[36px] rounded-full border-2 border-black/20 p-1 flex justify-center">
+        <div className="w-[22px] h-[36px] rounded-full border-2 border-black/20 dark:border-white/20 p-1 flex justify-center">
           <motion.div
             animate={{
               y: [0, 12, 0],
@@ -136,13 +136,13 @@ export function HeroSection({ lang, dict }: { lang: string; dict: any }) {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="w-1 h-2 bg-black/40 rounded-full"
+            className="w-1 h-2 bg-black/40 dark:bg-white/40 rounded-full"
           />
         </div>
       </motion.div>
 
       {/* Subtle overlay for depth */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/40 dark:to-white/40 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/40 dark:to-black/40 pointer-events-none" />
     </section>
   );
 }

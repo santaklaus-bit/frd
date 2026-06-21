@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { parseApiError, parseNetworkError, formatErrorForDisplay } from "@/lib/error-handler";
 
 export function ContactForm({ lang, dict }: { lang: string; dict: any }) {
   const [formData, setFormData] = useState({
@@ -33,34 +34,24 @@ export function ContactForm({ lang, dict }: { lang: string; dict: any }) {
       const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        console.error("[Contact Form] API error:", data);
-        
-        if (res.status === 400 && data.errors && Array.isArray(data.errors)) {
-          // Zod validation errors
-          data.errors.forEach((err: any) => toast.error(err.message));
-        } else {
-          toast.error(
-            lang === "fr"
-              ? "Une erreur est survenue. Veuillez réessayer."
-              : "An error occurred. Please try again."
-          );
-        }
+        const error = parseApiError(res, data, lang as 'fr' | 'en');
+        const displayMessage = formatErrorForDisplay(error);
+        console.error(`[Contact Form] API Error (${error.code}):`, error);
+        toast.error(displayMessage);
         return;
       }
 
       toast.success(
         lang === "fr"
-          ? "Message envoyé avec succès !"
-          : "Message sent successfully!"
+          ? "Message envoyé avec succès ! Nous vous répondrons au plus tôt."
+          : "Message sent successfully! We'll get back to you soon."
       );
       setFormData({ fullName: "", email: "", requestType: "general", message: "" });
     } catch (err) {
-      console.error("[Contact Form] Network error:", err);
-      toast.error(
-        lang === "fr"
-          ? "Erreur réseau. Vérifiez votre connexion."
-          : "Network error. Please check your connection."
-      );
+      const error = parseNetworkError(err as Error, lang as 'fr' | 'en');
+      const displayMessage = formatErrorForDisplay(error);
+      console.error(`[Contact Form] Error (${error.code}):`, error);
+      toast.error(displayMessage);
     } finally {
       setIsSubmitting(false);
     }
