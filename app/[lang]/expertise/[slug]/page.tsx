@@ -153,7 +153,16 @@ export default async function ExpertiseDetailPage({ params }: PageProps) {
       const parsed = JSON.parse(content);
       if (parsed && parsed.blocks && Array.isArray(parsed.blocks)) {
         isEditorJs = true;
-        const parser = edjsParser();
+        const parser = edjsParser({
+          image: (block: any) => {
+            const url = block.data.file?.url || block.data.url;
+            if (url && url.toLowerCase().endsWith('.pdf')) {
+              return `<div class="my-8 w-full"><iframe src="${url}" class="w-full h-[80vh] rounded-2xl border border-border/40 shadow-xl" title="PDF Document"></iframe></div>`;
+            }
+            const caption = block.data.caption ? `<figcaption class="text-center text-sm text-muted-foreground mt-2">${block.data.caption}</figcaption>` : '';
+            return `<figure class="my-8"><img src="${url}" alt="${block.data.caption || ''}" class="w-full rounded-2xl border border-border/40" />${caption}</figure>`;
+          }
+        });
         const htmlBlocks = parser.parse(parsed);
         renderedHtml = Array.isArray(htmlBlocks) ? htmlBlocks.join("") : (htmlBlocks as string);
       }
@@ -217,12 +226,20 @@ export default async function ExpertiseDetailPage({ params }: PageProps) {
               
               {initiative.image && (
                 <div className="mb-12 space-y-4">
-                  <div className="relative aspect-video rounded-3xl overflow-hidden border border-border/40 shadow-2xl">
-                    <img
+                  <div className={`relative ${initiative.image.toLowerCase().endsWith('.pdf') ? 'h-[80vh]' : 'aspect-video'} rounded-3xl overflow-hidden border border-border/40 shadow-2xl`}>
+                    {initiative.image.toLowerCase().endsWith('.pdf') ? (
+                      <iframe
+                        src={initiative.image}
+                        title={title}
+                        className="w-full h-full border-none"
+                      />
+                    ) : (
+                      <img
                         src={initiative.image}
                         alt={title}
                         className="w-full h-full object-cover"
                       />
+                    )}
                   </div>
                   {caption && (
                     <p className="text-sm text-muted-foreground italic px-2 border-l-2 border-primary/30 py-1 not-prose">

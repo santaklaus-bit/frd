@@ -199,12 +199,20 @@ export default async function BlogPost({ params }: PageProps) {
 
             {page.thumbnail && (
               <div className="space-y-4">
-                <div className="relative rounded-3xl overflow-hidden border border-border/40 shadow-2xl group bg-muted/30">
-                  <img
-                    src={page.thumbnail}
-                    alt={title}
-                    className="w-full h-auto max-h-[700px] object-contain transition-transform duration-700 group-hover:scale-105"
-                  />
+                <div className={`relative rounded-3xl overflow-hidden border border-border/40 shadow-2xl group bg-muted/30 ${page.thumbnail.toLowerCase().endsWith('.pdf') ? 'h-[80vh]' : ''}`}>
+                  {page.thumbnail.toLowerCase().endsWith('.pdf') ? (
+                    <iframe
+                      src={page.thumbnail}
+                      title={title}
+                      className="w-full h-full border-none"
+                    />
+                  ) : (
+                    <img
+                      src={page.thumbnail}
+                      alt={title}
+                      className="w-full h-auto max-h-[700px] object-contain transition-transform duration-700 group-hover:scale-105"
+                    />
+                  )}
                 </div>
                 {caption && (
                   <p className="text-sm text-muted-foreground italic px-2 border-l-2 border-primary/30 py-1">

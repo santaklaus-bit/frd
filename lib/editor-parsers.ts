@@ -15,6 +15,18 @@ export const customParsers = {
     const caption = data.caption || "";
     const alt = caption || "Image";
 
+    if (url.toLowerCase().endsWith('.pdf')) {
+      return `
+        <div class="my-10 w-full">
+          <iframe 
+            src="${url}" 
+            class="w-full h-[80vh] rounded-3xl border border-border/40 shadow-2xl" 
+            title="PDF Document"
+          ></iframe>
+        </div>
+      `;
+    }
+
     return `
       <figure class="my-10 space-y-4">
         <div class="relative rounded-3xl overflow-hidden border border-border/40 shadow-2xl group bg-muted/30">
@@ -46,6 +58,19 @@ export const customParsers = {
     if (!url) return "";
 
     const caption = data.caption || "";
+    
+    if (url.toLowerCase().endsWith('.pdf')) {
+      return `
+        <div class="my-10 w-full">
+          <iframe 
+            src="${url}" 
+            class="w-full h-[80vh] rounded-3xl border border-border/40 shadow-2xl" 
+            title="PDF Document"
+          ></iframe>
+        </div>
+      `;
+    }
+
     return `
       <figure class="my-10">
         <div class="rounded-3xl overflow-hidden border border-border/40 shadow-2xl group">
