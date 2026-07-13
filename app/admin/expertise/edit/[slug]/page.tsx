@@ -12,5 +12,5 @@ export default async function EditExpertisePage({ params }: { params: Promise<{ 
     return <div className="p-8">Expertise non trouvée.</div>;
   }
 
-  return <ExpertiseForm initialData={expertise} />;
+  return <ExpertiseForm initialData={expertise} allExpertises={allExpertise} />;
 }

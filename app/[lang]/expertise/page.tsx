@@ -36,7 +36,7 @@ export default async function ExpertisePage({
 
   const rawInitiatives = await getData("expertise");
   const initiatives = rawInitiatives
-    .filter((item: any) => item.slug) // skip empty drafts
+    .filter((item: any) => item.slug && !item.parentSlug) // skip empty drafts and sub-expertises
     .map((item: any, index: number) => ({
       ...item,
       num: String(index + 1).padStart(2, "0"),

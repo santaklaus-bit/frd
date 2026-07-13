@@ -199,6 +199,7 @@ export interface ExpertiseItem {
   category: { fr: string; en: string };
   imageCaption?: { fr: string; en: string };
   projectSlugs?: string[];
+  parentSlug?: string | null;
 }
 
 export interface ProjectItem {
@@ -235,6 +236,7 @@ export async function getData(filename: string): Promise<any[]> {
           imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
           link: data.link,
           projectSlugs: data.projectSlugs ? JSON.parse(data.projectSlugs) : [],
+          parentSlug: data.parentSlug,
         };
       });
     }
@@ -292,6 +294,7 @@ export async function saveData(filename: string, data: any[]): Promise<void> {
       imageCaptionEn: i.imageCaption?.en || null,
       link: i.link || null,
       projectSlugs: i.projectSlugs ? JSON.stringify(i.projectSlugs) : "[]",
+      parentSlug: i.parentSlug || null,
       order: index,
     }));
     await Initiative.bulkCreate(records);

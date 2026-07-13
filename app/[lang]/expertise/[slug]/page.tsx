@@ -58,6 +58,47 @@ async function LinkedProjects({ slugs, lang }: { slugs: string[]; lang: string }
   );
 }
 
+async function SubExpertises({ parentSlug, lang, allExpertises }: { parentSlug: string; lang: string; allExpertises: any[] }) {
+  const subExpertises = allExpertises.filter((e: any) => e.parentSlug === parentSlug);
+
+  if (subExpertises.length === 0) return null;
+
+  return (
+    <div className="mt-20 pt-12 border-t border-border/40 not-prose">
+      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-6">
+        {lang === "fr" ? "Sous Expertises" : "Sub Expertises"}
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {subExpertises.map((sub: any) => {
+          const title = (sub.title as any)[lang] || sub.title.fr;
+          const description = (sub.description as any)[lang] || sub.description.fr;
+          const image = sub.image;
+          return (
+            <Link
+              key={sub.slug}
+              href={`/${lang}/expertise/${sub.slug}`}
+              className="group flex flex-col gap-3 p-4 rounded-2xl border border-border/40 bg-card hover:border-primary/40 hover:shadow-lg transition-all duration-300"
+            >
+              {image && (
+                <div className="relative aspect-video rounded-xl overflow-hidden">
+                  <img src={image} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                </div>
+              )}
+              <div className="flex items-start justify-between gap-2">
+                <div className="space-y-1">
+                  <p className="text-sm font-bold text-foreground leading-tight">{title}</p>
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">{description}</p>
+                </div>
+                <ArrowUpRight className="w-4 h-4 shrink-0 text-muted-foreground group-hover:text-primary transition-colors mt-0.5" />
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
@@ -227,6 +268,13 @@ export default async function ExpertiseDetailPage({ params }: PageProps) {
                 lang={lang}
               />
             )}
+
+            {/* ── SUB EXPERTISES ── */}
+            <SubExpertises
+              parentSlug={slug}
+              lang={lang}
+              allExpertises={initiatives}
+            />
           </div>
         </main>
       </div>

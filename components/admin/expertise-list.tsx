@@ -139,7 +139,16 @@ export default function ExpertiseList({ initialData }: { initialData: any[] }) {
                       </button>
                     </div>
                   </TableCell>
-                  <TableCell className="font-semibold">{item.title.fr}</TableCell>
+                  <TableCell className="font-semibold">
+                    <div className="flex flex-col gap-1">
+                      <span>{item.title.fr}</span>
+                      {item.parentSlug && (
+                        <span className="text-[10px] text-muted-foreground bg-muted w-fit px-2 py-0.5 rounded-full">
+                          Sous-expertise de : {initialData.find(i => i.slug === item.parentSlug)?.title?.fr || item.parentSlug}
+                        </span>
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell>
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-muted text-muted-foreground">
                       {item.category.fr}

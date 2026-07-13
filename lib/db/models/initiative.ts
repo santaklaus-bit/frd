@@ -20,6 +20,7 @@ export class Initiative extends Model {
   public declare link: string | null;
   public declare projectSlugs: string | null;
   public declare order: number;
+  public declare parentSlug: string | null;
   public declare readonly createdAt: Date;
   public declare readonly updatedAt: Date;
 }
@@ -44,6 +45,7 @@ Initiative.init(
     link: { type: DataTypes.STRING, allowNull: true },
     projectSlugs: { type: DataTypes.TEXT, allowNull: true },
     order: { type: DataTypes.INTEGER, defaultValue: 0 },
+    parentSlug: { type: DataTypes.STRING, allowNull: true },
   },
   { sequelize, modelName: "Initiative" }
 );

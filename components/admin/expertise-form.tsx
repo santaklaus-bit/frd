@@ -15,7 +15,7 @@ const WysiwygEditor = dynamic(
   { ssr: false }
 );
 
-export default function ExpertiseForm({ initialData }: { initialData?: any }) {
+export default function ExpertiseForm({ initialData, allExpertises = [] }: { initialData?: any, allExpertises?: any[] }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [projectList, setProjectList] = useState<{ slug: string; title: { fr: string; en: string } }[]>([]);
@@ -47,6 +47,7 @@ export default function ExpertiseForm({ initialData }: { initialData?: any }) {
       en: initialData?.imageCaption?.en || "",
     },
     projectSlugs: (initialData?.projectSlugs as string[]) || [],
+    parentSlug: initialData?.parentSlug || "",
   });
 
   useEffect(() => {
@@ -249,6 +250,23 @@ export default function ExpertiseForm({ initialData }: { initialData?: any }) {
             placeholder="slug-expertise"
             className="rounded-xl border-border/40 font-mono"
           />
+        </div>
+        <div className="space-y-1.5 mt-4">
+          <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Expertise Parente</label>
+          <select
+            value={formData.parentSlug}
+            onChange={(e) => setFormData({ ...formData, parentSlug: e.target.value })}
+            className="flex h-10 w-full rounded-xl border border-border/40 bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="">Aucune (Expertise principale)</option>
+            {allExpertises
+              .filter(e => e.slug !== formData.slug) // Prevent self-linking
+              .map(e => (
+                <option key={e.slug} value={e.slug}>
+                  {e.title.fr}
+                </option>
+            ))}
+          </select>
         </div>
       </div>
 
