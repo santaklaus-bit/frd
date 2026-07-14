@@ -11,6 +11,8 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { getMDXComponents } from "@/mdx-components";
 import { TableOfContents } from "@/components/table-of-contents";
 
+import { siteConfig } from "@/lib/site";
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
@@ -23,6 +25,10 @@ export async function generateMetadata({
   const description = page.description[lang as 'fr'|'en'] || page.description.fr || page.description.en || "";
   const caption = page.imageCaption[lang as 'fr'|'en'] || page.imageCaption.fr || page.imageCaption.en || "";
 
+  const imageUrl = page.thumbnail 
+    ? (page.thumbnail.startsWith("http") ? page.thumbnail : `${siteConfig.url}${page.thumbnail.startsWith("/") ? "" : "/"}${page.thumbnail}`)
+    : undefined;
+
   return {
     title,
     description,
@@ -30,13 +36,13 @@ export async function generateMetadata({
       type: "article",
       title,
       description: description || "",
-      images: page.thumbnail ? [{ url: page.thumbnail, alt: caption || title }] : [],
+      images: imageUrl ? [{ url: imageUrl, alt: caption || title }] : [],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description: description || "",
-      images: page.thumbnail ? [page.thumbnail] : [],
+      images: imageUrl ? [imageUrl] : [],
     },
   };
 }

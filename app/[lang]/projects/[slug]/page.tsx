@@ -25,6 +25,8 @@ const ICON_MAP: Record<string, any> = {
   TrendingUp,
 };
 
+import { siteConfig } from "@/lib/site";
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
@@ -38,19 +40,23 @@ export async function generateMetadata({
   const description = (initiative.description as any)[lang] || initiative.description.fr;
   const caption = (initiative.imageCaption as any)[lang] || initiative.imageCaption?.fr || "";
 
+  const imageUrl = initiative.image 
+    ? (initiative.image.startsWith("http") ? initiative.image : `${siteConfig.url}${initiative.image.startsWith("/") ? "" : "/"}${initiative.image}`)
+    : undefined;
+
   return {
     title,
     description,
     openGraph: {
       title,
       description,
-      images: initiative.image ? [{ url: initiative.image, alt: caption || title }] : [],
+      images: imageUrl ? [{ url: imageUrl, alt: caption || title }] : [],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: initiative.image ? [initiative.image] : [],
+      images: imageUrl ? [imageUrl] : [],
     },
   };
 }

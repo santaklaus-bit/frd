@@ -3,8 +3,8 @@ export default function JsonLd({ lang, dict }: { lang: string; dict: any }) {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Farid DANKO",
-    url: "https://fariddanko.com",
-    image: "https://fariddanko.com/farid-portrait.webp",
+    url: "https://monsieurdanko.comcom",
+    image: "https://monsieurdanko.comcom/farid-portrait.webp",
     jobTitle: lang === "fr" ? "Entrepreneur Social" : "Social Entrepreneur",
     description: dict.seo.home.description,
     sameAs: [
@@ -19,7 +19,7 @@ export default function JsonLd({ lang, dict }: { lang: string; dict: any }) {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Farid DANKO",
-    url: "https://fariddanko.com",
+    url: "https://monsieurdanko.comcom",
     description: dict.seo.home.description,
     inLanguage: lang,
   };
