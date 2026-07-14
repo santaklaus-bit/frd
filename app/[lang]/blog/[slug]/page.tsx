@@ -134,7 +134,7 @@ export default async function BlogPost({ params }: PageProps) {
             </Button>
 
             <div className="space-y-6">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tighter text-balance leading-[0.9] uppercase">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-balance leading-tight uppercase">
                 {title}
               </h1>
 
@@ -222,6 +222,36 @@ export default async function BlogPost({ params }: PageProps) {
               </div>
             )}
 
+            {/* Document Download/Preview Section for Mobile */}
+            {pdfUrl && (
+              <div className="lg:hidden p-6 rounded-3xl border border-border/40 bg-card shadow-lg space-y-4 mb-12">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-xl bg-red-500/10 text-red-500">
+                    <FileText className="w-5 h-5" />
+                  </div>
+                  <p className="text-sm font-bold uppercase tracking-wider">Document</p>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  {lang === "fr" 
+                    ? "Consultez ou téléchargez le document joint à cet article." 
+                    : "View or download the document attached to this article."}
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button asChild variant="outline" className="flex-1 rounded-2xl h-12 font-bold uppercase tracking-widest text-[10px]">
+                    <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+                      {lang === "fr" ? "Prévisualiser" : "Preview"}
+                    </a>
+                  </Button>
+                  <Button asChild className="flex-1 rounded-2xl h-12 bg-foreground text-background font-bold uppercase tracking-widest text-[10px] shadow-lg hover:opacity-90">
+                    <a href={pdfUrl} download target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
+                      <Download className="w-4 h-4" />
+                      {lang === "fr" ? "Télécharger" : "Download"}
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            )}
+
             <div className="prose dark:prose-invert max-w-none 
               prose-headings:font-semibold prose-headings:tracking-tighter prose-headings:uppercase 
               prose-p:text-muted-foreground/90 prose-p:leading-relaxed prose-lg
@@ -250,15 +280,22 @@ export default async function BlogPost({ params }: PageProps) {
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     {lang === "fr" 
-                      ? "Téléchargez la version complète de cet article au format PDF pour une lecture hors ligne." 
-                      : "Download the full version of this article in PDF format for offline reading."}
+                      ? "Consultez ou téléchargez le document joint à cet article." 
+                      : "View or download the document attached to this article."}
                   </p>
-                  <Button asChild className="w-full rounded-2xl h-12 bg-foreground text-background font-bold uppercase tracking-widest text-[10px] shadow-lg hover:opacity-90">
-                    <a href={pdfUrl} download target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
-                      <Download className="w-4 h-4" />
-                      {lang === "fr" ? "Télécharger le PDF" : "Download PDF"}
-                    </a>
-                  </Button>
+                  <div className="flex flex-col gap-3">
+                    <Button asChild variant="outline" className="w-full rounded-2xl h-12 font-bold uppercase tracking-widest text-[10px]">
+                      <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
+                        {lang === "fr" ? "Prévisualiser" : "Preview"}
+                      </a>
+                    </Button>
+                    <Button asChild className="w-full rounded-2xl h-12 bg-foreground text-background font-bold uppercase tracking-widest text-[10px] shadow-lg hover:opacity-90">
+                      <a href={pdfUrl} download target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2">
+                        <Download className="w-4 h-4" />
+                        {lang === "fr" ? "Télécharger" : "Download"}
+                      </a>
+                    </Button>
+                  </div>
                 </div>
               )}
 

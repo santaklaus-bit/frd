@@ -211,11 +211,11 @@ export function BlogForm({ initialData }: BlogFormProps) {
 
               <div className="space-y-4 pt-4 border-t border-border/40">
                 <MediaUpload
-                  label="Version PDF (FR)"
+                  label="Version Document/PDF (FR)"
                   value={pdfUrlFr}
                   onChange={setPdfUrlFr}
                   onRemove={() => setPdfUrlFr("")}
-                  accept="application/pdf"
+                  accept="application/pdf,image/*"
                 />
                 <input type="hidden" name="pdfUrlFr" value={pdfUrlFr} />
 
@@ -301,11 +301,11 @@ export function BlogForm({ initialData }: BlogFormProps) {
 
               <div className="space-y-4 pt-4 border-t border-border/40">
                 <MediaUpload
-                  label="PDF Version (EN)"
+                  label="Document/PDF Version (EN)"
                   value={pdfUrlEn}
                   onChange={setPdfUrlEn}
                   onRemove={() => setPdfUrlEn("")}
-                  accept="application/pdf"
+                  accept="application/pdf,image/*"
                 />
                 <input type="hidden" name="pdfUrlEn" value={pdfUrlEn} />
 
