@@ -6,6 +6,8 @@ import Link from "next/link";
 import { getData } from "@/lib/content-manager";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import { HashScrollHandler } from "@/components/hash-scroll-handler";
+import { DocumentDownload } from "@/components/document-download";
+import { extractPdfLinks, isPdfUrl, type DocumentLink } from "@/lib/documents";
 
 export const dynamic = "force-dynamic";
 
@@ -177,6 +179,18 @@ export default async function ExpertiseDetailPage({ params }: PageProps) {
     }
   }
 
+  // ── DOWNLOADABLE DOCUMENTS ──
+  // The header media and the Editor.js content may both hold PDFs uploaded by
+  // the admin; expose all of them as real downloads.
+  // The header PDF gets its own download bar right under its preview, so it is
+  // excluded here to avoid listing the same file twice.
+  const headerIsPdf = isPdfUrl(initiative.image);
+  const documents: DocumentLink[] = extractPdfLinks(content).filter(
+    (doc, index, all) =>
+      doc.url !== initiative.image &&
+      all.findIndex((d) => d.url === doc.url) === index
+  );
+
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       <HashScrollHandler />
@@ -252,6 +266,15 @@ export default async function ExpertiseDetailPage({ params }: PageProps) {
                       {caption}
                     </p>
                   )}
+                  {headerIsPdf && (
+                    <DocumentDownload
+                      url={initiative.image}
+                      title={caption || title}
+                      lang={lang}
+                      context="expertise"
+                      variant="bar"
+                    />
+                  )}
                 </div>
               )}
 
@@ -281,6 +304,32 @@ export default async function ExpertiseDetailPage({ params }: PageProps) {
                     {lang === "fr" ? "En savoir plus" : "Learn more"}
                   </a>
                 </Button>
+              </div>
+            )}
+
+            {/* ── DOCUMENTS / EXPORT ── */}
+            {documents.length > 0 && (
+              <div className="mt-20 pt-12 border-t border-border/40 not-prose">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                  {lang === "fr" ? "Documents" : "Documents"}
+                </p>
+                <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+                  {lang === "fr"
+                    ? "Téléchargez les documents liés à cette expertise au format PDF."
+                    : "Download the documents attached to this expertise as PDF."}
+                </p>
+                <div className="space-y-3">
+                  {documents.map((doc) => (
+                    <DocumentDownload
+                      key={doc.url}
+                      url={doc.url}
+                      title={doc.caption || doc.name}
+                      lang={lang}
+                      context="expertise"
+                      variant="bar"
+                    />
+                  ))}
+                </div>
               </div>
             )}
 

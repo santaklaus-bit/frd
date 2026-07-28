@@ -1,4 +1,5 @@
 import { getAnalyticsData } from "@/lib/analytics";
+import { isValidMeasurementId } from "@/lib/gtag";
 import {
     TrafficChart,
     UsersChart,
@@ -37,6 +38,7 @@ function Delta({ value }: { value: number }) {
 
 export default async function AnalyticsPage() {
     const data = await getAnalyticsData();
+    const trackingEnabled = isValidMeasurementId(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID);
 
     const kpis = [
         {
@@ -91,13 +93,45 @@ export default async function AnalyticsPage() {
             <TrendingUp className="h-4 w-4" />
           </div>
           <div className="space-y-1">
-            <p className="font-semibold">Mode Démonstration Actif</p>
+            <p className="font-semibold">
+              {data.demoReason === "api-error"
+                ? "Connexion à Google Analytics en échec"
+                : "Mode Démonstration Actif"}
+            </p>
             <p className="text-xs opacity-80 leading-relaxed">
-              Les données affichées ci-dessous sont des données de démonstration car la connexion à Google Analytics 4 n'est pas configurée. 
-              Vérifiez que les variables <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">GA_PROPERTY_ID</code>, 
-              <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">GA_CLIENT_EMAIL</code>, 
-              <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">GA_PRIVATE_KEY</code> et 
-              <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">NEXT_PUBLIC_GA_MEASUREMENT_ID</code> sont correctement définies dans votre fichier <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">.env</code>.
+              {data.demoReason === "api-error"
+                ? "Les identifiants sont présents mais l'API Google Analytics Data a renvoyé une erreur. Vérifiez que le compte de service a bien été ajouté comme lecteur sur la propriété GA4 et que l'API « Google Analytics Data » est activée."
+                : "Les données affichées ci-dessous sont des données de démonstration car la connexion à Google Analytics 4 n'est pas configurée."}
+            </p>
+            {data.demoDetails && (
+              <p className="text-xs font-mono bg-amber-100/60 dark:bg-amber-900/30 px-2 py-1 rounded mt-2 break-all">
+                {data.demoDetails}
+              </p>
+            )}
+            <p className="text-xs opacity-80 leading-relaxed pt-1">
+              Variables attendues dans <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">.env</code> :{" "}
+              <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">GA_PROPERTY_ID</code>,{" "}
+              <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">GA_CLIENT_EMAIL</code>,{" "}
+              <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">GA_PRIVATE_KEY</code> (rapports) et{" "}
+              <code className="bg-amber-100/50 dark:bg-amber-900/30 px-1 rounded">NEXT_PUBLIC_GA_MEASUREMENT_ID</code> (collecte côté visiteur).
+            </p>
+          </div>
+        </div>
+      )}
+
+      {!trackingEnabled && (
+        <div className="p-4 rounded-xl border border-red-200 bg-red-50/50 dark:border-red-900/50 dark:bg-red-950/20 text-red-800 dark:text-red-200 text-sm flex items-start gap-3">
+          <div className="mt-0.5 p-1 rounded-md bg-red-100 dark:bg-red-900/50">
+            <Eye className="h-4 w-4" />
+          </div>
+          <div className="space-y-1">
+            <p className="font-semibold">Collecte des visites désactivée</p>
+            <p className="text-xs opacity-80 leading-relaxed">
+              <code className="bg-red-100/50 dark:bg-red-900/30 px-1 rounded">NEXT_PUBLIC_GA_MEASUREMENT_ID</code>{" "}
+              est absente ou vaut encore la valeur d'exemple{" "}
+              <code className="bg-red-100/50 dark:bg-red-900/30 px-1 rounded">G-XXXXXXXXXX</code>. Le script gtag.js
+              n'est donc pas chargé sur le site et aucune visite n'est enregistrée. Renseignez l'identifiant de mesure
+              réel (Admin GA4 → Flux de données → Web) puis relancez le build.
             </p>
           </div>
         </div>

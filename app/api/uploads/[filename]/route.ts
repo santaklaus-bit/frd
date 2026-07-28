@@ -39,13 +39,27 @@ export async function GET(
 
     const contentType = mimeTypes[ext] || "application/octet-stream";
 
-    return new NextResponse(buffer, {
-      status: 200,
-      headers: {
-        "Content-Type": contentType,
-        "Cache-Control": "public, max-age=31536000, immutable",
-      },
-    });
+    // `?download=1` forces the browser to save the file instead of displaying it
+    // inline (PDFs in particular open in the built-in viewer by default).
+    const url = new URL(request.url);
+    const forceDownload = url.searchParams.get("download") === "1";
+
+    const headers: Record<string, string> = {
+      "Content-Type": contentType,
+      "Content-Length": String(buffer.length),
+      "Cache-Control": "public, max-age=31536000, immutable",
+    };
+
+    if (forceDownload) {
+      // Strip the timestamp prefix added at upload time for a cleaner filename
+      const suggested = sanitized.replace(/^\d{10,}-/, "") || sanitized;
+      headers["Content-Disposition"] =
+        `attachment; filename="${suggested.replace(/"/g, "")}"; filename*=UTF-8''${encodeURIComponent(suggested)}`;
+    } else {
+      headers["Content-Disposition"] = "inline";
+    }
+
+    return new NextResponse(buffer, { status: 200, headers });
   } catch (error) {
     console.error("File serve error:", error);
     return new NextResponse("Internal error", { status: 500 });

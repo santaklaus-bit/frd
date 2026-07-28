@@ -49,6 +49,7 @@ export async function generateMetadata({
 
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
 import { HashScrollHandler } from "@/components/hash-scroll-handler";
+import { RelatedPosts } from "@/components/related-posts";
 
 // @ts-ignore
 import edjsParser from "editorjs-html";
@@ -270,7 +271,8 @@ export default async function BlogPost({ params }: PageProps) {
               )}
             </div>
 
-            {/* Source / Bibliography section could be added here if needed */}
+            {/* ── SUGGESTED ARTICLES ── */}
+            <RelatedPosts currentSlug={slug} lang={lang} />
           </main>
 
           <aside className="hidden lg:block">
