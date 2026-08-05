@@ -1,0 +1,117 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos",
+    "expertise": "EXPERTISE",
+    "blog": "BLOG",
+    "projects": "PROJETS",
+    "contact": "CONTACT"
+  },
+  "home": {
+    "title": "Farid DANKO",
+    "subtitle": "Entrepreneur social · Consultant en développement organisationnel",
+    "description": "Farid Danko conçoit et structure des stratégies et programmes qui renforcent durablement le pouvoir économique des femmes et des jeunes, tout en accompagnant les organisations dans le développement de solutions à fort impact.",
+    "cta": "Découvrir mon expertise",
+    "cta_href": "/expertise"
+  },
+  "about": {
+    "title": "À propos de moi",
+    "content1": "Je suis un entrepreneur social animé par un rêve, un désir profond : être utile à l’humanité. Dès l’âge de 10 ans, j’ai ressenti un besoin — celui de contribuer à créer des opportunités là où elles manquent, de transformer les idées en solutions concrètes, de contribuer à un monde plus juste.",
+    "content2": "Issu d’un environnement entrepreneurial (avec des parents entrepreneurs), j’ai grandi avec un surcroît de responsabilités nourri par la curiosité, la débrouillardise et des valeurs humaines fortes : la générosité, l’écoute, le partage. Ces principes ont façonné mon rapport au leadership, toujours orienté vers l’impact collectif.",
+    "content3": "Créateur impulsif d’idées et bâtisseur de projets, j’ai accompagné au fil des ans plus d’une cinquantaine de personnes et organisations à clarifier leur vision, structurer leurs initiatives et poser les bases de projets porteurs de sens. J’interviens notamment en création d’entreprise, développement organisationnel, gestion de projet, positionnement stratégique et accompagnement au changement.",
+    "content4": "J’ai également soutenu plusieurs organisations — tant à but non lucratif que dans le secteur privé — dans la recherche de financement, que ce soit auprès d’institutions bancaires, de bailleurs de fonds ou dans le cadre d’appels à projets. Mon rôle est d’accompagner, de structurer les idées et de renforcer la posture stratégique pour maximiser les chances de succès.",
+    "content5": "En plus de mon parcours universitaire à la Faculté de science politique et de droit de l’Université du Québec à Montréal (UQAM), j’ai approfondi mes compétences grâce à des formations spécialisées portant sur l’économie circulaire, le développement durable, l’intervention en milieu rural et l’accompagnement en contexte international, notamment auprès de l’Organisation internationale du Travail. Ces expériences m’ont permis d’affiner une approche humaine, systémique et solidement ancrée dans les réalités de terrain.",
+    "content6": "J’ai dirigé des projets d’envergure, notamment le Programme d’apprentissage en milieu de travail pour des métiers du secteur de l’environnement, coordonné des programmes liés à l’employabilité et à l’insertion socioprofessionnelle, et participé à des révisions de normes professionnelles. Mon expertise inclut également la gestion du changement en milieu organisationnel et la structuration de projets à impact social.",
+    "content7": "Aujourd’hui, je mets cette expertise au service de celles et ceux qui souhaitent entreprendre autrement — avec clarté, cohérence et impact."
+  },
+  "expertise": {
+    "title": "Expertise",
+    "description": "Stratégies et programmes à fort impact social et économique.",
+    "intro": "Une approche structurée qui allie vision, terrain et méthodologie rigoureuse pour générer des résultats durables.",
+    "outro": "Construisons ensemble des solutions qui changent des vies.",
+    "subpages": {
+      "title": "Domaines d'intervention",
+      "autonomisation": {
+        "title": "Autonomisation",
+        "desc": "Structuration d'activités génératrices de revenus et optimisation de la chaîne de valeur.",
+        "details": "Accompagnement, création de valeur, résilience."
+      },
+      "developpement": {
+        "title": "Développement",
+        "desc": "Accompagnement organisationnel, gouvernance et structuration stratégique.",
+        "details": "Stratégie, impact social, économie circulaire."
+      },
+      "inclusion": {
+        "title": "Inclusion",
+        "desc": "Programmes d'insertion et expertises à impact économique et social.",
+        "details": "Employabilité, formation, équité sociale."
+      }
+    }
+  },
+  "featuredProject": {
+    "title": "Projet mis en avant",
+    "caption": "Champ de piri piri – Coopérative de femmes productrices, Kenya.",
+    "description": "Analyse de la chaîne de valeur et des opportunités de transformation pour renforcer les revenus.",
+    "cta": "Lire le projet",
+    "href": "/fr/projects/filiere-piri-piri-kenya"
+  },
+  "home_contact": {
+    "title": "Collaborer",
+    "description": "Disponible pour mandats stratégiques, missions terrain et accompagnement organisationnel.",
+    "cta": "Me contacter"
+  },
+  "contact": {
+    "title": "Contact",
+    "name": "Nom complet",
+    "email": "Adresse e-mail",
+    "email_hint": "seul canal de réponse",
+    "type": "Type de demande",
+    "options": {
+      "general": "Message général",
+      "collaboration": "Collaboration / événement",
+      "media": "Média / entrevue"
+    },
+    "message": "Message",
+    "submit": "Envoyer"
+  },
+  "projects": {
+    "title": "Projets",
+    "intro": "Depuis toujours, je crois en l’importance d’agir et de contribuer à créer des opportunités.",
+    "description": "Cette page présente quelques expertises que j’ai portées ou accompagnées, à la croisée de l’entrepreneuriat, du développement organisationnel et de l’engagement.",
+    "outro": "Des actions concrètes qui traduisent mon désir constant : être utile et contribuer à un impact durable."
+  },
+  "newsletter": {
+    "title": "Restez informé",
+    "description": "Inscrivez-vous pour recevoir mes dernières réflexions, projets et exclusivités directement dans votre boîte mail.",
+    "placeholder": "Votre adresse e-mail",
+    "button": "S'abonner",
+    "success": "Merci pour votre abonnement !",
+    "error": "Une erreur est survenue. Veuillez réessayer."
+  },
+  "seo": {
+    "home": {
+      "title": "Farid DANKO - Entrepreneur Social & Conseiller en Développement",
+      "description": "Découvrez le parcours de Farid Danko, entrepreneur social et conseiller en développement organisationnel. Accompagnement pour projets à impact social et durable."
+    },
+    "about": {
+      "title": "À propos - Farid DANKO",
+      "description": "En savoir plus sur Farid Danko, son parcours d'entrepreneur social et son engagement pour un monde plus juste et durable."
+    },
+    "expertise": {
+      "title": "Expertise - Farid DANKO",
+      "description": "Découvrez l'expertise de Farid Danko en autonomisation économique, développement organisationnel et inclusion sociale — programmes à fort impact."
+    },
+    "projects": {
+      "title": "Projets - Farid DANKO",
+      "description": "Découvrez l'expertise portée ou accompagnée par Farid Danko dans les secteurs de l'environnement, de l'employabilité et de l'innovation sociale."
+    },
+    "blog": {
+      "title": "Blog & Réflexions - Farid DANKO",
+      "description": "Articles, analyses et réflexions de Farid Danko sur l'entrepreneuriat social, le leadership et le changement positif."
+    },
+    "contact": {
+      "title": "Contact - Farid DANKO",
+      "description": "Prenez contact avec Farid Danko pour vos projets de collaboration, demandes médias ou questions générales."
+    }
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "expertise": "EXPERTISE",
+    "blog": "BLOG",
+    "projects": "PROJECTS",
+    "contact": "CONTACT"
+  },
+  "home": {
+    "title": "Farid DANKO",
+    "subtitle": "Social Entrepreneur · Organisational Development Consultant",
+    "description": "Farid Danko designs and structures strategies and programmes that sustainably strengthen the economic power of women and youth, while supporting organisations in developing high-impact solutions.",
+    "cta": "Discover my expertise",
+    "cta_href": "/expertise"
+  },
+  "about": {
+    "title": "About Me",
+    "content1": "I am a social entrepreneur driven by a deep desire to be useful to humanity. Since the age of ten, I have felt the need to create opportunities where they are lacking, transform ideas into concrete solutions and contribute to a fairer world.",
+    "content2": "Coming from an entrepreneurial background, with parents who were entrepreneurs, I grew up with a strong sense of responsibility fuelled by curiosity, resourcefulness, and a commitment to strong human values such as generosity, active listening, and sharing. These principles have shaped my leadership approach, which is always focused on collective impact.",
+    "content3": "As a prolific generator of ideas and builder of projects, I have helped over fifty individuals and organisations clarify their vision, structure their initiatives, and lay the foundations for meaningful projects. I specialise in business creation, organisational development, project management, strategic positioning and change management.",
+    "content4": "I have also supported several organisations — both non-profit and in the private sector — in seeking funding from banking institutions, funders and through calls for projects. My role is to provide support, structure ideas and strengthen strategic positioning to maximise the chances of success.",
+    "content5": "In addition to my academic background in Political Science and Law at the University of Quebec in Montreal (UQAM), I have developed my skills through specialised training in the circular economy, sustainable development, rural intervention, and international support, notably with the International Labour Organisation. These experiences have enabled me to develop a human, systemic approach that is firmly grounded in practical realities.",
+    "content6": "I have led large-scale projects, including the Workplace Learning Programme for Environmental Trades, coordinated programmes related to employability and socio-professional integration, and contributed to the revision of professional standards. I am also an expert in change management in organisational settings and in structuring projects with a social impact.",
+    "content7": "Today, I offer my expertise to those who wish to conduct business differently — with clarity, consistency and impact."
+  },
+  "expertise": {
+    "title": "Expertise",
+    "description": "Strategies and programmes with strong social and economic impact.",
+    "intro": "A structured approach combining vision, fieldwork and rigorous methodology to generate lasting results.",
+    "outro": "Let's build together solutions that change lives.",
+    "subpages": {
+      "title": "Areas of Intervention",
+      "autonomisation": {
+        "title": "Empowerment",
+        "desc": "Structuring income-generating activities and optimising the value chain.",
+        "details": "Support, value creation, resilience."
+      },
+      "developpement": {
+        "title": "Development",
+        "desc": "Organizational support, governance and strategic structuring.",
+        "details": "Strategy, social impact, circular economy."
+      },
+      "inclusion": {
+        "title": "Inclusion",
+        "desc": "Integration programmes and expertise with economic and social impact.",
+        "details": "Employability, training, social equity."
+      }
+    }
+  },
+  "featuredProject": {
+    "title": "Featured Project",
+    "caption": "Piri piri field – Women producers cooperative, Kenya.",
+    "description": "Value chain analysis and transformation opportunities to strengthen revenue.",
+    "cta": "Read the project",
+    "href": "/en/projects/cooperative-femmes-kenya"
+  },
+  "home_contact": {
+    "title": "Collaborate",
+    "description": "Available for strategic mandates, field missions and organisational support.",
+    "cta": "Contact me"
+  },
+  "contact": {
+    "title": "Contact",
+    "name": "Full name",
+    "email": "Email address",
+    "email_hint": "sole means of response",
+    "type": "Type of request",
+    "options": {
+      "general": "General message",
+      "collaboration": "Collaboration/event",
+      "media": "Media/interview"
+    },
+    "message": "Message",
+    "submit": "Send"
+  },
+  "projects": {
+    "title": "Projects",
+    "intro": "I have always believed in the importance of taking action and helping to create opportunities.",
+    "description": "This page presents some of the expertise I have led or supported, at the crossroads of entrepreneurship, organisational development and social engagement.",
+    "outro": "These are concrete actions that reflect my constant desire to be useful and contribute to a lasting impact."
+  },
+  "newsletter": {
+    "title": "Stay Informed",
+    "description": "Sign up to receive my latest thoughts, projects, and exclusives directly in your inbox.",
+    "placeholder": "Your email address",
+    "button": "Subscribe",
+    "success": "Thank you for subscribing!",
+    "error": "An error occurred. Please try again."
+  },
+  "seo": {
+    "home": {
+      "title": "Farid DANKO - Social Entrepreneur & Development Advisor",
+      "description": "Discover Farid Danko's journey as a social entrepreneur and organizational development advisor. Guidance for high-impact social and sustainable projects."
+    },
+    "about": {
+      "title": "About - Farid DANKO",
+      "description": "Learn more about Farid Danko, his social entrepreneurial path, and his commitment to a fairer and more sustainable world."
+    },
+    "expertise": {
+      "title": "Expertise - Farid DANKO",
+      "description": "Explore Farid Danko's expertise in economic empowerment, organisational development and social inclusion — high-impact strategies and programmes."
+    },
+    "projects": {
+      "title": "Projects - Farid DANKO",
+      "description": "Discover the expertise led or supported by Farid Danko in the environmental, employability, and social innovation sectors."
+    },
+    "blog": {
+      "title": "Blog & Reflections - Farid DANKO",
+      "description": "Articles, analyses, and reflections by Farid Danko on social entrepreneurship, leadership, and positive change."
+    },
+    "contact": {
+      "title": "Contact - Farid DANKO",
+      "description": "Get in touch with Farid Danko for collaboration projects, media inquiries, or general questions."
+    }
+  }
+}
