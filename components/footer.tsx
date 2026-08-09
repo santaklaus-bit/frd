@@ -107,12 +107,6 @@ export default function Footer({ lang, dict }: { lang: string; dict: any }) {
                   {dict.nav.blog}
                 </Link>
                 <Link
-                  href={`/${lang}/projects`}
-                  className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors"
-                >
-                  {dict.nav.projects}
-                </Link>
-                <Link
                   href={`/${lang}/contact`}
                   className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors"
                 >
