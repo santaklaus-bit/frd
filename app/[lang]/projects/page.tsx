@@ -1,4 +1,4 @@
-import { Target, Users, Lightbulb, TrendingUp, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { getDictionary } from "@/lib/get-dictionary";
 import { getData } from "@/lib/content-manager";
 import Image from "next/image";
@@ -15,22 +15,19 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const dict = await getDictionary(lang as "en" | "fr");
+  const defaultTitle = lang === "fr" ? "Projets - Farid DANKO" : "Projects - Farid DANKO";
+  const defaultDesc = lang === "fr"
+    ? "Découvrez les projets de Farid Danko"
+    : "Discover Farid Danko's projects";
 
   return {
-    title: dict.seo.projects.title,
-    description: dict.seo.projects.description,
+    title: (dict as any)?.seo?.projects?.title || defaultTitle,
+    description: (dict as any)?.seo?.projects?.description || defaultDesc,
     alternates: {
       canonical: `/${lang}/projects`,
     },
   };
 }
-
-const ICON_MAP: Record<string, any> = {
-  Target,
-  Users,
-  Lightbulb,
-  TrendingUp,
-};
 
 export default async function ProjectsPage({
   params,
@@ -43,17 +40,16 @@ export default async function ProjectsPage({
   const rawProjects = await getData("projects");
   const filteredProjects = rawProjects.filter((item: any) => item.slug);
   
-  const initiatives = filteredProjects.map((item: any) => ({
+  const projects = filteredProjects.map((item: any) => ({
     ...item,
-    icon: ICON_MAP[item.icon] || Lightbulb,
     title: item.title?.[lang] ?? item.title?.fr ?? "",
     description: item.description?.[lang] ?? item.description?.fr ?? "",
     category: item.category?.[lang] ?? item.category?.fr ?? "",
   }));
 
   const isFr = lang === "fr";
-  const featured = initiatives[0] ?? null;
-  const rest = initiatives.slice(1);
+  const featured = projects[0] ?? null;
+  const rest = projects.slice(1);
 
   return (
     <div className="min-h-screen bg-background">
@@ -87,7 +83,7 @@ export default async function ProjectsPage({
             <article className="group grid md:grid-cols-2 gap-10 md:gap-16 items-start">
               {/* Image */}
               {featured.image ? (
-                <div className="relative aspect-[3/2] overflow-hidden bg-muted">
+                <div className="relative aspect-[3/2] overflow-hidden bg-muted rounded-2xl shadow-2xl">
                   <Image
                     src={featured.image}
                     alt={featured.title}
@@ -97,32 +93,32 @@ export default async function ProjectsPage({
                   />
                 </div>
               ) : (
-                <div className="relative aspect-[3/2] bg-muted/60 flex items-center justify-center">
-                  <featured.icon className="h-12 w-12 text-muted-foreground/40" />
+                <div className="relative aspect-[3/2] bg-muted/60 flex items-center justify-center rounded-2xl">
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40">{isFr ? "Pas d'image" : "No image"}</div>
                 </div>
               )}
 
               {/* Content */}
               <div className="flex flex-col justify-center gap-6">
                 <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-muted text-muted-foreground uppercase tracking-widest">
+                  <span className="text-[10px] font-bold px-4 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 uppercase tracking-widest">
                     {featured.category}
                   </span>
                 </div>
                 <Link href={`/${lang}/projects/${featured.slug}`} className="w-fit">
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-tight hover:underline uppercase">
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[0.95] hover:opacity-70 transition-opacity uppercase">
                     {featured.title}
                   </h2>
                 </Link>
                 {featured.description && (
-                  <p className="text-muted-foreground leading-relaxed line-clamp-4">
+                  <p className="text-muted-foreground leading-relaxed line-clamp-4 text-lg">
                     {featured.description}
                   </p>
                 )}
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground">
+                <Link href={`/${lang}/projects/${featured.slug}`} className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors">
                   {isFr ? "En savoir plus" : "Learn more"}
-                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </div>
+                  <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
             </article>
           </section>
@@ -135,7 +131,7 @@ export default async function ProjectsPage({
               {rest.map((project: any) => (
                 <article key={project.slug} className="group flex flex-col gap-6">
                   {/* Image */}
-                  <div className="relative aspect-[3/2] overflow-hidden bg-muted/60">
+                  <div className="relative aspect-[3/2] overflow-hidden bg-muted/60 rounded-xl shadow-lg">
                     {project.image ? (
                       <Image
                         src={project.image}
@@ -145,7 +141,7 @@ export default async function ProjectsPage({
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                         <project.icon className="h-10 w-10 text-muted-foreground/40" />
+                         <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/20">{isFr ? "Découvrir" : "Explore"}</div>
                       </div>
                     )}
                   </div>
@@ -153,12 +149,12 @@ export default async function ProjectsPage({
                   {/* Content */}
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center gap-3">
-                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-muted text-muted-foreground uppercase tracking-widest">
+                      <span className="text-[10px] font-bold px-3 py-1 rounded-full bg-muted text-muted-foreground uppercase tracking-widest">
                         {project.category}
                       </span>
                     </div>
                     <Link href={`/${lang}/projects/${project.slug}`} className="w-fit">
-                      <h2 className="text-2xl md:text-3xl font-bold tracking-tight leading-snug hover:underline uppercase">
+                      <h2 className="text-2xl md:text-3xl font-bold tracking-tight leading-none hover:opacity-70 transition-opacity uppercase">
                         {project.title}
                       </h2>
                     </Link>
@@ -175,7 +171,7 @@ export default async function ProjectsPage({
         )}
 
         {/* ── EMPTY STATE ── */}
-        {initiatives.length === 0 && (
+        {projects.length === 0 && (
           <div className="py-40 text-center">
             <p className="text-3xl text-muted-foreground/50 font-light uppercase tracking-tighter">
               {isFr ? "Aucun projet pour l'instant." : "No projects yet."}

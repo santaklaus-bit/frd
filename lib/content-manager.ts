@@ -1,4 +1,4 @@
-import { BlogPost, Dictionary, Initiative, Production } from "./db/models";
+import { BlogPost, Dictionary, Initiative, Production, Testimonial } from "./db/models";
 
 // ============================================================================
 // BLOG POSTS
@@ -6,9 +6,11 @@ import { BlogPost, Dictionary, Initiative, Production } from "./db/models";
 
 // ~200 words per minute reading speed
 function calcReadTime(content: string, lang: "en" | "fr" = "fr"): string {
-  const words = content?.trim().split(/\s+/).length ?? 0;
+  const text = content?.replace(/<[^>]*>?/gm, "") || "";
+  const words = text.trim().split(/\s+/).length ?? 0;
+  if (!text.trim()) return "1 min";
   const minutes = Math.max(1, Math.round(words / 200));
-  return lang === "fr" ? `${minutes} min` : `${minutes} min`;
+  return `${minutes} min`;
 }
 
 export async function getBlogPosts() {
@@ -16,49 +18,136 @@ export async function getBlogPosts() {
     order: [["date", "DESC"]],
   });
   return posts.map((p) => {
-    const json = p.toJSON() as any;
-    json.readTime = calcReadTime(json.content ?? "");
-    return json;
+    const data = p.toJSON() as any;
+    return {
+      slug: data.slug,
+      slugEn: data.slugEn || data.slug,
+      title: { fr: data.titleFr, en: data.titleEn },
+      description: { fr: data.descriptionFr, en: data.descriptionEn },
+      date: data.date,
+      thumbnail: data.thumbnail,
+      authorName: data.authorName,
+      authorPhoto: data.authorPhoto,
+      content: { fr: data.contentFr || "", en: data.contentEn || "" },
+      readTime: { fr: data.readTimeFr || "", en: data.readTimeEn || "" },
+      wordCount: { fr: data.wordCountFr || 0, en: data.wordCountEn || 0 },
+      pdfUrl: { fr: data.pdfUrlFr || "", en: data.pdfUrlEn || "" },
+      audioUrl: { fr: data.audioUrlFr || "", en: data.audioUrlEn || "" },
+      imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
+    };
   });
 }
 
 export async function getBlogPost(slug: string) {
   const post = await BlogPost.findOne({ where: { slug } });
   if (!post) return null;
-  const json = post.toJSON() as any;
-  json.readTime = calcReadTime(json.content ?? "");
-  return json;
+  const data = post.toJSON() as any;
+  return {
+    slug: data.slug,
+    slugEn: data.slugEn || data.slug,
+    title: { fr: data.titleFr, en: data.titleEn },
+    description: { fr: data.descriptionFr, en: data.descriptionEn },
+    date: data.date,
+    thumbnail: data.thumbnail,
+    authorName: data.authorName,
+    authorPhoto: data.authorPhoto,
+    content: { fr: data.contentFr || "", en: data.contentEn || "" },
+    readTime: { fr: data.readTimeFr || "", en: data.readTimeEn || "" },
+    wordCount: { fr: data.wordCountFr || 0, en: data.wordCountEn || 0 },
+    pdfUrl: { fr: data.pdfUrlFr || "", en: data.pdfUrlEn || "" },
+    audioUrl: { fr: data.audioUrlFr || "", en: data.audioUrlEn || "" },
+    imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
+  };
 }
 
 export async function saveBlogPost(
   slug: string,
-  frontmatter: any,
-  content: string
+  slugEn: string | null | undefined,
+  frontmatter: {
+    title: { fr: string; en: string };
+    description: { fr: string; en: string };
+    date: string;
+    thumbnail: string;
+    authorName: string;
+    authorPhoto: string;
+    imageCaption?: { fr: string; en: string };
+    pdfUrl?: { fr: string; en: string };
+    audioUrl?: { fr: string; en: string };
+    readTime?: { fr: string; en: string };
+  },
+  content: { fr: string; en: string },
+  readTime?: { fr: string; en: string }
 ) {
   const existing = await BlogPost.findOne({ where: { slug } });
 
+  // Word count calculation
+  const wordCountFr = content.fr?.replace(/<[^>]*>?/gm, "").trim().split(/\s+/).filter(Boolean).length || 0;
+  const wordCountEn = content.en?.replace(/<[^>]*>?/gm, "").trim().split(/\s+/).filter(Boolean).length || 0;
+
+  const dataToSave = {
+    slugEn: slugEn || null,
+    titleFr: frontmatter.title?.fr || "",
+    titleEn: frontmatter.title?.en || "",
+    descriptionFr: frontmatter.description?.fr || "",
+    descriptionEn: frontmatter.description?.en || "",
+    date: frontmatter.date,
+    thumbnail: frontmatter.thumbnail,
+    authorName: frontmatter.authorName,
+    authorPhoto: frontmatter.authorPhoto,
+    contentFr: content.fr || "",
+    contentEn: content.en || "",
+    readTimeFr: readTime?.fr || frontmatter.readTime?.fr || calcReadTime(content.fr, "fr"),
+    readTimeEn: readTime?.en || frontmatter.readTime?.en || calcReadTime(content.en, "en"),
+    wordCountFr,
+    wordCountEn,
+    pdfUrlFr: frontmatter.pdfUrl?.fr || "",
+    pdfUrlEn: frontmatter.pdfUrl?.en || "",
+    audioUrlFr: frontmatter.audioUrl?.fr || "",
+    audioUrlEn: frontmatter.audioUrl?.en || "",
+    imageCaptionFr: frontmatter.imageCaption?.fr || "",
+    imageCaptionEn: frontmatter.imageCaption?.en || "",
+  };
+
   if (existing) {
-    await existing.update({
-      title: frontmatter.title,
-      description: frontmatter.description,
-      date: frontmatter.date,
-      thumbnail: frontmatter.thumbnail,
-      authorName: frontmatter.authorName,
-      authorPhoto: frontmatter.authorPhoto,
-      content,
-    });
+    await existing.update(dataToSave);
   } else {
     await BlogPost.create({
       slug,
-      title: frontmatter.title,
-      description: frontmatter.description,
-      date: frontmatter.date,
-      thumbnail: frontmatter.thumbnail,
-      authorName: frontmatter.authorName,
-      authorPhoto: frontmatter.authorPhoto,
-      content,
+      ...dataToSave,
     });
   }
+}
+
+/**
+ * Look up a post by either its FR slug or EN slug.
+ * Used by the [lang]/blog/[slug] page to support bilingual URLs.
+ */
+export async function getBlogPostByAnySlug(slug: string) {
+  // Try FR slug first
+  let post = await BlogPost.findOne({ where: { slug } });
+  // Then try EN slug
+  if (!post) {
+    const { Op } = await import("sequelize");
+    post = await BlogPost.findOne({ where: { slugEn: slug } });
+  }
+  if (!post) return null;
+  const data = post.toJSON() as any;
+  return {
+    slug: data.slug,
+    slugEn: data.slugEn || data.slug,
+    title: { fr: data.titleFr, en: data.titleEn },
+    description: { fr: data.descriptionFr, en: data.descriptionEn },
+    date: data.date,
+    thumbnail: data.thumbnail,
+    authorName: data.authorName,
+    authorPhoto: data.authorPhoto,
+    content: { fr: data.contentFr || "", en: data.contentEn || "" },
+    readTime: { fr: data.readTimeFr || "", en: data.readTimeEn || "" },
+    wordCount: { fr: data.wordCountFr || 0, en: data.wordCountEn || 0 },
+    pdfUrl: { fr: data.pdfUrlFr || "", en: data.pdfUrlEn || "" },
+    audioUrl: { fr: data.audioUrlFr || "", en: data.audioUrlEn || "" },
+    imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
+  };
 }
 
 export async function deleteBlogPost(slug: string) {
@@ -101,61 +190,111 @@ export async function saveDictionary(lang: "en" | "fr", data: any) {
 // DATA (Expertise, Projects)
 // ============================================================================
 
-export async function getData(filename: string) {
-  if (filename === "expertise" || filename === "initiatives") {
-    const expertiseItems = await Initiative.findAll({ order: [["order", "ASC"]] });
-    // Transform back to JSON structure expected by the frontend
-    return expertiseItems.map((i) => {
-      const data = i.toJSON();
-      return {
-        slug: data.slug,
-        icon: data.icon,
-        title: { fr: data.titleFr, en: data.titleEn },
-        description: { fr: data.descriptionFr, en: data.descriptionEn },
-        details: { fr: data.detailsFr, en: data.detailsEn },
-        category: { fr: data.categoryFr, en: data.categoryEn },
-      };
-    });
-  }
-
-  if (filename === "projects" || filename === "production") {
-    const projects = await Production.findAll({ order: [["order", "ASC"]] });
-    // Transform back to JSON
-    return projects.map((p) => {
-      const data = p.toJSON();
-      return {
-        slug: data.slug,
-        icon: data.icon,
-        title: { fr: data.titleFr, en: data.titleEn },
-        description: { fr: data.descriptionFr, en: data.descriptionEn },
-        category: { fr: data.categoryFr, en: data.categoryEn },
-        details: { fr: data.detailsFr, en: data.detailsEn },
-        image: data.image,
-        href: data.href,
-      };
-    });
-  }
-
-  return [];
+export interface ExpertiseItem {
+  slug: string;
+  title: { fr: string; en: string };
+  description: { fr: string; en: string };
+  content: { fr: string; en: string };
+  details: { fr: string; en: string };
+  category: { fr: string; en: string };
+  imageCaption?: { fr: string; en: string };
+  projectSlugs?: string[];
+  parentSlug?: string | null;
 }
 
-export async function saveData(filename: string, data: any) {
+export interface ProjectItem {
+  slug: string;
+  title: { fr: string; en: string };
+  description: { fr: string; en: string };
+  category: { fr: string; en: string };
+  details: { fr: string; en: string };
+  image: string | null;
+  imageEn?: string | null;
+  imageCaption?: { fr: string; en: string };
+  href: string;
+  pdfUrl?: string | null;
+  isFeatured?: boolean;
+}
+
+export async function getData(filename: "expertise" | "initiatives"): Promise<ExpertiseItem[]>;
+export async function getData(filename: "projects" | "production"): Promise<ProjectItem[]>;
+export async function getData(filename: string): Promise<any[]> {
+  try {
+    if (filename === "expertise" || filename === "initiatives") {
+      const expertiseItems = await Initiative.findAll({ order: [["order", "ASC"]] });
+      // Transform back to JSON structure expected by the frontend
+      return expertiseItems.map((i) => {
+        const data = i.toJSON();
+        return {
+          slug: data.slug,
+          title: { fr: data.titleFr, en: data.titleEn },
+          description: { fr: data.descriptionFr, en: data.descriptionEn },
+          content: { fr: data.contentFr || "", en: data.contentEn || "" },
+          details: { fr: data.detailsFr, en: data.detailsEn },
+          category: { fr: data.categoryFr, en: data.categoryEn },
+          image: data.image,
+          imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
+          link: data.link,
+          projectSlugs: data.projectSlugs ? JSON.parse(data.projectSlugs) : [],
+          parentSlug: data.parentSlug,
+        };
+      });
+    }
+
+    if (filename === "projects" || filename === "production") {
+      const projects = await Production.findAll({ order: [["order", "ASC"]] });
+      // Transform back to JSON
+      return projects.map((p) => {
+        const data = p.toJSON();
+        return {
+          slug: data.slug,
+          title: { fr: data.titleFr, en: data.titleEn },
+          description: { fr: data.descriptionFr, en: data.descriptionEn },
+          category: { fr: data.categoryFr, en: data.categoryEn },
+          details: { fr: data.detailsFr, en: data.detailsEn },
+          image: data.image,
+          imageEn: data.imageEn,
+          imageCaption: { fr: data.imageCaptionFr || "", en: data.imageCaptionEn || "" },
+          href: data.href,
+          pdfUrl: data.pdfUrl,
+          isFeatured: data.isFeatured,
+        };
+      });
+    }
+
+    return [];
+  } catch (error) {
+    console.warn("Could not load data:", (error as any).message);
+    return [];
+  }
+}
+
+export async function saveData(filename: "expertise" | "initiatives", data: ExpertiseItem[]): Promise<void>;
+export async function saveData(filename: "projects" | "production", data: ProjectItem[]): Promise<void>;
+export async function saveData(filename: string, data: any[]): Promise<void> {
   // Since the legacy format sends the entire array to `saveData`,
   // we need to sync it to the DB (destroy all, then create all)
   
   if (filename === "expertise" || filename === "initiatives") {
-    await Initiative.destroy({ truncate: true }); // Wipe table
+    await Initiative.destroy({ where: {}, truncate: false }); // Wiping more safely
     const records = data.map((i: any, index: number) => ({
       slug: i.slug,
-      icon: i.icon || "Target",
       titleFr: i.title?.fr || "",
       titleEn: i.title?.en || "",
       descriptionFr: i.description?.fr || "",
       descriptionEn: i.description?.en || "",
+      contentFr: i.content?.fr || "",
+      contentEn: i.content?.en || "",
       detailsFr: i.details?.fr || null,
       detailsEn: i.details?.en || null,
       categoryFr: i.category?.fr || "",
       categoryEn: i.category?.en || "",
+      image: i.image || null,
+      imageCaptionFr: i.imageCaption?.fr || null,
+      imageCaptionEn: i.imageCaption?.en || null,
+      link: i.link || null,
+      projectSlugs: i.projectSlugs ? JSON.stringify(i.projectSlugs) : "[]",
+      parentSlug: i.parentSlug || null,
       order: index,
     }));
     await Initiative.bulkCreate(records);
@@ -165,7 +304,6 @@ export async function saveData(filename: string, data: any) {
     await Production.destroy({ truncate: true }); // Wipe table
     const records = data.map((p: any, index: number) => ({
       slug: p.slug,
-      icon: p.icon || "Video",
       titleFr: p.title?.fr || "",
       titleEn: p.title?.en || "",
       descriptionFr: p.description?.fr || "",
@@ -175,7 +313,12 @@ export async function saveData(filename: string, data: any) {
       detailsFr: p.details?.fr || "",
       detailsEn: p.details?.en || "",
       image: p.image || null,
+      imageEn: p.imageEn || null,
+      imageCaptionFr: p.imageCaption?.fr || null,
+      imageCaptionEn: p.imageCaption?.en || null,
       href: p.href || "",
+      pdfUrl: p.pdfUrl || null,
+      isFeatured: p.isFeatured || false,
       order: index,
     }));
     await Production.bulkCreate(records);
@@ -208,4 +351,77 @@ export async function getContactMessagesCount() {
 
 export async function getSubscribersCount() {
   return await Subscriber.count();
+}
+
+// ============================================================================
+// TESTIMONIALS
+// ============================================================================
+
+export async function getTestimonials() {
+  try {
+    const testimonials = await Testimonial.findAll({
+      order: [["order", "ASC"]],
+    });
+    return testimonials.map((t) => {
+      const data = t.toJSON() as any;
+      return {
+        id: data.id,
+        name: { fr: data.nameFr, en: data.nameEn },
+        role: { fr: data.roleFr, en: data.roleEn },
+        content: { fr: data.contentFr, en: data.contentEn },
+        image: data.image,
+        certified: data.certified,
+        rating: data.rating,
+        order: data.order,
+      };
+    });
+  } catch (error) {
+    // Testimonials table doesn't exist yet or other database error
+    console.warn("Could not load testimonials:", (error as any).message);
+    return [];
+  }
+}
+
+export async function saveTestimonial(
+  id: number | undefined,
+  data: {
+    name: { fr: string; en: string };
+    role: { fr: string; en: string };
+    content: { fr: string; en: string };
+    image?: string;
+    certified?: boolean;
+    rating?: number;
+    order?: number;
+  }
+) {
+  const testimonialData = {
+    nameFr: data.name.fr,
+    nameEn: data.name.en,
+    roleFr: data.role.fr,
+    roleEn: data.role.en,
+    contentFr: data.content.fr,
+    contentEn: data.content.en,
+    image: data.image || null,
+    certified: data.certified ?? false,
+    rating: data.rating ?? 5,
+    order: data.order ?? 0,
+  };
+
+  if (id) {
+    const testimonial = await Testimonial.findByPk(id);
+    if (testimonial) {
+      return await testimonial.update(testimonialData);
+    }
+  }
+
+  return await Testimonial.create(testimonialData);
+}
+
+export async function deleteTestimonial(id: number) {
+  const testimonial = await Testimonial.findByPk(id);
+  if (testimonial) {
+    await testimonial.destroy();
+    return true;
+  }
+  return false;
 }

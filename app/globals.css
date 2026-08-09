@@ -179,3 +179,50 @@
     border-bottom-right-radius: 0 !important;
   }
 }
+
+/* Premium Article Styling */
+.article-content-premium {
+  font-family: var(--font-sans) !important;
+}
+
+.article-content-premium p {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+
+/* Drop Cap for the first paragraph of the article */
+.article-content-premium > p:first-of-type::first-letter,
+.article-content-premium > div > p:first-of-type::first-letter {
+  float: left;
+  font-size: 4.5rem;
+  line-height: 1;
+  font-weight: 700;
+  margin-right: 0.75rem;
+  margin-top: 0.25rem;
+  color: var(--primary);
+  font-family: var(--font-sans);
+}
+
+/* Custom Audio Player Styling */
+.custom-audio-player {
+  filter: invert(1) hue-rotate(180deg) brightness(1.5);
+}
+
+.dark .custom-audio-player {
+  filter: none;
+}
+
+.custom-audio-player::-webkit-media-controls-panel {
+  background-color: var(--card);
+}
+
+.custom-audio-player::-webkit-media-controls-play-button,
+.custom-audio-player::-webkit-media-controls-current-time-display,
+.custom-audio-player::-webkit-media-controls-time-remaining-display,
+.custom-audio-player::-webkit-media-controls-timeline,
+.custom-audio-player::-webkit-media-controls-volume-control-container,
+.custom-audio-player::-webkit-media-controls-volume-slider,
+.custom-audio-player::-webkit-media-controls-mute-button {
+  filter: none;
+}

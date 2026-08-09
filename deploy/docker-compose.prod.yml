@@ -5,6 +5,8 @@ services:
     restart: always
     environment:
       - NODE_ENV=production
+    env_file:
+      - ../.env
     expose: 
       - 3000
 

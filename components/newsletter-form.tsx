@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Mail } from 'lucide-react';
 import { toast } from 'sonner';
+import { parseApiError, parseNetworkError, formatErrorForDisplay } from '@/lib/error-handler';
 
 export function NewsletterForm() {
     const [email, setEmail] = useState('');
@@ -20,29 +21,30 @@ export function NewsletterForm() {
                 body: JSON.stringify({ email }),
             });
 
-            if (res.status === 409) {
-                toast.success("Vous êtes déjà inscrit !");
-                setEmail("");
-                return;
-            }
-
             const data = await res.json().catch(() => ({}));
 
             if (!res.ok) {
-                console.error("[NewsletterForm] API error:", data);
-                if (res.status === 400 && data.errors && Array.isArray(data.errors)) {
-                    data.errors.forEach((err: any) => toast.error(err.message));
-                } else {
-                    toast.error("Une erreur est survenue.");
+                // Handle already subscribed
+                if (res.status === 409) {
+                    toast.info("Vous êtes déjà inscrit à la newsletter !");
+                    setEmail("");
+                    return;
                 }
+
+                const error = parseApiError(res, data, 'fr');
+                const displayMessage = formatErrorForDisplay(error);
+                console.error(`[NewsletterForm] Error (${error.code}):`, error);
+                toast.error(displayMessage);
                 return;
             }
 
-            toast.success("Merci pour votre inscription !");
+            toast.success("Merci ! Bienvenue dans notre newsletter. Vous recevrez nos prochains articles par email.");
             setEmail("");
         } catch (err) {
-            console.error("[NewsletterForm] ctx:", err);
-            toast.error("Erreur de connexion.");
+            const error = parseNetworkError(err as Error, 'fr');
+            const displayMessage = formatErrorForDisplay(error);
+            console.error(`[NewsletterForm] Error (${error.code}):`, error);
+            toast.error(displayMessage);
         } finally {
             setIsSubmitting(false);
         }

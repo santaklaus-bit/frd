@@ -1,236 +1,220 @@
 "use client";
 
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import Link from "@tiptap/extension-link";
-import Image from "@tiptap/extension-image";
-import { useState, useRef } from "react";
-import {
-  Bold,
-  Italic,
-  Underline as UnderlineIcon,
-  Strikethrough,
-  Heading1,
-  Heading2,
-  List,
-  ListOrdered,
-  Link as LinkIcon,
-  ImageIcon,
-  Loader2,
-} from "lucide-react";
+import React, { useEffect, useRef, useCallback } from "react";
+import EditorJS, { OutputData } from "@editorjs/editorjs";
+import Header from "@editorjs/header";
+import List from "@editorjs/list";
+import ImageTool from "@editorjs/image";
+import Quote from "@editorjs/quote";
+// @ts-ignore
+import Marker from "@editorjs/marker";
+// @ts-ignore
+import Delimiter from "@editorjs/delimiter";
+// @ts-ignore
+import InlineCode from "@editorjs/inline-code";
+// @ts-ignore
+import LinkTool from "@editorjs/link";
+// @ts-ignore
+import Embed from "@editorjs/embed";
+// @ts-ignore
+import Paragraph from "@editorjs/paragraph";
+// @ts-ignore
+import Table from "@editorjs/table";
+// @ts-ignore
+import Warning from "@editorjs/warning";
+// @ts-ignore
+import Checklist from "@editorjs/checklist";
+// @ts-ignore
+import CodeTool from "@editorjs/code";
+
 import { toast } from "sonner";
+import "./editorjs.css";
 
 interface WysiwygEditorProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
+  holder?: string;
 }
-
-const MenuBar = ({ editor }: { editor: any }) => {
-  const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  if (!editor) {
-    return null;
-  }
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) throw new Error("Upload failed");
-
-      const data = await res.json();
-      editor.chain().focus().setImage({ src: data.url }).run();
-      toast.success("Image insérée !");
-    } catch (err) {
-      console.error(err);
-      toast.error("Erreur lors de l'envoi de l'image.");
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    }
-  };
-
-  const addImage = () => {
-    fileInputRef.current?.click();
-  };
-
-  const setLink = () => {
-    const previousUrl = editor.getAttributes("link").href;
-    const url = window.prompt("URL du lien", previousUrl);
-    
-    // cancelled
-    if (url === null) {
-      return;
-    }
-
-    // empty
-    if (url === "") {
-      editor.chain().focus().extendMarkRange("link").unsetLink().run();
-      return;
-    }
-
-    // update link
-    editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
-  };
-
-  return (
-    <div className="flex flex-wrap gap-1 p-2 border-b border-border bg-muted/20">
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        disabled={!editor.can().chain().focus().toggleBold().run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("bold") ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Gras"
-      >
-        <Bold className="w-4 h-4" />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        disabled={!editor.can().chain().focus().toggleItalic().run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("italic") ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Italique"
-      >
-        <Italic className="w-4 h-4" />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleUnderline().run()}
-        disabled={!editor.can().chain().focus().toggleUnderline().run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("underline") ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Souligné"
-      >
-        <UnderlineIcon className="w-4 h-4" />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleStrike().run()}
-        disabled={!editor.can().chain().focus().toggleStrike().run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("strike") ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Barré"
-      >
-        <Strikethrough className="w-4 h-4" />
-      </button>
-
-      <div className="w-px h-6 bg-border mx-1 self-center" />
-
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("heading", { level: 2 }) ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Titre 1"
-      >
-        <Heading1 className="w-4 h-4" />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("heading", { level: 3 }) ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Titre 2"
-      >
-        <Heading2 className="w-4 h-4" />
-      </button>
-
-      <div className="w-px h-6 bg-border mx-1 self-center" />
-
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("bulletList") ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Liste à puces"
-      >
-        <List className="w-4 h-4" />
-      </button>
-      <button
-        type="button"
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("orderedList") ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Liste numérotée"
-      >
-        <ListOrdered className="w-4 h-4" />
-      </button>
-
-      <div className="w-px h-6 bg-border mx-1 self-center" />
-
-      <button
-        type="button"
-        onClick={setLink}
-        className={`p-2 rounded-md hover:bg-muted ${editor.isActive("link") ? "bg-muted text-primary" : "text-muted-foreground"}`}
-        title="Insérer un lien"
-      >
-        <LinkIcon className="w-4 h-4" />
-      </button>
-      <button
-        type="button"
-        onClick={addImage}
-        disabled={uploading}
-        className="p-2 rounded-md hover:bg-muted text-muted-foreground disabled:opacity-50"
-        title="Insérer une image"
-      >
-        {uploading ? (
-          <Loader2 className="w-4 h-4 animate-spin" />
-        ) : (
-          <ImageIcon className="w-4 h-4" />
-        )}
-      </button>
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileUpload}
-        accept="image/*"
-        className="hidden"
-      />
-    </div>
-  );
-};
 
 export function WysiwygEditor({
   value,
   onChange,
+  placeholder,
   className,
+  holder = "editorjs-container",
 }: WysiwygEditorProps) {
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      Image,
-      Link.configure({
-        openOnClick: false,
-      }),
-    ],
-    content: value,
-    immediatelyRender: false,
-    onUpdate: ({ editor }) => {
-      onChange(editor.getHTML());
-    },
-    editorProps: {
-      attributes: {
-        class: "prose dark:prose-invert max-w-none focus:outline-none p-4 min-h-[400px]",
-      },
-    },
-  });
+  const ejInstance = useRef<EditorJS | null>(null);
+  const isReady = useRef(false);
+
+  const getInitialData = useCallback((): OutputData | undefined => {
+    if (!value) return undefined;
+    try {
+      const parsed = JSON.parse(value);
+      if (parsed.blocks) return parsed;
+    } catch (e) {
+      // Not JSON — wrap plain text
+    }
+    return {
+      time: Date.now(),
+      blocks: [{ type: "paragraph", data: { text: value } }],
+      version: "2.30.0",
+    };
+  }, [value]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || isReady.current) return;
+
+    const initEditor = async () => {
+      try {
+        const editor = new EditorJS({
+          holder,
+          placeholder: placeholder || "Commencez à rédiger votre article ici...",
+          initialBlock: "paragraph",
+          data: getInitialData(),
+          inlineToolbar: ["bold", "italic", "marker", "inlineCode", "link"],
+          tools: {
+            // ─── Headings ───────────────────────────────────────────────────
+            header: {
+              class: Header as any,
+              config: { levels: [2, 3, 4], defaultLevel: 2 },
+              shortcut: "CMD+SHIFT+H",
+              inlineToolbar: false,
+            },
+            // ─── Text ───────────────────────────────────────────────────────
+            paragraph: {
+              class: Paragraph as any,
+              inlineToolbar: true,
+            },
+            // ─── Lists ──────────────────────────────────────────────────────
+            list: {
+              class: List,
+              inlineToolbar: true,
+              config: { defaultStyle: "unordered" },
+              shortcut: "CMD+SHIFT+L",
+            },
+            checklist: {
+              class: Checklist,
+              inlineToolbar: true,
+            },
+            // ─── Media ──────────────────────────────────────────────────────
+            image: {
+              class: ImageTool,
+              config: {
+                uploader: {
+                  async uploadByFile(file: File) {
+                    const formData = new FormData();
+                    formData.append("file", file);
+                    try {
+                      const res = await fetch("/api/upload", {
+                        method: "POST",
+                        body: formData,
+                      });
+                      if (!res.ok) throw new Error("Upload failed");
+                      const data = await res.json();
+                      return { success: 1, file: { url: data.url } };
+                    } catch {
+                      toast.error("Erreur lors de l'upload de l'image");
+                      return { success: 0, file: { url: "" } };
+                    }
+                  },
+                  async uploadByUrl(url: string) {
+                    return { success: 1, file: { url } };
+                  },
+                },
+              },
+            },
+            // ─── Rich blocks ────────────────────────────────────────────────
+            quote: {
+              class: Quote,
+              inlineToolbar: true,
+              config: { quotePlaceholder: "Saisir la citation...", captionPlaceholder: "Auteur" },
+              shortcut: "CMD+SHIFT+O",
+            },
+            warning: {
+              class: Warning,
+              inlineToolbar: true,
+              config: { titlePlaceholder: "Titre", messagePlaceholder: "Message important..." },
+            },
+            table: {
+              class: Table as any,
+              inlineToolbar: true,
+              config: { rows: 2, cols: 3, withHeadings: true },
+            },
+            code: {
+              class: CodeTool as any,
+            },
+            // ─── Inline tools ────────────────────────────────────────────────
+            marker: {
+              class: Marker,
+              shortcut: "CMD+SHIFT+M",
+            },
+            inlineCode: {
+              class: InlineCode,
+              shortcut: "CMD+SHIFT+C",
+            },
+            delimiter: Delimiter,
+            // ─── Embeds ──────────────────────────────────────────────────────
+            linkTool: {
+              class: LinkTool,
+              config: { endpoint: "/api/link-meta" },
+            },
+            embed: {
+              class: Embed,
+              inlineToolbar: false,
+              config: {
+                services: {
+                  youtube: true,
+                  twitter: true,
+                  instagram: true,
+                  vimeo: true,
+                },
+              },
+            },
+          },
+          onChange: async (api) => {
+            const data = await api.saver.save();
+            onChange(JSON.stringify(data));
+          },
+          autofocus: false,
+          onReady: () => {
+            isReady.current = true;
+          },
+        });
+
+        ejInstance.current = editor;
+      } catch (err) {
+        console.error("Failed to initialize Editor.js", err);
+      }
+    };
+
+    initEditor();
+
+    return () => {
+      // Intentionally not destroying: causes issues in strict mode
+    };
+  }, [holder, placeholder, getInitialData, onChange]);
 
   return (
-    <div className={`border border-border rounded-xl overflow-hidden bg-background flex flex-col ${className || ""}`}>
-      <MenuBar editor={editor} />
-      <div className="flex-1 overflow-y-auto cursor-text" onClick={() => editor?.commands.focus()}>
-        <EditorContent editor={editor} />
+    <div className={`flex flex-col ${className || ""}`}>
+      {/* Toolbar hint */}
+      <div className="px-4 py-2 bg-muted/30 border-b border-border/30 flex items-center gap-3 flex-wrap text-[10px] text-muted-foreground/60 font-mono">
+        <span className="font-semibold text-muted-foreground/80">Outils :</span>
+        <span>Tab → nouvelle ligne</span>
+        <span>·</span>
+        <span>/ → insérer un bloc</span>
+        <span>·</span>
+        <span>Sélectionner → mise en forme</span>
+        <span>·</span>
+        <span>⌘+Z → annuler</span>
+      </div>
+      {/* Editor area */}
+      <div className="flex-1 overflow-y-auto cursor-text p-4 md:p-8 min-h-[400px]">
+        <div
+          id={holder}
+          className="w-full prose prose-sm md:prose-base dark:prose-invert max-w-none focus:outline-none"
+        />
       </div>
     </div>
   );

@@ -22,11 +22,16 @@ export async function GET(
     return NextResponse.json({
       post: {
         slug: post.slug,
-        title: post.title,
+        title: { fr: post.titleFr, en: post.titleEn },
         date: post.date,
-        description: post.description || "",
+        description: { fr: post.descriptionFr, en: post.descriptionEn },
         thumbnail: post.thumbnail || "",
-        content: post.content,
+        content: { fr: post.contentFr, en: post.contentEn },
+        readTime: { fr: post.readTimeFr, en: post.readTimeEn },
+        wordCount: { fr: post.wordCountFr, en: post.wordCountEn },
+        pdfUrl: { fr: post.pdfUrlFr, en: post.pdfUrlEn },
+        audioUrl: { fr: post.audioUrlFr, en: post.audioUrlEn },
+        imageCaption: { fr: post.imageCaptionFr, en: post.imageCaptionEn },
       },
     });
   } catch (error) {
@@ -63,12 +68,38 @@ export async function PUT(
       );
     }
 
+    const normalize = (field: any) => {
+      if (typeof field === "string") {
+        return { fr: field, en: field };
+      }
+      return {
+        fr: field?.fr || "",
+        en: field?.en || "",
+      };
+    };
+
+    const title = normalize(body.title);
+    const description = normalize(body.description);
+    const content = normalize(body.content);
+    const pdfUrl = normalize(body.pdfUrl);
+    const audioUrl = normalize(body.audioUrl);
+    const imageCaption = normalize(body.imageCaption);
+
     await post.update({
-      title: body.title,
+      titleFr: title.fr,
+      titleEn: title.en,
+      descriptionFr: description.fr,
+      descriptionEn: description.en,
       date: body.date,
-      description: body.description ?? "",
       thumbnail: body.thumbnail ?? "",
-      content: body.content,
+      contentFr: content.fr,
+      contentEn: content.en,
+      pdfUrlFr: pdfUrl.fr,
+      pdfUrlEn: pdfUrl.en,
+      audioUrlFr: audioUrl.fr,
+      audioUrlEn: audioUrl.en,
+      imageCaptionFr: imageCaption.fr,
+      imageCaptionEn: imageCaption.en,
     });
 
     return NextResponse.json({ success: true, slug });

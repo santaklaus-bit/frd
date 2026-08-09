@@ -2,7 +2,8 @@ import {
   getBlogPosts,
   getData,
   getContactMessagesCount,
-  getSubscribersCount
+  getSubscribersCount,
+  getTestimonials
 } from "@/lib/content-manager";
 import {
   FileText,
@@ -13,6 +14,7 @@ import {
   Users,
   ArrowRight,
   PlusCircle,
+  MessageSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -23,16 +25,18 @@ export default async function AdminDashboard() {
   let posts: any[] = [];
   let initiatives: any[] = [];
   let production: any[] = [];
+  let testimonials: any[] = [];
   let contactCount = 0;
   let subscriberCount = 0;
   let dbError = false;
 
   try {
-    [posts, initiatives, production, contactCount, subscriberCount] =
+    [posts, initiatives, production, testimonials, contactCount, subscriberCount] =
       await Promise.all([
         getBlogPosts(),
         getData("initiatives"),
         getData("production"),
+        getTestimonials(),
         getContactMessagesCount(),
         getSubscribersCount(),
       ]);
@@ -64,6 +68,14 @@ export default async function AdminDashboard() {
       href: "/admin/projects",
       color: "bg-purple-500/10 text-purple-600",
       gradient: "from-purple-500/10 to-transparent"
+    },
+    {
+      label: "Testimonials",
+      value: testimonials.length,
+      icon: MessageSquare,
+      href: "/admin/testimonials",
+      color: "bg-cyan-500/10 text-cyan-600",
+      gradient: "from-cyan-500/10 to-transparent"
     },
     {
       label: "Messages",
@@ -201,9 +213,11 @@ export default async function AdminDashboard() {
                 Consultez la documentation ou contactez le support technique pour toute question sur la gestion de votre site.
               </p>
             </div>
-            <Button variant="outline" className="w-full rounded-2xl h-11 text-xs font-bold uppercase tracking-widest border-border/60">
-              Voir la doc
-            </Button>
+            <Link href="/admin/docs" className="block w-full">
+              <Button variant="outline" className="w-full rounded-2xl h-11 text-xs font-bold uppercase tracking-widest border-border/60">
+                Voir la doc
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

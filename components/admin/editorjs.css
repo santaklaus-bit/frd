@@ -1,0 +1,35 @@
+/* Add custom tweaks to Editor.js for Tailwind Typography / Dark Mode */
+
+.ce-block__content, 
+.ce-toolbar__content {
+  max-width: none;
+}
+
+/* Adjust toolbar colors for dark mode */
+.dark .ce-toolbar__actions {
+  filter: invert(1);
+}
+
+.dark .ce-popover {
+  background: #1a1a1a;
+  border-color: #333;
+  color: #fff;
+}
+
+.dark .ce-popover__item:hover {
+  background: #333;
+}
+
+.dark .ce-inline-toolbar {
+  background: #1a1a1a;
+  border-color: #333;
+}
+
+.dark .ce-inline-toolbar__buttons {
+  filter: invert(1);
+}
+
+/* Base resets inside the prose container */
+#editorjs-container .ce-paragraph {
+  line-height: 1.75;
+}

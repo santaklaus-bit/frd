@@ -1,12 +1,12 @@
 # ------------------------------
 # 1. Install dependencies
 # ------------------------------
-FROM node:20-alpine
+FROM node:22-alpine
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* source.config.ts ./
-RUN corepack enable pnpm && pnpm i --frozen-lockfile
+RUN npm install --legacy-peer-deps
 
 # Copy everything else
 COPY . .

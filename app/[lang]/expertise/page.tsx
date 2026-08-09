@@ -14,9 +14,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   const dict = await getDictionary(lang as "en" | "fr");
+  const defaultTitle = lang === "fr" ? "Expertise - Farid DANKO" : "Expertise - Farid DANKO";
+  const defaultDesc = lang === "fr"
+    ? "Découvrez l'expertise de Farid Danko"
+    : "Discover Farid Danko's expertise";
+
   return {
-    title: dict.seo.expertise.title,
-    description: dict.seo.expertise.description,
+    title: (dict as any)?.seo?.expertise?.title || defaultTitle,
+    description: (dict as any)?.seo?.expertise?.description || defaultDesc,
     alternates: { canonical: `/${lang}/expertise` },
   };
 }
@@ -31,7 +36,7 @@ export default async function ExpertisePage({
 
   const rawInitiatives = await getData("expertise");
   const initiatives = rawInitiatives
-    .filter((item: any) => item.slug) // skip empty drafts
+    .filter((item: any) => item.slug && !item.parentSlug) // skip empty drafts and sub-expertises
     .map((item: any, index: number) => ({
       ...item,
       num: String(index + 1).padStart(2, "0"),

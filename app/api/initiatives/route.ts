@@ -11,7 +11,6 @@ const LocalizedFieldSchema = z.object({
 
 const InitiativeSchema = z.object({
   slug: z.string().min(1, "Slug is required"),
-  icon: z.string().min(1, "Icon is required"),
   title: LocalizedFieldSchema,
   description: LocalizedFieldSchema,
   category: LocalizedFieldSchema,
@@ -66,7 +65,6 @@ export async function POST(request: NextRequest) {
 
     await Initiative.create({
       slug: data.slug,
-      icon: data.icon,
       titleFr: data.title.fr,
       titleEn: data.title.en,
       descriptionFr: data.description.fr,

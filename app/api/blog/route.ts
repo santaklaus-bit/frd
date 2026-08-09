@@ -2,14 +2,35 @@ import { NextRequest, NextResponse } from "next/server";
 import { getBlogPosts, saveBlogPost } from "@/lib/content-manager";
 import { z } from "zod";
 
+const LocalizedField = z.union([
+  z.string(),
+  z.object({
+    fr: z.string().optional().default(""),
+    en: z.string().optional().default(""),
+  })
+]);
+
 const BlogPostSchema = z.object({
   slug: z.string().min(1, "Slug is required"),
-  title: z.string().min(1, "Title is required"),
+  title: LocalizedField,
   date: z.string().min(1, "Date is required"),
-  description: z.string().optional().default(""),
+  description: LocalizedField.optional(),
   thumbnail: z.string().optional().default(""),
-  content: z.string().min(1, "Content is required"),
+  content: LocalizedField,
+  pdfUrl: LocalizedField.optional(),
+  audioUrl: LocalizedField.optional(),
+  imageCaption: LocalizedField.optional(),
 });
+
+const normalize = (field: any) => {
+  if (typeof field === "string") {
+    return { fr: field, en: field };
+  }
+  return {
+    fr: field?.fr || "",
+    en: field?.en || "",
+  };
+};
 
 // GET: Retrieve all blog posts
 export async function GET() {
@@ -38,16 +59,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { slug, title, date, description, thumbnail, content } = parsed.data;
+    const { slug, title, date, description, thumbnail, content, pdfUrl, audioUrl, imageCaption } = parsed.data;
 
     const frontmatter = {
-      title,
+      title: normalize(title),
       date,
-      description,
+      description: normalize(description),
       thumbnail,
+      pdfUrl: normalize(pdfUrl),
+      audioUrl: normalize(audioUrl),
+      imageCaption: normalize(imageCaption),
+      authorName: "Farid DANKO",
+      authorPhoto: "/farid-portrait.webp",
     };
 
-    await saveBlogPost(slug, frontmatter, content);
+    await saveBlogPost(slug, undefined, frontmatter, normalize(content));
 
     return NextResponse.json(
       { success: true, slug },

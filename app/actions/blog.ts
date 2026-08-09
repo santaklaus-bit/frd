@@ -7,11 +7,23 @@ import path from "path";
 
 export async function createOrUpdateBlogPost(formData: FormData) {
   const slug = formData.get("slug") as string;
-  const title = formData.get("title") as string;
-  const description = formData.get("description") as string;
+  const slugEn = (formData.get("slugEn") as string) || slug;
+  const titleFr = formData.get("titleFr") as string;
+  const titleEn = formData.get("titleEn") as string;
+  const descriptionFr = formData.get("descriptionFr") as string;
+  const descriptionEn = formData.get("descriptionEn") as string;
   const date = formData.get("date") as string;
-  const content = formData.get("content") as string;
+  const contentFr = formData.get("contentFr") as string;
+  const contentEn = formData.get("contentEn") as string;
   const authorName = formData.get("authorName") as string;
+  const readTimeFr = formData.get("readTimeFr") as string;
+  const readTimeEn = formData.get("readTimeEn") as string;
+  const imageCaptionFr = formData.get("imageCaptionFr") as string || "";
+  const imageCaptionEn = formData.get("imageCaptionEn") as string || "";
+  const pdfUrlFr = formData.get("pdfUrlFr") as string || "";
+  const pdfUrlEn = formData.get("pdfUrlEn") as string || "";
+  const audioUrlFr = formData.get("audioUrlFr") as string || "";
+  const audioUrlEn = formData.get("audioUrlEn") as string || "";
   
   const thumbnailData = formData.get("thumbnail");
   let thumbnailUrl = formData.get("currentThumbnail") as string || "";
@@ -46,15 +58,21 @@ export async function createOrUpdateBlogPost(formData: FormData) {
   }
 
   const frontmatter = {
-    title,
+    title: { fr: titleFr, en: titleEn },
+    description: { fr: descriptionFr, en: descriptionEn },
     date,
-    description,
     thumbnail: thumbnailUrl || "",
     authorName: authorName || "",
     authorPhoto: authorPhotoUrl || "",
+    imageCaption: { fr: imageCaptionFr, en: imageCaptionEn },
+    pdfUrl: { fr: pdfUrlFr, en: pdfUrlEn },
+    audioUrl: { fr: audioUrlFr, en: audioUrlEn },
   };
 
-  await saveBlogPost(slug, frontmatter, content);
+  const content = { fr: contentFr, en: contentEn };
+  const readTime = { fr: readTimeFr, en: readTimeEn };
+
+  await saveBlogPost(slug, slugEn, frontmatter, content, readTime);
   revalidatePath("/admin/blog");
   revalidatePath("/[lang]/blog", "layout");
 }

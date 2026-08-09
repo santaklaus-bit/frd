@@ -1,10 +1,10 @@
 import { getData } from "@/lib/content-manager";
-import ProductionManager from "@/components/admin/production-manager";
+import ProjectsList from "@/components/admin/projects-list";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProjectsAdminPage() {
   const projects = await getData("projects");
 
-  return <ProductionManager initialData={projects} />;
+  return <ProjectsList initialData={projects} />;
 }

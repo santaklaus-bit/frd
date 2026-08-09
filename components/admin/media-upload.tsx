@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { ImageIcon, Loader2, X, UploadCloud, FileText, Video } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { ImageCropper } from "./image-cropper";
 
 interface MediaUploadProps {
   value?: string;
@@ -14,6 +15,7 @@ interface MediaUploadProps {
   accept?: string;
   label?: string;
   className?: string;
+  aspect?: number;
 }
 
 export function MediaUpload({
@@ -23,16 +25,42 @@ export function MediaUpload({
   accept = "image/*,video/*,application/pdf",
   label = "Fichier",
   className,
+  aspect = 1,
 }: MediaUploadProps) {
   const [uploading, setUploading] = useState(false);
+  const [cropperOpen, setCropperOpen] = useState(false);
+  const [originalImage, setOriginalImage] = useState<string | null>(null);
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (file.type.startsWith("image/") && !file.type.includes("svg")) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setOriginalImage(reader.result as string);
+        setCropperOpen(true);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      await performUpload(file);
+    }
+  };
+
+  const skipCrop = async () => {
+    const fileInput = document.getElementById(`upload-${label}`) as HTMLInputElement;
+    const file = fileInput?.files?.[0];
+    if (file) {
+      setCropperOpen(false);
+      setOriginalImage(null);
+      await performUpload(file);
+    }
+  };
+
+  const performUpload = async (file: File | Blob) => {
     setUploading(true);
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", file, "upload.jpg");
 
     try {
       const res = await fetch("/api/upload", {
@@ -51,6 +79,11 @@ export function MediaUpload({
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleCropComplete = async (croppedBlob: Blob) => {
+    setCropperOpen(false);
+    await performUpload(croppedBlob);
   };
 
   const isImage = value?.match(/\.(jpg|jpeg|png|webp|gif|svg)$/i);
@@ -161,11 +194,25 @@ export function MediaUpload({
           id={`upload-${label}`}
           type="file"
           accept={accept}
-          onChange={handleUpload}
+          onChange={onFileSelect}
           className="hidden"
           disabled={uploading}
         />
       </div>
+
+      {originalImage && (
+        <ImageCropper
+          image={originalImage}
+          open={cropperOpen}
+          aspect={aspect}
+          onClose={() => {
+            setCropperOpen(false);
+            setOriginalImage(null);
+          }}
+          onCropComplete={handleCropComplete}
+          onSkip={skipCrop}
+        />
+      )}
     </div>
   );
 }

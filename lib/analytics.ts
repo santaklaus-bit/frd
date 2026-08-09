@@ -53,13 +53,18 @@ export interface AnalyticsData {
     deviceSplit: DeviceSplit[];
     // Meta
     isDemo: boolean; // true when using mock data
+    demoReason?: "not-configured" | "api-error"; // why we fell back to mock data
+    demoDetails?: string; // human readable explanation (missing vars, API message…)
 }
 
 // ---------------------------------------------------------------------------
 // Mock data — Fallback
 // ---------------------------------------------------------------------------
 
-function getMockAnalyticsData(): AnalyticsData {
+function getMockAnalyticsData(
+    reason: "not-configured" | "api-error" = "not-configured",
+    details?: string
+): AnalyticsData {
     const now = new Date();
     const dailyMetrics: DailyMetric[] = Array.from({ length: 30 }, (_, i) => {
         const d = new Date(now);
@@ -103,6 +108,8 @@ function getMockAnalyticsData(): AnalyticsData {
             { device: "Tablette", users: 253, percentage: 7 },
         ],
         isDemo: true,
+        demoReason: reason,
+        demoDetails: details,
     };
 }
 
@@ -110,14 +117,66 @@ function getMockAnalyticsData(): AnalyticsData {
 // Real GA4 Integration
 // ---------------------------------------------------------------------------
 
-async function fetchFromGoogleAnalytics(): Promise<AnalyticsData | null> {
-    const propertyId = process.env.GA_PROPERTY_ID;
-    const clientEmail = process.env.GA_CLIENT_EMAIL;
-    const privateKey = process.env.GA_PRIVATE_KEY?.replace(/\\n/g, '\n');
-
-    if (!propertyId || !clientEmail || !privateKey) {
-        return null;
+/** GA4 returns raw values like "google / organic" or "(direct) / (none)". */
+function prettifySource(raw: string): string {
+    const value = (raw || "").toLowerCase();
+    if (!value) return "Inconnu";
+    if (value.startsWith("(direct)")) return "Direct";
+    if (value.includes("organic")) return "Recherche organique";
+    if (value.includes("referral")) return "Référents";
+    if (value.includes("cpc") || value.includes("paid")) return "Publicité payante";
+    if (value.includes("email")) return "Email";
+    if (/facebook|linkedin|twitter|x\.com|instagram|tiktok|youtube|social/.test(value)) {
+        return "Réseaux sociaux";
     }
+    // "google / organic" → "Google"
+    const source = raw.split("/")[0].trim();
+    return source.charAt(0).toUpperCase() + source.slice(1);
+}
+
+function prettifyDevice(raw: string): string {
+    switch ((raw || "").toLowerCase()) {
+        case "mobile":
+            return "Mobile";
+        case "desktop":
+            return "Desktop";
+        case "tablet":
+            return "Tablette";
+        default:
+            return raw || "Autre";
+    }
+}
+
+type FetchResult =
+    | { ok: true; data: AnalyticsData }
+    | { ok: false; reason: "not-configured" | "api-error"; details: string };
+
+async function fetchFromGoogleAnalytics(): Promise<FetchResult> {
+    const propertyId = process.env.GA_PROPERTY_ID?.trim();
+    const clientEmail = process.env.GA_CLIENT_EMAIL?.trim();
+    let privateKey = process.env.GA_PRIVATE_KEY;
+
+    const missing = [
+        !propertyId && "GA_PROPERTY_ID",
+        !clientEmail && "GA_CLIENT_EMAIL",
+        !privateKey && "GA_PRIVATE_KEY",
+    ].filter(Boolean) as string[];
+
+    if (missing.length > 0 || !propertyId || !clientEmail || !privateKey) {
+        console.warn(`Analytics: missing environment variables: ${missing.join(", ")}`);
+        return {
+            ok: false,
+            reason: "not-configured",
+            details: `Variables manquantes dans .env : ${missing.join(", ")}`,
+        };
+    }
+
+    // Sanitize private key: remove quotes, fix newlines, trim
+    privateKey = privateKey.trim();
+    if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+        privateKey = privateKey.substring(1, privateKey.length - 1);
+    }
+    privateKey = privateKey.replace(/\\n/g, '\n');
 
     try {
         const client = new BetaAnalyticsDataClient({
@@ -125,25 +184,6 @@ async function fetchFromGoogleAnalytics(): Promise<AnalyticsData | null> {
                 client_email: clientEmail,
                 private_key: privateKey,
             },
-        });
-
-        // Current 30 days and Previous 30 days for deltas
-        const [response] = await client.runReport({
-            property: `properties/${propertyId}`,
-            dateRanges: [
-                { startDate: '30daysAgo', endDate: 'today' },
-                { startDate: '60daysAgo', endDate: '31daysAgo' },
-            ],
-            metrics: [
-                { name: 'screenPageViews' },
-                { name: 'sessions' },
-                { name: 'activeUsers' },
-                { name: 'bounceRate' },
-                { name: 'averageSessionDuration' },
-            ],
-            dimensions: [
-                { name: 'date' },
-            ],
         });
 
         const [pageResponse] = await client.runReport({
@@ -195,31 +235,8 @@ async function fetchFromGoogleAnalytics(): Promise<AnalyticsData | null> {
             limit: 3,
         });
 
-        // Parse Main KPIs
-        let totalPageviews = 0;
-        let totalSessions = 0;
-        let totalUsers = 0;
-        let avgBounceRate = 0;
-        let avgSessionDurationSec = 0;
-
-        let prevPageviews = 0;
-        let prevSessions = 0;
-        let prevUsers = 0;
-
-        const dailyMap = new Map<string, DailyMetric>();
-
-        response.rows?.forEach((row: any) => {
-            const dateStr = row.dimensionValues?.[0]?.value || "";
-            const formattedDate = `${dateStr.substring(0, 4)}-${dateStr.substring(4, 6)}-${dateStr.substring(6, 8)}`;
-            const isCurrentPeriod = dateStr >= new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().replace(/-/g, '').substring(0, 8); // approximate
-
-            // Actually, we should check which date range this row belongs to. 
-            // In GA4 reports with multiple date ranges, date range is a dimension by default or it aggregates.
-            // Since we queried 'date' dimension, we get rows for each date.
-            // We just need to check if the date is within the last 30 days.
-        });
-
-        // Let's simplify and make two separate calls for total metrics to safely compare ranges without complex date parsing
+        // Totals for the current and previous period, in a single report.
+        // Multiple named date ranges expose a `dateRange` dimension we can filter on.
         const [kpiResponse] = await client.runReport({
             property: `properties/${propertyId}`,
             dateRanges: [
@@ -235,21 +252,26 @@ async function fetchFromGoogleAnalytics(): Promise<AnalyticsData | null> {
             ],
         });
 
-        // Helper to get metric for a dimension range
-        const getMetric = (rangeName: string, metricIndex: number) => {
-            const row = kpiResponse.rows?.find((r: any) => r.dimensionValues?.[0]?.value === rangeName);
+        // Helper to read a metric for a named date range.
+        // The API labels rows with the range name, or `date_range_{index}` as a fallback.
+        const getMetric = (rangeName: 'current' | 'previous', metricIndex: number) => {
+            const fallbackName = rangeName === 'current' ? 'date_range_0' : 'date_range_1';
+            const row = kpiResponse.rows?.find((r: any) => {
+                const value = r.dimensionValues?.[0]?.value;
+                return value === rangeName || value === fallbackName;
+            });
             return row ? parseFloat(row.metricValues?.[metricIndex]?.value || '0') : 0;
         };
 
-        totalPageviews = getMetric('current', 0);
-        totalSessions = getMetric('current', 1);
-        totalUsers = getMetric('current', 2);
-        avgBounceRate = Math.round(getMetric('current', 3) * 1000) / 10; // convert to percentage
-        avgSessionDurationSec = getMetric('current', 4);
+        const totalPageviews = getMetric('current', 0);
+        const totalSessions = getMetric('current', 1);
+        const totalUsers = getMetric('current', 2);
+        const avgBounceRate = Math.round(getMetric('current', 3) * 1000) / 10; // ratio → percentage
+        const avgSessionDurationSec = getMetric('current', 4);
 
-        prevPageviews = getMetric('previous', 0);
-        prevSessions = getMetric('previous', 1);
-        prevUsers = getMetric('previous', 2);
+        const prevPageviews = getMetric('previous', 0);
+        const prevSessions = getMetric('previous', 1);
+        const prevUsers = getMetric('previous', 2);
 
         const calcDelta = (current: number, previous: number) => {
             if (previous === 0) return 0;
@@ -308,7 +330,7 @@ async function fetchFromGoogleAnalytics(): Promise<AnalyticsData | null> {
         }) || [];
 
         const trafficSources: TrafficSource[] = rawSources.map((s: any) => ({
-            source: s.source,
+            source: prettifySource(s.source),
             sessions: s.sessions,
             percentage: totalSourceSessions > 0 ? Math.round((s.sessions / totalSourceSessions) * 1000) / 10 : 0
         }));
@@ -325,29 +347,36 @@ async function fetchFromGoogleAnalytics(): Promise<AnalyticsData | null> {
         }) || [];
 
         const deviceSplit: DeviceSplit[] = rawDevices.map((d: any) => ({
-            device: d.device,
+            device: prettifyDevice(d.device),
             users: d.users,
             percentage: totalDeviceUsers > 0 ? Math.round((d.users / totalDeviceUsers) * 1000) / 10 : 0
         }));
 
         return {
-            totalPageviews,
-            totalSessions,
-            totalUsers,
-            avgBounceRate,
-            avgSessionDuration: formatDuration(avgSessionDurationSec),
-            pageviewsDelta: calcDelta(totalPageviews, prevPageviews),
-            sessionsDelta: calcDelta(totalSessions, prevSessions),
-            usersDelta: calcDelta(totalUsers, prevUsers),
-            dailyMetrics,
-            topPages,
-            trafficSources,
-            deviceSplit,
-            isDemo: false,
+            ok: true,
+            data: {
+                totalPageviews,
+                totalSessions,
+                totalUsers,
+                avgBounceRate,
+                avgSessionDuration: formatDuration(avgSessionDurationSec),
+                pageviewsDelta: calcDelta(totalPageviews, prevPageviews),
+                sessionsDelta: calcDelta(totalSessions, prevSessions),
+                usersDelta: calcDelta(totalUsers, prevUsers),
+                dailyMetrics,
+                topPages,
+                trafficSources,
+                deviceSplit,
+                isDemo: false,
+            },
         };
     } catch (e) {
         console.error("Error fetching Google Analytics data:", e);
-        return null;
+        return {
+            ok: false,
+            reason: "api-error",
+            details: (e as Error)?.message || "Erreur inconnue de l'API Google Analytics.",
+        };
     }
 }
 
@@ -355,9 +384,9 @@ async function fetchFromGoogleAnalytics(): Promise<AnalyticsData | null> {
  * Entry-point used by the analytics page server component.
  */
 export async function getAnalyticsData(): Promise<AnalyticsData> {
-    const realData = await fetchFromGoogleAnalytics();
-    if (realData) {
-        return realData;
+    const result = await fetchFromGoogleAnalytics();
+    if (result.ok) {
+        return result.data;
     }
-    return getMockAnalyticsData();
+    return getMockAnalyticsData(result.reason, result.details);
 }

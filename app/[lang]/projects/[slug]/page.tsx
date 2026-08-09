@@ -10,6 +10,10 @@ import { HashScrollHandler } from "@/components/hash-scroll-handler";
 
 export const dynamic = "force-dynamic";
 
+// @ts-ignore
+import edjsParser from "editorjs-html";
+import { customParsers } from "@/lib/editor-parsers";
+
 interface PageProps {
   params: Promise<{ slug: string; lang: string }>;
 }
@@ -21,6 +25,8 @@ const ICON_MAP: Record<string, any> = {
   TrendingUp,
 };
 
+import { siteConfig } from "@/lib/site";
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
@@ -30,12 +36,28 @@ export async function generateMetadata({
 
   if (!initiative) return {};
 
-  const title = initiative.title[lang as keyof typeof initiative.title] || initiative.title.fr;
-  const description = initiative.description[lang as keyof typeof initiative.description] || initiative.description.fr;
+  const title = (initiative.title as any)[lang] || initiative.title.fr;
+  const description = (initiative.description as any)[lang] || initiative.description.fr;
+  const caption = (initiative.imageCaption as any)[lang] || initiative.imageCaption?.fr || "";
+
+  const imageUrl = initiative.image 
+    ? (initiative.image.startsWith("http") ? initiative.image : `${siteConfig.url}${initiative.image.startsWith("/") ? "" : "/"}${initiative.image}`)
+    : undefined;
 
   return {
     title,
     description,
+    openGraph: {
+      title,
+      description,
+      images: imageUrl ? [{ url: imageUrl, alt: caption || title }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: imageUrl ? [imageUrl] : [],
+    },
   };
 }
 
@@ -51,8 +73,29 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const title = initiative.title?.[lang as keyof typeof initiative.title] || initiative.title?.fr || "";
   const description = initiative.description?.[lang as keyof typeof initiative.description] || initiative.description?.fr || "";
   const category = initiative.category?.[lang as keyof typeof initiative.category] || initiative.category?.fr || "";
+  const caption = initiative.imageCaption?.[lang as keyof typeof initiative.imageCaption] || initiative.imageCaption?.fr || "";
   const Icon = ICON_MAP[initiative.icon] || Lightbulb;
   const isFr = lang === "fr";
+
+  const detailsRaw = initiative.details?.[lang as keyof typeof initiative.details] || initiative.details?.fr || "";
+  
+  // Editor.js Check & Parse
+  let isEditorJs = false;
+  let renderedHtml = "";
+
+  if (detailsRaw && (detailsRaw.startsWith("{") || detailsRaw.startsWith('{"'))) {
+    try {
+      const parsed = JSON.parse(detailsRaw);
+      if (parsed && parsed.blocks && Array.isArray(parsed.blocks)) {
+        isEditorJs = true;
+        const parser = edjsParser(customParsers);
+        const htmlBlocks = parser.parse(parsed);
+        renderedHtml = Array.isArray(htmlBlocks) ? htmlBlocks.join("") : (htmlBlocks as string);
+      }
+    } catch (e) {
+      // Not JSON or Not EditorJS format, fallback to raw text
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -104,15 +147,20 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         <div className="grid lg:grid-cols-[1fr_250px] gap-12 lg:gap-20">
           <main className="space-y-12">
             {/* Banner Image - Now inside content like the blog */}
-            {initiative.image && (
-                <div className="relative aspect-video rounded-3xl overflow-hidden border border-border/40 shadow-2xl group">
-                   <Image
-                      src={initiative.image}
-                      alt={title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      priority
-                    />
+            {(lang === "en" ? initiative.imageEn || initiative.image : initiative.image) && (
+                <div className="space-y-4">
+                  <div className="relative rounded-3xl overflow-hidden border border-border/40 shadow-2xl group bg-muted/30">
+                    <img
+                        src={lang === "en" ? initiative.imageEn || initiative.image : initiative.image}
+                        alt={title}
+                        className="w-full h-auto max-h-[700px] object-contain transition-transform duration-700 group-hover:scale-105"
+                      />
+                  </div>
+                  {caption && (
+                    <p className="text-sm text-muted-foreground italic px-2 border-l-2 border-primary/30 py-1">
+                      {caption}
+                    </p>
+                  )}
                 </div>
             )}
 
@@ -120,26 +168,37 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               {description}
             </p>
 
-            {initiative.details && (
-              <div className="prose dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tighter prose-headings:uppercase prose-p:text-muted-foreground prose-p:leading-relaxed prose-lg whitespace-pre-wrap">
-                <p>{(initiative.details as any)[lang] || initiative.details.fr}</p>
+            {(isEditorJs || detailsRaw) && (
+              <div className="prose dark:prose-invert max-w-none prose-headings:font-bold prose-headings:tracking-tighter prose-headings:uppercase prose-p:text-muted-foreground prose-p:leading-relaxed prose-lg">
+                {isEditorJs ? (
+                  <div dangerouslySetInnerHTML={{ __html: renderedHtml }} />
+                ) : (
+                  <div className="whitespace-pre-wrap">{detailsRaw}</div>
+                )}
               </div>
             )}
 
-            {initiative.href && (
-              <div className="pt-8">
+            <div className="flex flex-wrap items-center gap-4 pt-8">
+              {initiative.pdfUrl && (
+                <Button asChild size="lg" variant="outline" className="rounded-full px-8 py-6 font-bold uppercase tracking-widest transition-transform hover:scale-105 border-primary/20 hover:border-primary/50">
+                  <a href={initiative.pdfUrl} download target="_blank" rel="noopener noreferrer">
+                    {isFr ? "Télécharger le PDF" : "Download PDF"}
+                  </a>
+                </Button>
+              )}
+              {initiative.href && (
                 <Button asChild size="lg" className="rounded-full px-8 py-6 font-bold uppercase tracking-widest transition-transform hover:scale-105 bg-foreground text-background">
                   <a href={initiative.href} target="_blank" rel="noopener noreferrer">
                     {isFr ? "Voir la réalisation" : "View achievement"}
                   </a>
                 </Button>
-              </div>
-            )}
+              )}
+            </div>
           </main>
 
           <aside className="hidden lg:block">
              <div className="sticky top-32 space-y-10">
-                {/* TOC placeholder or other project-specific metadata could go here */}
+                {/* Meta details could go here */}
              </div>
           </aside>
         </div>

@@ -5,13 +5,30 @@
   "scripts": {
     "build:config": "esbuild source.config.ts --bundle --format=esm --outfile=.source/source.config.mjs --platform=node --external:fumadocs-mdx/config --external:zod",
     "dev": "fumadocs-mdx && npm run build:config && next dev --turbopack",
-    "build": "fumadocs-mdx && npm run build:config && next build",
-    "start": "next start",
+    "build": "rm -rf .next && fumadocs-mdx && npm run build:config && next build && npm run db:init:all",
+    "start": "npm run db:init:all && next start",
     "lint": "next lint",
     "postinstall": "fumadocs-mdx && npm run build:config",
-    "db:setup": "npx sequelize-cli db:create || true && npx sequelize-cli db:migrate && node -e \"if(process.env.NODE_ENV==='production'){require('./scripts/sync-schema.js')}else{console.log('sync-schema: Skipped (non-production)')}\" && npx sequelize-cli db:seed:all || true"
+    "db:setup": "npx sequelize-cli db:create || true && npx sequelize-cli db:migrate && node scripts/sync-schema.js && npx sequelize-cli db:seed:all || true",
+    "db:init:testimonials": "node scripts/create-testimonials-table.js",
+    "db:init:all": "npm run db:setup && npm run db:init:testimonials"
   },
   "dependencies": {
+    "@editorjs/checklist": "^1.6.0",
+    "@editorjs/code": "^2.9.4",
+    "@editorjs/delimiter": "^1.4.2",
+    "@editorjs/editorjs": "^2.31.6",
+    "@editorjs/embed": "^2.8.0",
+    "@editorjs/header": "^2.8.8",
+    "@editorjs/image": "^2.10.3",
+    "@editorjs/inline-code": "^1.5.2",
+    "@editorjs/link": "^2.6.2",
+    "@editorjs/list": "^2.0.9",
+    "@editorjs/marker": "^1.4.0",
+    "@editorjs/paragraph": "^2.11.7",
+    "@editorjs/quote": "^2.7.6",
+    "@editorjs/table": "^2.4.5",
+    "@editorjs/warning": "^1.4.1",
     "@google-analytics/data": "^5.2.1",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
@@ -29,6 +46,7 @@
     "@types/mdx": "^2.0.13",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "editorjs-html": "^4.0.5",
     "framer-motion": "^12.34.0",
     "fumadocs-core": "^15.6.2",
     "fumadocs-mdx": "^11.6.10",
@@ -44,6 +62,7 @@
     "radix-ui": "^1.4.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-easy-crop": "^5.5.7",
     "recharts": "^3.7.0",
     "sequelize": "^6.37.8",
     "sonner": "^2.0.7",
@@ -65,6 +84,17 @@
     "sequelize-cli": "^6.6.5",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.5",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite": "^5.4.11"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@tailwindcss/oxide",
+      "esbuild",
+      "protobufjs",
+      "sharp",
+      "sqlite3",
+      "unrs-resolver"
+    ]
   }
 }

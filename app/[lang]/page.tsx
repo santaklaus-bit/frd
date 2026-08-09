@@ -6,18 +6,10 @@ import { ArrowRight, Zap, TrendingUp, Users, BookOpen, FileText, Target, Lightbu
 import { Button } from "@/components/ui/button";
 import { HeroSection } from "@/components/hero-section";
 import { getDictionary } from "@/lib/get-dictionary";
-import { getBlogPosts, getData } from "@/lib/content-manager";
+import { getBlogPosts, getData, getTestimonials } from "@/lib/content-manager";
 import { Newsletter } from "@/components/newsletter";
+import { TestimonialsSection } from "@/components/testimonials-section";
 import { Metadata } from "next";
-
-const ICON_MAP: Record<string, any> = {
-  Zap,
-  TrendingUp,
-  Users,
-  Target,
-  Lightbulb,
-  Video,
-};
 
 const formatDate = (date: Date, lang: string): string => {
   return date.toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", {
@@ -57,7 +49,6 @@ export default async function HomePage({
 
   const rawExpertise = await getData("expertise");
   const expertiseItems = rawExpertise.slice(0, 3).map((item: any) => ({
-    icon: ICON_MAP[item.icon] || Lightbulb,
     title: item.title?.[lang] || item.title?.fr || "",
     desc: item.description?.[lang] || item.description?.fr || "",
     href: `/${lang}/expertise/${item.slug}`,
@@ -70,6 +61,22 @@ export default async function HomePage({
     image: item.image || "/farid-portrait.webp",
     href: `/${lang}/projects/${item.slug}`,
   }));
+
+  let testimonials: any[] = [];
+  try {
+    testimonials = await getTestimonials();
+  } catch (error) {
+    console.warn("Testimonials unavailable:", (error as any).message);
+  }
+
+  const featuredProject = rawProjects.find((p: any) => p.isFeatured === true);
+  const featuredProjectData = featuredProject ? {
+    title: featuredProject.title?.[lang as "en" | "fr"] || featuredProject.title?.fr || "",
+    desc: featuredProject.description?.[lang as "en" | "fr"] || featuredProject.description?.fr || "",
+    caption: featuredProject.imageCaption?.[lang as "en" | "fr"] || featuredProject.imageCaption?.fr || "",
+    image: featuredProject.image || "/farid-portrait.webp",
+    href: `/${lang}/projects/${featuredProject.slug}`,
+  } : null;
 
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-24">
@@ -136,10 +143,7 @@ export default async function HomePage({
                 href={item.href}
                 className="group p-6 md:p-8 border border-border rounded-2xl bg-background hover:shadow-xl hover:-translate-y-1 transition-all"
               >
-                <div className="mb-4 md:mb-6 p-2.5 md:p-3 rounded-xl bg-muted/30 group-hover:bg-black group-hover:text-white dark:group-hover:bg-white dark:group-hover:text-black transition-colors w-fit">
-                  <item.icon className="h-6 w-6 md:h-7 md:w-7" />
-                </div>
-                <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3 uppercase tracking-tight">
+                <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3 uppercase tracking-tight group-hover:text-primary transition-colors">
                   {item.title}
                 </h3>
                 <p className="text-muted-foreground text-sm leading-relaxed mb-4">
@@ -168,39 +172,45 @@ export default async function HomePage({
       </section>
 
       {/* ── 3. FEATURED PROJECT ── */}
-      <section className="py-12 md:py-20 lg:py-28 border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 md:mb-12 lg:mb-16 tracking-tight uppercase text-center">
-            {dict.featuredProject.title}
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
-            <div className="relative aspect-[4/3] rounded-2xl md:rounded-3xl overflow-hidden bg-muted shadow-xl md:shadow-2xl group">
-              <Image
-                src="/projects/image2.png"
-                alt="Champ de piri piri – Coopérative de femmes productrices, Kenya"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-              <p className="absolute bottom-3 md:bottom-4 left-3 md:left-4 right-3 md:right-4 text-white text-xs leading-snug">
-                <span className="font-bold block">{dict.featuredProject.caption}</span>
-                <span className="text-white/70 text-[11px] mt-0.5 block">{dict.featuredProject.description}</span>
-              </p>
-            </div>
-            <div className="flex flex-col gap-4 md:gap-6">
-              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground leading-relaxed">
-                {dict.featuredProject.description}
-              </p>
-              <Link href={dict.featuredProject.href} className="inline-block">
-                <Button className="gap-2 px-6 sm:px-8 py-5 sm:py-6 rounded-full font-bold uppercase bg-black text-white dark:bg-white dark:text-black hover:opacity-90 transition-all shadow-xl text-sm sm:text-base">
-                  {dict.featuredProject.cta}
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
+      {featuredProjectData && (
+        <section className="py-12 md:py-20 lg:py-28 border-b border-border">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 md:mb-12 lg:mb-16 tracking-tight uppercase text-center">
+              {dict.featuredProject?.title || (lang === "fr" ? "Projet mis en avant" : "Featured Project")}
+            </h2>
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
+              <div className="relative aspect-[4/3] rounded-2xl md:rounded-3xl overflow-hidden bg-muted shadow-xl md:shadow-2xl group">
+                <Image
+                  src={featuredProjectData.image}
+                  alt={featuredProjectData.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                {featuredProjectData.caption && (
+                  <p className="absolute bottom-3 md:bottom-4 left-3 md:left-4 right-3 md:right-4 text-white text-xs leading-snug">
+                    <span className="font-bold block">{featuredProjectData.caption}</span>
+                  </p>
+                )}
+              </div>
+              <div className="flex flex-col gap-4 md:gap-6">
+                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold uppercase tracking-tight">
+                  {featuredProjectData.title}
+                </h3>
+                <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground leading-relaxed">
+                  {featuredProjectData.desc}
+                </p>
+                <Link href={featuredProjectData.href} className="inline-block">
+                  <Button className="gap-2 px-6 sm:px-8 py-5 sm:py-6 rounded-full font-bold uppercase bg-black text-white dark:bg-white dark:text-black hover:opacity-90 transition-all shadow-xl text-sm sm:text-base">
+                    {dict.featuredProject?.cta || (lang === "fr" ? "Découvrir le projet" : "Discover project")}
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ── 4. PROJECTS ── */}
       <section className="py-12 md:py-20 lg:py-28 border-b border-border bg-muted/20">
@@ -291,6 +301,8 @@ export default async function HomePage({
           <div className="grid sm:grid-cols-2 gap-6 md:gap-8 lg:gap-10">
             {posts.map((post: any) => {
               const date = post.date ? new Date(post.date) : null;
+              const postTitle = post.title[lang as 'fr'|'en'] || post.title.fr || post.title.en || '';
+              const postDesc = post.description[lang as 'fr'|'en'] || post.description.fr || post.description.en || '';
               return (
                 <Link
                   key={post.slug}
@@ -301,7 +313,7 @@ export default async function HomePage({
                     <div className="relative h-44 sm:h-48 md:h-52 w-full overflow-hidden">
                       <Image
                         src={post.thumbnail}
-                        alt={post.title}
+                        alt={postTitle}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
                       />
@@ -309,11 +321,11 @@ export default async function HomePage({
                   )}
                   <div className="flex flex-1 flex-col p-5 sm:p-6 md:p-8">
                     <h3 className="text-lg md:text-xl font-bold tracking-tight mb-2 md:mb-3 group-hover:text-primary transition-colors leading-tight">
-                      {post.title}
+                      {postTitle}
                     </h3>
-                    {post.description && (
+                    {postDesc && (
                       <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed flex-1">
-                        {post.description}
+                        {postDesc}
                       </p>
                     )}
                     <div className="mt-4 md:mt-5 flex items-center justify-between text-xs font-bold text-muted-foreground uppercase tracking-widest">
@@ -329,6 +341,9 @@ export default async function HomePage({
       </section>
 
 
+
+      {/* ── 6. TESTIMONIALS ── */}
+      <TestimonialsSection testimonials={testimonials} lang={lang as "en" | "fr"} />
 
       {/* Newsletter */}
       <Newsletter lang={lang} dict={dict} />

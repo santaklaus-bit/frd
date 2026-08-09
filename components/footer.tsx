@@ -62,9 +62,9 @@ export default function Footer({ lang, dict }: { lang: string; dict: any }) {
               />
             </Link>
             <p className="text-muted-foreground leading-relaxed font-medium ml-4">
-              {lang === "fr"
+              {dict.footer?.tagline || (lang === "fr"
                 ? "Entrepreneur social passionné par l'impact collectif et le développement durable."
-                : "Social entrepreneur passionate about collective impact and sustainable development."}
+                : "Social entrepreneur passionate about collective impact and sustainable development.")}
             </p>
           </div>
 
@@ -157,13 +157,13 @@ export default function Footer({ lang, dict }: { lang: string; dict: any }) {
               href={`/${lang}/privacy-policy`}
               className="text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
             >
-              Privacy Policy
+              {dict.footer?.privacy || "Privacy Policy"}
             </Link>
             <Link
               href={`/${lang}/terms-of-service`}
               className="text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
             >
-              Terms of Service
+              {dict.footer?.terms || "Terms of Service"}
             </Link>
           </div>
         </div>

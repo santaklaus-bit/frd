@@ -88,6 +88,11 @@
     "success": "Merci pour votre abonnement !",
     "error": "Une erreur est survenue. Veuillez réessayer."
   },
+  "footer": {
+    "tagline": "Développer les personnes, renforcer les organisations, mobiliser l'impact durable.",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions d'utilisation"
+  },
   "seo": {
     "home": {
       "title": "Farid DANKO - Entrepreneur Social & Conseiller en Développement",
