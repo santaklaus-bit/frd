@@ -1,6 +1,6 @@
 services:
   monsieurdanko:
-    image: ghcr.io/aureldsk02/monsieurdanko:latest
+    image: ghcr.io/santaklaus-bit/monsieurdanko:latest
     container_name: monsieurdanko
     restart: always
     environment:
