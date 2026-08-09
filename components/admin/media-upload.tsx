@@ -60,7 +60,11 @@ export function MediaUpload({
   const performUpload = async (file: File | Blob) => {
     setUploading(true);
     const formData = new FormData();
-    formData.append("file", file, "upload.jpg");
+    // Keep the real filename: forcing "upload.jpg" stored PDFs under a .jpg
+    // name, so they were served as images and could not be previewed.
+    // Cropped images arrive as a plain Blob and are genuinely JPEG.
+    const filename = file instanceof File ? file.name : "upload.jpg";
+    formData.append("file", file, filename);
 
     try {
       const res = await fetch("/api/upload", {

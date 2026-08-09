@@ -37,7 +37,14 @@ export async function GET(
       ".pdf": "application/pdf",
     };
 
-    const contentType = mimeTypes[ext] || "application/octet-stream";
+    // Files uploaded before the filename fix are PDFs stored under a .jpg name.
+    // Trust the bytes over the extension so they are served as real PDFs.
+    const isPdfContent =
+      buffer.length >= 5 && buffer.subarray(0, 5).toString("latin1") === "%PDF-";
+
+    const contentType = isPdfContent
+      ? "application/pdf"
+      : mimeTypes[ext] || "application/octet-stream";
 
     // `?download=1` forces the browser to save the file instead of displaying it
     // inline (PDFs in particular open in the built-in viewer by default).
@@ -52,7 +59,11 @@ export async function GET(
 
     if (forceDownload) {
       // Strip the timestamp prefix added at upload time for a cleaner filename
-      const suggested = sanitized.replace(/^\d{10,}-/, "") || sanitized;
+      let suggested = sanitized.replace(/^\d{10,}-/, "") || sanitized;
+      // …and hand back a .pdf name for the mis-named legacy uploads
+      if (isPdfContent && ext !== ".pdf") {
+        suggested = `${suggested.replace(/\.[a-zA-Z0-9]+$/, "")}.pdf`;
+      }
       headers["Content-Disposition"] =
         `attachment; filename="${suggested.replace(/"/g, "")}"; filename*=UTF-8''${encodeURIComponent(suggested)}`;
     } else {
