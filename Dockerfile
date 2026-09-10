@@ -16,8 +16,8 @@ ARG NEXT_PUBLIC_SITE_URL=https://monsieurdanko.com
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NODE_ENV=production
 
-# Build Next.js (se fait UNE SEULE FOIS à la construction de l'image)
-RUN npm run build
+# Build Next.js uniquement (sans init DB — pas de MySQL pendant le build)
+RUN npm run build:next
 
 # ------------------------------
 # 2. Runner — image finale légere
