@@ -1,9 +1,6 @@
 import { ImageResponse } from "next/og";
-// Temporarily disabled to debug build crash
-// import { docs, meta } from "@/.source";
-// import { loader } from "fumadocs-core/source";
-// import { createMDXSource } from "fumadocs-mdx";
-import { getAuthor, isValidAuthor, type AuthorKey } from "@/lib/authors";
+import { getBlogPostByAnySlug } from "@/lib/content-manager";
+import { siteConfig } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const alt = "Blog Post";
@@ -13,168 +10,190 @@ export const size = {
 };
 export const contentType = "image/png";
 
-/*
-const blogSource = loader({
-  baseUrl: "/blog",
-  source: createMDXSource(docs, meta),
-});
-*/
-
-const getAssetData = async (authorAvatar?: string) => {
+const getAssetData = async (thumbnailUrl?: string) => {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url;
 
-    const assetUrls = {
-      clashDisplay: `${baseUrl}/fonts/ClashDisplay-Semibold.ttf`,
-      cabinetGrotesk: `${baseUrl}/fonts/CabinetGrotesk-Medium.ttf`,
-      logo: `${baseUrl}/magicui-logo.png`,
-      ...(authorAvatar && { authorAvatar: `${baseUrl}${authorAvatar}` }),
-    };
+    const [clashDisplayRes, cabinetGroteskRes] = await Promise.all([
+      fetch(`${baseUrl}/fonts/ClashDisplay-Semibold.ttf`),
+      fetch(`${baseUrl}/fonts/CabinetGrotesk-Medium.ttf`),
+    ]);
 
-    const fetchPromises = [
-      fetch(assetUrls.clashDisplay),
-      fetch(assetUrls.cabinetGrotesk),
-      fetch(assetUrls.logo),
-    ];
+    const [clashDisplay, cabinetGrotesk] = await Promise.all([
+      clashDisplayRes.ok ? clashDisplayRes.arrayBuffer() : null,
+      cabinetGroteskRes.ok ? cabinetGroteskRes.arrayBuffer() : null,
+    ]);
 
-    if (assetUrls.authorAvatar) {
-      fetchPromises.push(fetch(assetUrls.authorAvatar));
+    let thumbnailBase64: string | undefined;
+    if (thumbnailUrl) {
+      try {
+        const res = await fetch(thumbnailUrl);
+        if (res.ok) {
+          const buf = await res.arrayBuffer();
+          const contentType = res.headers.get("content-type") || "image/jpeg";
+          thumbnailBase64 = `data:${contentType};base64,${Buffer.from(buf).toString("base64")}`;
+        }
+      } catch {
+        // thumbnail facultatif, on ignore l'erreur
+      }
     }
 
-    const responses = await Promise.all(fetchPromises);
-    const [clashDisplayRes, cabinetGroteskRes, logoRes, authorAvatarRes] =
-      responses;
-
-    if (!clashDisplayRes.ok || !cabinetGroteskRes.ok || !logoRes.ok) {
-      return null;
-    }
-
-    const assetPromises = [
-      clashDisplayRes.arrayBuffer(),
-      cabinetGroteskRes.arrayBuffer(),
-      logoRes.arrayBuffer(),
-    ];
-
-    if (authorAvatarRes && authorAvatarRes.ok) {
-      assetPromises.push(authorAvatarRes.arrayBuffer());
-    }
-
-    const assetBuffers = await Promise.all(assetPromises);
-    const [clashDisplay, cabinetGrotesk, logoImage, authorAvatarImage] =
-      assetBuffers;
-
-    const logoBase64 = `data:image/png;base64,${Buffer.from(logoImage).toString(
-      "base64"
-    )}`;
-
-    let authorAvatarBase64: string | undefined;
-    if (authorAvatarImage) {
-      authorAvatarBase64 = `data:image/png;base64,${Buffer.from(
-        authorAvatarImage
-      ).toString("base64")}`;
-    }
-
-    return {
-      clashDisplay,
-      cabinetGrotesk,
-      logoBase64,
-      authorAvatarBase64,
-    };
+    return { clashDisplay, cabinetGrotesk, thumbnailBase64 };
   } catch (error) {
-    console.error("Error loading assets:", error);
-    return null;
+    console.error("Error loading OG assets:", error);
+    return { clashDisplay: null, cabinetGrotesk: null, thumbnailBase64: undefined };
   }
 };
 
-const styles = {
-  wrapper: {
-    height: "100%",
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-    padding: "40px",
-  },
-  container: {
-    display: "flex",
-    height: "100%",
-    width: "100%",
-    border: "4px solid black",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    padding: "60px",
-  },
-  titleContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-  },
-  logo: {
-    marginBottom: "20px",
-    alignSelf: "flex-start",
-  },
-  title: {
-    fontSize: "40px",
-    fontWeight: 700,
-    color: "black",
-    lineHeight: 1.2,
-    marginBottom: "10px",
-    letterSpacing: "0.5px",
-  },
-  summary: {
-    fontSize: "25px",
-    fontWeight: 500,
-    color: "#4A4A4A",
-    lineHeight: 1.5,
-    letterSpacing: "0.5px",
-  },
-  metaContainer: {
-    display: "flex",
-    gap: "15px",
-    marginTop: "20px",
-    alignItems: "center",
-  },
-  metaBase: {
-    fontSize: "19px",
-    fontWeight: 500,
-    lineHeight: 1.4,
-    padding: "4px 0px",
-  },
-  authorMeta: {
-    color: "black",
-    backgroundColor: "white",
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-  },
-  authorAvatar: {
-    width: "32px",
-    height: "32px",
-    borderRadius: "50%",
-    border: "2px solid black",
-  },
-  dateMeta: {
-    color: "black",
-  },
-  dotSeparator: {
-    fontSize: "19px",
-    color: "black",
-    fontWeight: 500,
-  },
-} as const;
+export default async function Image({ params }: { params: Promise<{ slug: string; lang?: string }> }) {
+  const { slug, lang = "fr" } = await params;
 
-export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+  // Récupération des données de l'article
+  const page = await getBlogPostByAnySlug(slug).catch(() => null);
+
+  const title = page
+    ? (page.title[lang as "fr" | "en"] || page.title.fr || page.title.en || "Article")
+    : "Article";
+  const description = page
+    ? (page.description[lang as "fr" | "en"] || page.description.fr || page.description.en || "")
+    : "";
+  const authorName = (page as any)?.authorName || "Farid DANKO";
+  const date = page ? new Date(page.date).toLocaleDateString(lang === "fr" ? "fr-FR" : "en-US", { year: "numeric", month: "long", day: "numeric" }) : "";
+
+  // URL absolue du thumbnail
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url;
+  let thumbnailUrl: string | undefined;
+  if (page?.thumbnail) {
+    thumbnailUrl = page.thumbnail.startsWith("http")
+      ? page.thumbnail
+      : `${baseUrl}${page.thumbnail.startsWith("/") ? "" : "/"}${page.thumbnail}`;
+  }
+
+  const { clashDisplay, cabinetGrotesk, thumbnailBase64 } = await getAssetData(thumbnailUrl);
+
+  const fonts: any[] = [];
+  if (clashDisplay) fonts.push({ name: "Clash Display", data: clashDisplay, weight: 700, style: "normal" });
+  if (cabinetGrotesk) fonts.push({ name: "Cabinet Grotesk", data: cabinetGrotesk, weight: 500, style: "normal" });
+
+  const fontFamily = fonts.length > 0 ? "Clash Display" : "system-ui";
+
+  // Tronquer le titre si trop long
+  const truncatedTitle = title.length > 80 ? title.slice(0, 77) + "..." : title;
+  const truncatedDesc = description.length > 120 ? description.slice(0, 117) + "..." : description;
+
   return new ImageResponse(
     (
-      <div style={{ fontSize: 40, color: 'black', background: 'white', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        Blog Post: {slug}
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          backgroundColor: "#0a0a0a",
+          fontFamily,
+        }}
+      >
+        {/* Colonne gauche : texte */}
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            padding: "60px",
+            borderRight: thumbnailBase64 ? "1px solid #222" : "none",
+          }}
+        >
+          {/* En-tête : site name */}
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div
+              style={{
+                fontSize: "15px",
+                fontWeight: 700,
+                color: "#888",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+              }}
+            >
+              monsieurdanko.com
+            </div>
+          </div>
+
+          {/* Corps : titre + description */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            <div
+              style={{
+                fontSize: thumbnailBase64 ? "36px" : "48px",
+                fontWeight: 700,
+                color: "#ffffff",
+                lineHeight: 1.2,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              {truncatedTitle}
+            </div>
+            {truncatedDesc && (
+              <div
+                style={{
+                  fontSize: "20px",
+                  color: "#999",
+                  lineHeight: 1.5,
+                  fontWeight: 400,
+                }}
+              >
+                {truncatedDesc}
+              </div>
+            )}
+          </div>
+
+          {/* Pied : auteur + date */}
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div
+              style={{
+                width: "36px",
+                height: "36px",
+                borderRadius: "50%",
+                backgroundColor: "#333",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "14px",
+                color: "#fff",
+                fontWeight: 700,
+              }}
+            >
+              {authorName.charAt(0)}
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+              <div style={{ fontSize: "15px", color: "#fff", fontWeight: 600 }}>{authorName}</div>
+              {date && <div style={{ fontSize: "13px", color: "#666" }}>{date}</div>}
+            </div>
+          </div>
+        </div>
+
+        {/* Colonne droite : thumbnail (si disponible) */}
+        {thumbnailBase64 && (
+          <div
+            style={{
+              width: "420px",
+              display: "flex",
+              overflow: "hidden",
+            }}
+          >
+            <img
+              src={thumbnailBase64}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          </div>
+        )}
       </div>
     ),
-    { width: 1200, height: 630 }
+    {
+      ...size,
+      fonts,
+    }
   );
 }

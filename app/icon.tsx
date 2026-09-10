@@ -4,45 +4,65 @@ import { join } from "node:path";
 
 export const runtime = "nodejs";
 
+export const sizes = [
+  { rel: "icon", sizes: "32x32" },
+  { rel: "apple-touch-icon", sizes: "180x180" },
+];
+
 export const size = {
-  width: 32,
-  height: 32,
+  width: 180,
+  height: 180,
 };
 export const contentType = "image/png";
 
 export default async function Icon() {
-  const fontData = await readFile(
-    join(process.cwd(), "public/fonts/ClashDisplay-Semibold.ttf"),
-  );
+  let fontData: ArrayBuffer | null = null;
+  try {
+    fontData = await readFile(
+      join(process.cwd(), "public/fonts/ClashDisplay-Semibold.ttf"),
+    );
+  } catch {
+    // fallback sans font custom
+  }
 
   return new ImageResponse(
     <div
       style={{
-        fontSize: 18,
-        background: "black",
+        background: "white",
         width: "100%",
         height: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        color: "white",
-        borderRadius: "4px",
-        fontFamily: "Clash Display",
-        fontWeight: "bold",
+        padding: "20px",
       }}
     >
-      FD
+      <span
+        style={{
+          fontFamily: fontData ? "Clash Display" : "Georgia, serif",
+          fontSize: "28px",
+          fontWeight: 700,
+          color: "black",
+          letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          whiteSpace: "nowrap",
+        }}
+      >
+        FARID DANKO
+      </span>
     </div>,
     {
       ...size,
-      fonts: [
-        {
-          name: "Clash Display",
-          data: fontData,
-          style: "normal",
-          weight: 700,
-        },
-      ],
+      fonts: fontData
+        ? [
+            {
+              name: "Clash Display",
+              data: fontData,
+              style: "normal",
+              weight: 700,
+            },
+          ]
+        : [],
     },
   );
 }

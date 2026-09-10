@@ -20,29 +20,53 @@ export async function generateMetadata({
   const page = await getBlogPostByAnySlug(slug);
 
   if (!page) notFound();
-  
+
   const title = page.title[lang as 'fr'|'en'] || page.title.fr || page.title.en || "";
   const description = page.description[lang as 'fr'|'en'] || page.description.fr || page.description.en || "";
   const caption = page.imageCaption[lang as 'fr'|'en'] || page.imageCaption.fr || page.imageCaption.en || "";
+  const authorName = (page as any).authorName || "Farid DANKO";
 
-  const imageUrl = page.thumbnail 
+  const imageUrl = page.thumbnail
     ? (page.thumbnail.startsWith("http") ? page.thumbnail : `${siteConfig.url}${page.thumbnail.startsWith("/") ? "" : "/"}${page.thumbnail}`)
-    : undefined;
+    : `${siteConfig.url}/farid-portrait.webp`; // fallback sur le portrait
+
+  const canonicalUrl = `${siteConfig.url}/${lang}/blog/${slug}`;
 
   return {
+    metadataBase: new URL(siteConfig.url),
     title,
     description,
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        fr: `${siteConfig.url}/fr/blog/${page.slug}`,
+        en: `${siteConfig.url}/en/blog/${(page as any).slugEn || page.slug}`,
+      },
+    },
     openGraph: {
       type: "article",
       title,
       description: description || "",
-      images: imageUrl ? [{ url: imageUrl, alt: caption || title }] : [],
+      url: canonicalUrl,
+      siteName: siteConfig.name,
+      locale: lang === "fr" ? "fr_FR" : "en_US",
+      publishedTime: new Date(page.date).toISOString(),
+      authors: [authorName],
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: caption || title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description: description || "",
-      images: imageUrl ? [imageUrl] : [],
+      creator: "@FaridDanko",
+      images: [imageUrl],
     },
   };
 }
@@ -142,7 +166,7 @@ export default async function BlogPost({ params }: PageProps) {
             </Button>
 
             <div className="space-y-6">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-balance leading-tight uppercase">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-balance leading-[1.35] uppercase">
                 {title}
               </h1>
 
