@@ -16,7 +16,7 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function Icon() {
-  let fontData: ArrayBuffer | null = null;
+  let fontData: Buffer | null = null;
   try {
     fontData = await readFile(
       join(process.cwd(), "public/fonts/ClashDisplay-Semibold.ttf"),
