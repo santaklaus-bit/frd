@@ -125,7 +125,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             </Button>
 
             <div className="space-y-6">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-balance leading-[0.9] uppercase">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-balance leading-[1.25] sm:leading-[1.3] uppercase">
                 {title}
               </h1>
 
