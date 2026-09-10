@@ -64,7 +64,7 @@ export async function generateMetadata({
       siteName: siteConfig.name,
       images: [
         {
-          url: "/farid-portrait.webp", // Fallback for social preview
+          url: `${siteConfig.url}/farid-portrait.webp`,
           width: 1200,
           height: 630,
           alt: "Farid DANKO",
@@ -76,7 +76,7 @@ export async function generateMetadata({
       title: dict.seo.home.title,
       description: dict.seo.home.description,
       creator: "@FaridDanko",
-      images: ["/farid-portrait.webp"],
+      images: [`${siteConfig.url}/farid-portrait.webp`],
     },
     robots: {
       index: true,

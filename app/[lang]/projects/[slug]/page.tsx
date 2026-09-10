@@ -42,21 +42,43 @@ export async function generateMetadata({
 
   const imageUrl = initiative.image 
     ? (initiative.image.startsWith("http") ? initiative.image : `${siteConfig.url}${initiative.image.startsWith("/") ? "" : "/"}${initiative.image}`)
-    : undefined;
+    : `${siteConfig.url}/farid-portrait.webp`;
+
+  const canonicalUrl = `${siteConfig.url}/${lang}/projects/${slug}`;
 
   return {
+    metadataBase: new URL(siteConfig.url),
     title,
     description,
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        fr: `${siteConfig.url}/fr/projects/${initiative.slug}`,
+        en: `${siteConfig.url}/en/projects/${initiative.slugEn || initiative.slug}`,
+      },
+    },
     openGraph: {
+      type: "article",
       title,
       description,
-      images: imageUrl ? [{ url: imageUrl, alt: caption || title }] : [],
+      url: canonicalUrl,
+      siteName: siteConfig.name,
+      locale: lang === "fr" ? "fr_FR" : "en_US",
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: caption || title,
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: imageUrl ? [imageUrl] : [],
+      creator: "@FaridDanko",
+      images: [imageUrl],
     },
   };
 }
