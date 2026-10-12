@@ -1,10 +1,13 @@
+import { siteConfig } from "@/lib/site";
+
 export default function JsonLd({ lang, dict }: { lang: string; dict: any }) {
   const personData = {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Farid DANKO",
-    url: "https://monsieurdanko.comcom",
-    image: "https://monsieurdanko.comcom/farid-portrait.webp",
+    url: siteConfig.url,
+    image: `${siteConfig.url}/og-image.jpg`,
+    logo: `${siteConfig.url}/icon-512.png`,
     jobTitle: lang === "fr" ? "Entrepreneur Social" : "Social Entrepreneur",
     description: dict.seo.home.description,
     sameAs: [
@@ -19,7 +22,7 @@ export default function JsonLd({ lang, dict }: { lang: string; dict: any }) {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "Farid DANKO",
-    url: "https://monsieurdanko.comcom",
+    url: siteConfig.url,
     description: dict.seo.home.description,
     inLanguage: lang,
   };
