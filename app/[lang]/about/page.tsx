@@ -50,7 +50,7 @@ export default async function AboutPage({
 
             {/* Signature Section */}
             <div className="pt-10 md:pt-16 border-t border-border/40">
-              <div className="relative w-56 sm:w-64 md:w-80 h-28 sm:h-32 md:h-40 opacity-90 dark:invert mb-4">
+              <div className="relative w-56 sm:w-64 md:w-80 h-28 sm:h-32 md:h-40 opacity-90 dark:brightness-0 dark:invert mb-4">
                 <Image
                   src="/farid-signature.png"
                   alt="Farid Danko Signature"
