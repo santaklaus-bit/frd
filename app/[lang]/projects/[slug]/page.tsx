@@ -124,8 +124,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               </Link>
             </Button>
 
-            <div className="space-y-6">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-balance leading-[0.9] uppercase">
+            <div className="space-y-6 min-w-0">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-balance leading-[1] sm:leading-[0.9] uppercase break-words hyphens-auto">
                 {title}
               </h1>
 
@@ -145,7 +145,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
       {/* ── MAIN CONTENT ── */}
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-20 relative z-10">
         <div className="grid lg:grid-cols-[1fr_250px] gap-12 lg:gap-20">
-          <main className="space-y-12">
+          <main className="space-y-12 min-w-0">
             {/* Banner Image - Now inside content like the blog */}
             {(lang === "en" ? initiative.imageEn || initiative.image : initiative.image) && (
                 <div className="space-y-4">

@@ -225,7 +225,7 @@ export default async function ExpertiseDetailPage({ params }: PageProps) {
                   {category}
                 </span>
               </div>
-              <h1 className="text-5xl sm:text-6xl md:text-8xl font-serif font-extrabold tracking-tight text-balance leading-[0.85] uppercase animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
+              <h1 className="text-4xl sm:text-6xl break-words hyphens-auto md:text-8xl font-serif font-extrabold tracking-tight text-balance leading-[0.85] uppercase animate-in fade-in slide-in-from-bottom-8 duration-700 delay-150">
                 {title}
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl leading-relaxed font-medium animate-in fade-in slide-in-from-bottom-6 duration-700 delay-300">

@@ -85,8 +85,18 @@ export const customParsers = {
     const type = style === "ordered" ? "ol" : "ul";
     const listClass = style === "ordered" ? "list-decimal" : "list-disc";
 
-    const listItems = items.map((item: string) => `<li>${item}</li>`).join("");
-    return `<${type} class="${listClass} ml-6 space-y-2 my-6">${listItems}</${type}>`;
+    const renderItems = (list: any[], t: string, cls: string): string =>
+      list
+        .map((item: any) => {
+          const content = typeof item === "string" ? item : item?.content ?? "";
+          const nested = Array.isArray(item?.items) && item.items.length
+            ? `<${t} class="${cls} ml-6 space-y-2 mt-2">${renderItems(item.items, t, cls)}</${t}>`
+            : "";
+          return `<li>${content}${nested}</li>`;
+        })
+        .join("");
+
+    return `<${type} class="${listClass} ml-6 space-y-2 my-6">${renderItems(items || [], type, listClass)}</${type}>`;
   },
   header: (block: any) => {
     const { text, level } = block.data;
