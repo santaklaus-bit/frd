@@ -72,7 +72,7 @@ export default function TestimonialsList({ initialData }: { initialData: Testimo
       role: { fr: "", en: "" },
       content: { fr: "", en: "" },
       image: null,
-      certified: false,
+      certified: true,
       rating: 5,
       order: testimonials.length + 1,
     });

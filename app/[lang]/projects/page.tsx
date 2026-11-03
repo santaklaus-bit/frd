@@ -48,8 +48,6 @@ export default async function ProjectsPage({
   }));
 
   const isFr = lang === "fr";
-  const featured = projects[0] ?? null;
-  const rest = projects.slice(1);
 
   return (
     <div className="min-h-screen bg-background">
@@ -77,96 +75,64 @@ export default async function ProjectsPage({
           </h1>
         </header>
 
-        {/* ── FEATURED PROJECT ── */}
-        {featured && (
-          <section className="py-16 md:py-24 border-b border-border/40">
-            <article className="group grid md:grid-cols-2 gap-10 md:gap-16 items-start">
-              {/* Image */}
-              {featured.image ? (
-                <div className="relative aspect-[3/2] overflow-hidden bg-muted rounded-2xl shadow-2xl">
-                  <Image
-                    src={featured.image}
-                    alt={featured.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    priority
-                  />
+        {/* ── PROJECT LIST ── */}
+        {projects.length > 0 && (
+          <section className="py-12 md:py-20 grid gap-8 md:gap-10">
+            {projects.map((project: any, i: number) => (
+              <article
+                key={project.slug}
+                className="group relative grid md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] gap-6 md:gap-10 p-4 md:p-6 rounded-3xl border border-border/50 bg-card/40 transition-all duration-300 hover:border-foreground/30 hover:bg-card hover:shadow-xl"
+              >
+                {/* Image */}
+                <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-muted">
+                  {project.image ? (
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      sizes="(min-width: 768px) 45vw, 100vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                      priority={i === 0}
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40">
+                      {isFr ? "Pas d'image" : "No image"}
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="relative aspect-[3/2] bg-muted/60 flex items-center justify-center rounded-2xl">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40">{isFr ? "Pas d'image" : "No image"}</div>
-                </div>
-              )}
 
-              {/* Content */}
-              <div className="flex flex-col justify-center gap-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-bold px-4 py-1.5 rounded-full bg-primary/10 text-primary border border-primary/20 uppercase tracking-widest">
-                    {featured.category}
+                {/* Content */}
+                <div className="flex min-w-0 flex-col justify-center gap-4 md:py-2 md:pr-4">
+                  <div className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.25em] text-muted-foreground">
+                    <span className="tabular-nums text-foreground">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="h-px w-8 bg-border" />
+                    <span className="truncate">{project.category}</span>
+                  </div>
+
+                  <h2 className="text-2xl md:text-[1.75rem] lg:text-3xl font-semibold tracking-tight leading-tight text-balance">
+                    <Link
+                      href={`/${lang}/projects/${project.slug}`}
+                      className="after:absolute after:inset-0 after:content-[''] after:rounded-3xl"
+                    >
+                      {project.title}
+                    </Link>
+                  </h2>
+
+                  {project.description && (
+                    <p className="text-muted-foreground leading-relaxed line-clamp-3">
+                      {project.description}
+                    </p>
+                  )}
+
+                  <span className="mt-1 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-foreground">
+                    {isFr ? "Voir le projet" : "View project"}
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1.5" />
                   </span>
                 </div>
-                <Link href={`/${lang}/projects/${featured.slug}`} className="w-fit">
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[0.95] hover:opacity-70 transition-opacity uppercase">
-                    {featured.title}
-                  </h2>
-                </Link>
-                {featured.description && (
-                  <p className="text-muted-foreground leading-relaxed line-clamp-4 text-lg">
-                    {featured.description}
-                  </p>
-                )}
-                <Link href={`/${lang}/projects/${featured.slug}`} className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors">
-                  {isFr ? "En savoir plus" : "Learn more"}
-                  <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </div>
-            </article>
-          </section>
-        )}
-
-        {/* ── PROJECT GRID ── */}
-        {rest.length > 0 && (
-          <section className="py-16 md:py-24">
-            <div className="grid md:grid-cols-2 gap-x-12 lg:gap-x-20 gap-y-16 md:gap-y-24">
-              {rest.map((project: any) => (
-                <article key={project.slug} className="group flex flex-col gap-6">
-                  {/* Image */}
-                  <div className="relative aspect-[3/2] overflow-hidden bg-muted/60 rounded-xl shadow-lg">
-                    {project.image ? (
-                      <Image
-                        src={project.image}
-                        alt={project.title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                         <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/20">{isFr ? "Découvrir" : "Explore"}</div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-3">
-                      <span className="text-[10px] font-bold px-3 py-1 rounded-full bg-muted text-muted-foreground uppercase tracking-widest">
-                        {project.category}
-                      </span>
-                    </div>
-                    <Link href={`/${lang}/projects/${project.slug}`} className="w-fit">
-                      <h2 className="text-2xl md:text-3xl font-bold tracking-tight leading-none hover:opacity-70 transition-opacity uppercase">
-                        {project.title}
-                      </h2>
-                    </Link>
-                    {project.description && (
-                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
-                        {project.description}
-                      </p>
-                    )}
-                  </div>
-                </article>
-              ))}
-            </div>
+              </article>
+            ))}
           </section>
         )}
 

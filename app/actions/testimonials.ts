@@ -18,7 +18,7 @@ export async function saveTestimonial(
   try {
     await saveToDb(id, data);
     revalidatePath("/admin/testimonials");
-    revalidatePath("/");
+    revalidatePath("/", "layout");
     return { success: true };
   } catch (error) {
     console.error("Error saving testimonial:", error);
@@ -30,7 +30,7 @@ export async function deleteTestimonial(id: number) {
   try {
     await deleteFromDb(id);
     revalidatePath("/admin/testimonials");
-    revalidatePath("/");
+    revalidatePath("/", "layout");
     return { success: true };
   } catch (error) {
     console.error("Error deleting testimonial:", error);

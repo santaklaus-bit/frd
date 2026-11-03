@@ -1,7 +1,32 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Star, CheckCircle2 } from "lucide-react";
+import { Star } from "lucide-react";
+
+function VerifiedBadge({ label }: { label: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      role="img"
+      aria-label={label}
+      className="h-[18px] w-[18px] flex-shrink-0"
+    >
+      <title>{label}</title>
+      <path
+        fill="#1D9BF0"
+        d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91s-2.52-1.27-3.91-.81c-.66-1.31-1.91-2.19-3.34-2.19s-2.67.88-3.33 2.19c-1.4-.46-2.91-.2-3.92.81s-1.26 2.52-.8 3.91C2.88 9.33 2 10.57 2 12s.88 2.67 2.19 3.34c-.46 1.39-.21 2.9.8 3.91s2.52 1.26 3.91.81c.67 1.31 1.91 2.19 3.34 2.19s2.68-.88 3.34-2.19c1.39.45 2.9.2 3.91-.81s1.27-2.52.81-3.91c1.31-.67 2.19-1.91 2.19-3.34z"
+      />
+      <path
+        fill="none"
+        stroke="#fff"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M7.8 12.4l2.9 2.9 5.5-5.8"
+      />
+    </svg>
+  );
+}
 
 interface Testimonial {
   id: number;
@@ -111,22 +136,15 @@ export function TestimonialsSection({
                     </div>
                   )}
                   <div className="space-y-1">
-                    <p className="text-sm font-bold text-foreground">{name(testimonial)}</p>
+                    <p className="flex items-center gap-1.5 text-sm font-bold text-foreground">
+                      {testimonial.certified && (
+                        <VerifiedBadge label={lang === "fr" ? "Certifié" : "Verified"} />
+                      )}
+                      {name(testimonial)}
+                    </p>
                     <p className="text-xs text-muted-foreground">{role(testimonial)}</p>
                   </div>
                 </div>
-
-                {/* Certification Badge */}
-                {testimonial.certified && (
-                  <div className="flex-shrink-0">
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-500/15 border border-blue-500/30">
-                      <CheckCircle2 className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                      <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
-                        {lang === "fr" ? "Certifié" : "Verified"}
-                      </span>
-                    </div>
-                  </div>
-                )}
               </div>
             </motion.div>
           ))}

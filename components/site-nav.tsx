@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
 import {
@@ -35,6 +36,15 @@ const XIconLogo = ({ className }: { className?: string }) => (
 
 export function SiteNav({ lang }: { lang: "en" | "fr" }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname() || "";
+  const isActive = (href: string) =>
+    href === `/${lang}` ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
+  const navClass = (href: string, extra = "") =>
+    `text-xs font-bold uppercase transition-colors ${extra} ${
+      isActive(href)
+        ? "text-foreground underline underline-offset-8 decoration-2"
+        : "text-muted-foreground hover:text-foreground"
+    }`;
 
   const socialLinks = [
     {
@@ -97,7 +107,8 @@ export function SiteNav({ lang }: { lang: "en" | "fr" }) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="text-xs font-bold text-muted-foreground hover:text-foreground transition-colors uppercase"
+                  className={navClass(item.href)}
+                  aria-current={isActive(item.href) ? "page" : undefined}
                 >
                   {item.label}
                 </Link>
@@ -127,7 +138,8 @@ export function SiteNav({ lang }: { lang: "en" | "fr" }) {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="text-xs font-bold text-muted-foreground hover:text-foreground transition-colors uppercase"
+                  className={navClass(item.href)}
+                  aria-current={isActive(item.href) ? "page" : undefined}
                 >
                   {item.label}
                 </Link>
@@ -212,7 +224,8 @@ export function SiteNav({ lang }: { lang: "en" | "fr" }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-xs font-bold text-muted-foreground hover:text-foreground transition-colors py-2 uppercase"
+                className={navClass(item.href, "py-2")}
+                aria-current={isActive(item.href) ? "page" : undefined}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item.label}
