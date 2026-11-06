@@ -1,0 +1,12 @@
+node_modules
+.next
+.git
+.env*
+var
+reference
+out
+assets-source
+docs/captures
+*.zip
+*.ai
+*.xlsx

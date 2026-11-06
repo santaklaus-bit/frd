@@ -1,0 +1,15 @@
+services:
+  opus:
+    build: ..
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_SITE_URL: https://opuscrp.com
+      OPUS_APP_ORIGIN: https://opuscrp.com
+      OPUS_DATA_DIR: /app/var/opus
+    volumes:
+      - opus-data:/app/var/opus
+volumes:
+  opus-data:

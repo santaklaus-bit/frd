@@ -48,3 +48,8 @@ instructions.txt
 
 backend
 public/uploads
+
+# OPUS: persistent database, sessions and uploaded media
+/var/
+*.zip
+*.zip

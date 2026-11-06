@@ -1,17 +1,9 @@
 import type { NextConfig } from "next";
-import { createMDX } from "fumadocs-mdx/next";
-
-const withMDX = createMDX();
-
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  transpilePackages: ["geist"],
-  serverExternalPackages: ["sequelize", "mysql2", "sqlite3"],
-  experimental: {
-    serverActions: {
-      bodySizeLimit: "50mb",
-    },
-  },
+  turbopack: { root: process.cwd() },
+  images: { unoptimized: true },
+  experimental: { proxyClientMaxBodySize: "52mb" },
   async headers() {
     return [
       {
@@ -19,28 +11,12 @@ const nextConfig: NextConfig = {
         source: "/(.*)",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-        ],
-      },
-      {
-        // Protect media assets from easy hotlinking
-        source: "/:path(logo\\.png|farid-portrait\\.png|farid-signature\\.png)",
-        headers: [
-          { key: "Cache-Control", value: "private, no-cache, no-store" },
-          { key: "X-Robots-Tag", value: "noindex, nofollow" },
-        ],
-      },
-      {
-        // Protect font files
-        source: "/_next/static/media/:path*",
-        headers: [
-          { key: "Cache-Control", value: "private, max-age=0" },
-          { key: "Access-Control-Allow-Origin", value: "https://monsieurdanko.com" },
         ],
       },
     ];
   },
 };
 
-export default withMDX(nextConfig);
+export default nextConfig;

@@ -24,24 +24,19 @@
     ],
     "paths": {
       "@/*": [
-        "./*"
-      ],
-      "@/.source": [
-        "./.source"
+        "./src/*"
       ]
     }
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    ".source",
-    "source.generated.ts",
-    "magicuidesign-blog-template-bc0cb81"
+    "reference"
   ]
 }
